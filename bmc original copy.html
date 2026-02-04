@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BEST MARKETING COMPANY — Corporate</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<style>
+:root{
+  --accent:#3A6EA5;
+  --bg:#ffffff;
+  --text:#0b1f33;
+  --muted:#6b7280;
+  --border:#e6e9ef;
+  --radius:12px;
+  --shadow:0 18px 40px rgba(17,24,39,0.06);
+  --container:1200px;
+  --cta-padding:18px 30px;
+  --toast-bg: #13232f;
+  --toast-color: #e7f5ff;
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.45;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* progress */
+#scroll-progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),#5C7FA5);z-index:99999}
+
+/* topbar */
+.topbar{width:100%;background:#fff;border-bottom:1px solid var(--border);position:fixed;top:0;z-index:1100}
+.topbar-inner{max-width:var(--container);margin:0 auto;padding:9px 20px;display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.topbar-left{font-weight:800;letter-spacing:0.3px}
+.topbar-right{display:flex;align-items:center;gap:14px;color:var(--muted)}
+.search-box{width:300px;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fafbfc}
+.country-select{padding:8px;border-radius:8px;border:1px solid var(--border)}
+
+/* main nav */
+.main-nav{width:100%;background:#fff;border-bottom:1px solid var(--border);position:fixed;top:48px;z-index:1090}
+.main-nav-inner{max-width:var(--container);margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.main-nav-inner a{position:relative;font-weight:700;font-size:15px;padding:6px 2px}
+.main-nav-inner a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--accent);transition:width .22s}
+.main-nav-inner a:hover::after{width:100%}
+
+/* hero */
+.hero{margin-top:130px;padding:110px 20px 80px;min-height:68vh;display:flex;align-items:center;justify-content:center;background:#f6f8fb;position:relative}
+.hero-inner{max-width:var(--container);width:100%;display:flex;gap:36px;align-items:center}
+.hero-left{flex:1}
+.hero-right{flex:1;display:flex;justify-content:center}
+.hero-h{font-size:46px;line-height:1.05;font-weight:800;color:var(--text);margin-bottom:18px;opacity:1;transition:all .45s ease}
+.hero-sub{font-size:18px;color:var(--muted);margin-bottom:24px;max-width:520px}
+.cta-row{display:flex;gap:14px}
+.btn{padding:var(--cta-padding);border-radius:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:var(--accent);color:#fff;border:none;font-size:16px}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);font-size:15px}
+.hero-right img{width:100%;max-width:540px;border-radius:14px;box-shadow:0 30px 60px rgba(11,31,51,0.10);transform:translateZ(0)}
+
+/* metrics/pods */
+.metrics-row{max-width:var(--container);margin:20px auto;padding:0 20px;display:flex;gap:12px;justify-content:center}
+.metric{flex:1;background:#fff;padding:18px;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);text-align:center}
+.metric .num{font-weight:900;font-size:24px;color:var(--accent)}
+.metric .lbl{color:var(--muted);font-weight:700}
+
+.pods{max-width:var(--container);margin:28px auto;padding:0 20px;display:flex;gap:18px}
+.pod{flex:1;background:#fff;padding:18px;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow)}
+
+/* sections */
+.section{max-width:var(--container);margin:48px auto;padding:0 20px}
+.title{font-size:24px;font-weight:800;margin-bottom:6px}
+.underline{height:4px;width:88px;background:var(--accent);border-radius:6px;margin-bottom:18px}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+.about-grid img{border-radius:12px;box-shadow:var(--shadow)}
+
+/* services */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+.service{display:flex;gap:14px;align-items:flex-start;padding:14px;border-radius:12px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow)}
+.service .ico{width:54px;height:54px;border-radius:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+
+/* product highlights */
+.highlights{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:12px}
+.highlight{padding:20px;border-radius:12px;background:#fff;border:1px solid var(--border);box-shadow:0 12px 30px rgba(11,31,51,0.05);cursor:pointer;transition:transform .22s ease,box-shadow .22s}
+.highlight:hover{transform:translateY(-8px);box-shadow:0 28px 46px rgba(11,31,51,0.12)}
+.highlight strong{display:block;font-size:18px;margin-bottom:8px}
+
+/* cases */
+.case{padding:20px;background:#fff;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:14px;line-height:1.6}
+
+/* TRUSTED BY - premium carousel styles */
+.trusted-section{
+  max-width:var(--container);
+  margin:40px auto;
+  padding:28px;
+  border-radius:16px;
+  background: linear-gradient(135deg, #2d6aa0 0%, #6ea1d8 100%);
+  color: white;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  text-align:center;
+}
+.trusted-title{font-size:22px;font-weight:800;margin-bottom:18px}
+.trusted-carousel{overflow:hidden;position:relative;width:100%}
+.trusted-track{display:flex;gap:28px;align-items:center;padding:8px 0;animation:scrollClients 18s linear infinite}
+.client-item{background:rgba(255,255,255,0.12);padding:12px 22px;font-size:18px;font-weight:800;border-radius:12px;white-space:nowrap;border:1px solid rgba(255,255,255,0.18);transition:all .25s}
+.client-item:hover{transform:translateY(-6px) scale(1.06);box-shadow:0 0 24px rgba(255,255,255,0.6);background:rgba(255,255,255,0.22)}
+@keyframes scrollClients{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* clients list (single nice area) */
+.clients-bar{max-width:var(--container);margin:24px auto;padding:14px;border-radius:12px;background:#fbfdff;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.client-list{display:flex;gap:12px;flex-wrap:wrap}
+.client-card{padding:10px 14px;border-radius:10px;background:#fff;border:1px solid var(--border);box-shadow:0 10px 20px rgba(0,0,0,0.04);font-weight:800;cursor:pointer;transition:transform .18s}
+.client-card:hover{transform:translateY(-6px);box-shadow:0 22px 36px rgba(0,0,0,0.08)}
+
+/* contact form */
+.form-card{max-width:840px;margin:18px auto;background:#fff;padding:24px;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.form-card input,.form-card textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);margin-bottom:12px;font-size:15px}
+
+/* admin/login area (hidden by default) */
+.admin-fullpage{display:none;min-height:80vh;padding:48px 20px;background:linear-gradient(180deg,#f7fbff,#ffffff)}
+.admin-login-wrap{max-width:420px;margin:40px auto;padding:28px;border-radius:12px;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow)}
+.admin-login-wrap h2{font-size:20px;margin-bottom:12px}
+.admin-dashboard{display:none;max-width:1200px;margin:24px auto;padding:20px}
+
+/* admin controls inside page */
+.admin-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.admin-controls input{padding:8px;border-radius:8px;border:1px solid var(--border)}
+
+/* admin leads list */
+.admin-leads{margin-top:16px}
+
+/* modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:12000;align-items:center;justify-content:center}
+.modal .card{background:#fff;padding:18px;border-radius:12px;max-width:640px;width:92%;box-shadow:0 30px 80px rgba(0,0,0,0.18);position:relative}
+#closeModal{position:absolute;top:10px;right:12px;background:#fff;border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:14px;cursor:pointer}
+#modalTitle{font-size:18px;margin-bottom:6px}
+#modalDesc{color:var(--muted)}
+#modalCloseGhost{background:transparent;border:1px solid var(--border);padding:8px 12px;border-radius:8px;cursor:pointer}
+
+/* quick menu & sidebar */
+.quick-menu{position:fixed;right:18px;bottom:120px;display:flex;flex-direction:column;gap:12px;z-index:11000}
+.quick-btn{display:inline-flex;align-items:center;gap:10px;padding:10px 12px;border-radius:999px;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow);font-weight:700}
+.quick-btn.wh{background:#25D366;color:#fff;border:none}
+.sidebar{position:fixed;left:18px;top:40%;display:flex;flex-direction:column;gap:10px;z-index:11000;transform:translateY(-20px);opacity:0;pointer-events:none;transition:all .36s}
+.sidebar.visible{transform:translateY(0);opacity:1;pointer-events:auto}
+.sidebar .link{background:#fff;padding:10px;border-radius:8px;border:1px solid var(--border);box-shadow:var(--shadow);font-weight:700;display:block;width:150px;text-align:left}
+
+/* footer */
+footer{background:#f8fafc;padding:60px 20px;border-top:1px solid var(--border);margin-top:40px}
+.footer-wrap{max-width:var(--container);margin:0 auto;display:flex;gap:40px;justify-content:space-between;align-items:flex-start}
+.footer-col{flex:1;min-width:160px}
+.footer-col h5{margin-bottom:10px;font-weight:800}
+.footer-col a{display:block;color:var(--muted);margin-bottom:8px}
+
+/* toast */
+.toast-wrap{position:fixed;right:18px;bottom:26px;z-index:13000;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--toast-bg);color:var(--toast-color);padding:12px 18px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.28);font-weight:700;opacity:0;transform:translateY(10px);transition:all .28s ease}
+
+/* responsive */
+@media(max-width:1080px){
+  .main-nav-inner{gap:12px;overflow:hidden}
+  .search-box{width:200px}
+  .hero-inner{flex-direction:column;align-items:flex-start}
+  .hero-right{width:100%}
+  .highlights{grid-template-columns:1fr 1fr}
+  .services-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .topbar-inner,.main-nav-inner{padding:10px}
+  .search-box{display:none}
+  .hero-h{font-size:28px}
+  .highlights{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .footer-wrap{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- PROGRESS -->
+<div id="scroll-progress" aria-hidden="true"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">BEST MARKETING COMPANY</div>
+    <div class="topbar-right">
+      <div class="share">Share Price: ₹281.40 (-0.03)</div>
+      <input class="search-box" placeholder="Search the site..." aria-label="Search">
+      <select class="country-select" aria-label="Country selector"><option>EN ▼</option><option>IN</option><option>US</option></select>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="main-nav">
+  <div class="main-nav-inner">
+    <a href="#who">Who We Are</a>
+    <a class="solutions-link">Our Solutions</a>
+    <a class="industries-link">Industries</a>
+    <a href="#products">Products</a>
+    <a href="#investors">Investors</a>
+    <a href="#contact">Contact Us</a>
+    <a href="#admin" id="adminNav">Admin</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-h" id="heroHeading">Engineering Solutions for Modern Industries</div>
+      <p class="hero-sub">We supply valves, crucibles, dosing systems, lubricants and automation systems for industries.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" id="ctaSubmit" href="#contact">Submit a Request</a>
+        <a class="btn btn-ghost" href="#services">Explore Services</a>
+      </div>
+    </div>
+    <div class="hero-right"><img src="hero-banner.jpg" alt="Hero banner image"></div>
+  </div>
+</header>
+
+<!-- METRICS ROW -->
+<div class="metrics-row" aria-hidden="false">
+  <div class="metric"><div class="num" data-target="120">0</div><div class="lbl">Projects</div></div>
+  <div class="metric"><div class="num" data-target="45">0</div><div class="lbl">Years</div></div>
+  <div class="metric"><div class="num" data-target="350">0</div><div class="lbl">Clients</div></div>
+</div>
+
+<!-- PODS -->
+<div class="pods">
+  <div class="pod"><strong>Trusted Supply</strong><div style="color:var(--muted)">Quality parts, timely delivery</div></div>
+  <div class="pod"><strong>Expert Support</strong><div style="color:var(--muted)">Commissioning & field service</div></div>
+  <div class="pod"><strong>Sector Expertise</strong><div style="color:var(--muted)">Foundry, metal, industrial</div></div>
+</div>
+
+<!-- ABOUT -->
+<section id="who" class="section">
+  <div class="title">About Us</div>
+  <div class="underline"></div>
+  <div class="about-grid">
+    <div><img src="about.jpg" alt="About image"></div>
+    <div>
+      <p><strong>BEST MARKETING COMPANY</strong> is a trusted distributor of valves, crucibles, dosing systems, lubricants and automation equipment across India. We help keep operations reliable — from product selection to on-site commissioning.</p>
+      <p style="color:var(--muted);margin-top:8px">Our technical team supports installation, performance tuning, and after-sales service so you experience minimal downtime.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="section">
+  <div class="title">Our Services</div>
+  <div class="underline"></div>
+  <div class="services-grid">
+    <div class="service"><div class="ico">⚙️</div><div><h4>Industrial Supply</h4><p style="color:var(--muted)">Valves, actuators, consumables</p></div></div>
+    <div class="service"><div class="ico">💧</div><div><h4>Automation & Dosing</h4><p style="color:var(--muted)">Control systems & dosing pumps</p></div></div>
+    <div class="service"><div class="ico">📐</div><div><h4>Technical Consultancy</h4><p style="color:var(--muted)">Process & application support</p></div></div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" class="section">
+  <div class="title">Product Highlights</div>
+  <div class="underline"></div>
+  <div class="highlights">
+    <div class="highlight" data-title="Industrial Valve A1" data-desc="Robust Industrial Ball Valve — engineered for durability.">
+      <strong>Industrial Valve A1</strong>
+      <div style="color:var(--muted)">Robust Industrial Ball Valve — engineered for durability.</div>
+    </div>
+    <div class="highlight" data-title="Crucible C-300" data-desc="High-temp graphite lined">
+      <strong>Crucible C-300</strong>
+      <div style="color:var(--muted)">High-temp graphite lined</div>
+    </div>
+    <div class="highlight" data-title="Coolant LX" data-desc="Long-life metalworking coolant">
+      <strong>Coolant LX</strong>
+      <div style="color:var(--muted)">Long-life metalworking coolant</div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section id="cases" class="section">
+  <div class="title">Case Studies</div>
+  <div class="underline"></div>
+  <div class="case"><strong>Foundry Efficiency Upgrade</strong><p style="color:var(--muted);margin-top:8px">Reduced downtime by 23% through tuned dosing & control systems.</p></div>
+  <div class="case"><strong>Valve Retrofit Project</strong><p style="color:var(--muted);margin-top:8px">Replaced legacy valves to improve safety and reduce leakage.</p></div>
+  <div class="case"><strong>Lubrication Program</strong><p style="color:var(--muted);margin-top:8px">Custom lubrication program extended asset life.</p></div>
+</section>
+
+<!-- TRUSTED BY (AFTER CASE STUDIES) -->
+<div class="trusted-section" aria-hidden="false">
+  <div class="trusted-title">Trusted By</div>
+  <div class="trusted-carousel" role="list">
+    <div class="trusted-track" role="list">
+      <div class="client-item" role="listitem">AVCON</div>
+      <div class="client-item" role="listitem">Morgan</div>
+      <div class="client-item" role="listitem">Red Diamond</div>
+      <div class="client-item" role="listitem">Chem Trend</div>
+      <div class="client-item" role="listitem">Dosatron</div>
+
+      <!-- duplicated for infinite loop -->
+      <div class="client-item" role="listitem">AVCON</div>
+      <div class="client-item" role="listitem">Morgan</div>
+      <div class="client-item" role="listitem">Red Diamond</div>
+      <div class="client-item" role="listitem">Chem Trend</div>
+      <div class="client-item" role="listitem">Dosatron</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+  <div class="title">Submit a Request</div>
+  <div class="underline"></div>
+  <div class="form-card">
+    <form id="leadForm" action="https://formspree.io/f/mrbonlar" method="POST">
+      <input name="name" id="nameField" placeholder="Your name" required />
+      <input name="email" id="emailField" type="email" placeholder="Email" required />
+      <input name="company" id="companyField" placeholder="Company name" />
+      <input name="phone" id="phoneField" placeholder="Phone (optional)" />
+      <textarea name="message" id="messageField" rows="5" placeholder="Message"></textarea>
+      <div style="display:flex;gap:12px;margin-top:10px">
+        <button class="btn btn-primary" type="submit" style="padding:18px 36px;font-size:16px">Submit a Request</button>
+        <a class="btn btn-ghost" href="https://wa.me/919095195647" target="_blank">Chat on WhatsApp</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ADMIN FULLPAGE & LOGIN (same file, opened by #admin) -->
+<section id="admin" class="admin-fullpage" aria-hidden="true">
+  <div class="admin-login-wrap" id="adminLoginWrap">
+    <h2>Admin Login</h2>
+    <p style="color:var(--muted);margin-bottom:12px">Enter admin credentials to view leads.</p>
+    <label style="font-weight:700;font-size:13px">Username</label>
+    <input id="loginUser" placeholder="Username" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px" />
+    <label style="font-weight:700;font-size:13px">Password</label>
+    <input id="loginPass" type="password" placeholder="Password" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);margin-bottom:12px" />
+    <div style="display:flex;gap:10px;align-items:center">
+      <button id="loginBtn" class="btn btn-primary" style="padding:10px 18px">Login</button>
+      <button id="cancelLogin" class="btn btn-ghost" style="padding:10px 14px">Cancel</button>
+    </div>
+    <div id="loginError" style="color:#b91c1c;margin-top:10px;display:none"></div>
+  </div>
+
+  <div id="adminDashboard" class="admin-dashboard" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="font-weight:900;font-size:20px">Admin — Leads Dashboard</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="adminFilterTop" placeholder="Search leads..." style="padding:8px;border-radius:8px;border:1px solid var(--border)" />
+        <button id="adminLogout" class="btn btn-ghost">Logout</button>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
+      <button id="exportCSV_top" style="padding:8px 12px;border-radius:8px;background:var(--accent);color:#fff;border:none">Export CSV</button>
+      <button id="clearLeads_top" style="padding:8px 12px;border-radius:8px;background:#eee;border:none">Clear</button>
+    </div>
+
+    <div class="admin-leads" id="leadListAdmin" style="margin-top:18px"></div>
+  </div>
+</section>
+
+<!-- PRODUCT MODAL -->
+<div class="modal" id="productModal" aria-hidden="true">
+  <div class="card" role="dialog" aria-modal="true">
+    <button id="closeModal" title="Close">✕</button>
+    <h3 id="modalTitle">Product</h3>
+    <p id="modalDesc"></p>
+    <div style="margin-top:14px;display:flex;gap:10px">
+      <button id="enquireProduct" class="btn btn-primary">Enquire</button>
+      <button id="modalCloseGhost" class="btn btn-ghost">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK MENU -->
+<div class="quick-menu">
+  <a class="quick-btn" href="tel:9095195647">📞 Call</a>
+  <a class="quick-btn wh" href="https://wa.me/919095195647" target="_blank">💬 WhatsApp</a>
+  <a class="quick-btn" href="mailto:gokilavaratharaj142@gmail.com">✉️ Email</a>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar" aria-hidden="true">
+  <a class="link" href="#products">Products</a>
+  <a class="link" href="#contact">Contact</a>
+  <a class="link" href="#cases">Case Studies</a>
+  <a class="link" href="#top" id="backTop">↑ Back to Top</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-wrap">
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="#who">About</a>
+      <a href="#investors">Investors</a>
+    </div>
+    <div class="footer-col">
+      <h5>Products</h5>
+      <a href="#products">Valves</a>
+      <a href="#products">Crucibles</a>
+      <a href="#products">Lubricants</a>
+    </div>
+    <div class="footer-col">
+      <h5>Services</h5>
+      <a href="#services">Industrial Supply</a>
+      <a href="#services">Automation</a>
+      <a href="#services">Consultancy</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <a href="tel:9095195647">📞 9095195647</a>
+      <a href="mailto:gokilavaratharaj142@gmail.com">✉ gokilavaratharaj142@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toastWrap" aria-hidden="true"></div>
+
+<script>
+/* ---------- Helpers ---------- */
+function showToast(text, duration = 3500) {
+  const wrap = document.getElementById('toastWrap');
+  if(!wrap) return;
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerText = text;
+  wrap.appendChild(t);
+  // animate in
+  requestAnimationFrame(()=> {
+    t.style.opacity = '1';
+    t.style.transform = 'translateY(0)';
+  });
+  setTimeout(()=> {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(10px)';
+    setTimeout(()=> { t.remove(); }, 350);
+  }, duration);
+}
+
+/* ---------- GSAP registration ---------- */
+gsap.registerPlugin(ScrollTrigger);
+
+/* ---------- Progress bar ---------- */
+(function(){
+  const bar = document.getElementById('scroll-progress');
+  function update(){
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = (window.scrollY / Math.max(1,total)) * 100;
+    gsap.to(bar, { width: pct + '%', duration: 0.12, ease: 'power1.out' });
+  }
+  window.addEventListener('scroll', update);
+  update();
+})();
+
+/* ---------- Hero parallax and rotation ---------- */
+(function(){
+  // Parallax on mouse
+  const right = document.querySelector('.hero-right img');
+  if(right){
+    window.addEventListener('mousemove', e => {
+      const cx = window.innerWidth/2, cy = window.innerHeight/2;
+      const dx = (e.clientX - cx) / cx;
+      const dy = (e.clientY - cy) / cy;
+      gsap.to(right, { x: dx * 6, y: dy * 4, duration: 0.9, ease: 'power1.out' });
+    });
+  }
+
+  // Smooth text rotation
+  const phrases = [
+    "Engineering Solutions for Modern Industries",
+    "Delivering Reliability for Industrial Operations",
+    "Precision. Performance. Industrial Excellence."
+  ];
+  const heading = document.getElementById('heroHeading');
+  if(heading){
+    let idx = 0;
+    function swap(n){
+      gsap.to(heading, { opacity: 0, y: 8, duration: .45, ease: 'power2.in', onComplete: () => {
+        heading.textContent = phrases[n];
+        gsap.to(heading, { opacity: 1, y: 0, duration: .55, ease: 'power2.out' });
+      }});
+    }
+    setInterval(()=> { idx = (idx + 1) % phrases.length; swap(idx); }, 5000);
+  }
+})();
+
+/* ---------- GSAP reveals ---------- */
+gsap.from('.pod',{y:12,opacity:0,duration:0.9,stagger:0.12,ease:'power3.out',scrollTrigger:{trigger:'.pods',start:'top 92%'}});
+gsap.from('.about-grid img',{y:12,opacity:0,duration:0.9,ease:'power3.out',scrollTrigger:{trigger:'.about-grid',start:'top 92%'}});
+gsap.from('.about-grid div:last-child',{y:12,opacity:0,duration:0.9,delay:0.06,ease:'power3.out',scrollTrigger:{trigger:'.about-grid',start:'top 92%'}});
+gsap.from('.service',{y:12,opacity:0,duration:0.9,stagger:0.08,ease:'power3.out',scrollTrigger:{trigger:'.services-grid',start:'top 90%'}});
+gsap.from('.highlight',{y:8,opacity:0,duration:.82,stagger:.06,ease:'power3.out',scrollTrigger:{trigger:'.highlights',start:'top 90%'}});
+gsap.from('.case',{y:8,opacity:0,duration:.82,stagger:.06,ease:'power3.out',scrollTrigger:{trigger:'#cases',start:'top 90%'}});
+
+/* ---------- Metrics counters ---------- */
+(function(){
+  const nums = document.querySelectorAll('.metric .num');
+  function animate(){
+    nums.forEach(el => {
+      if(el.dataset.animated) return;
+      const target = +el.dataset.target || 0;
+      gsap.fromTo(el, { innerText: 0 }, {
+        innerText: target,
+        duration: 1.6,
+        ease: 'power1.out',
+        snap: { innerText: 1 },
+        onUpdate(){ el.textContent = Math.floor(el.innerText); },
+        onStart(){ el.dataset.animated = '1'; }
+      });
+    });
+  }
+  ScrollTrigger.create({ trigger:'.metrics-row', start:'top 90%', onEnter: animate });
+})();
+
+/* ---------- Product Modal & Enquire auto-fill ---------- */
+(function(){
+  const highlights = document.querySelectorAll('.highlight');
+  const modal = document.getElementById('productModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const closeBtn = document.getElementById('closeModal');
+  const closeGhost = document.getElementById('modalCloseGhost');
+  const enquireBtn = document.getElementById('enquireProduct');
+  const messageField = document.getElementById('messageField');
+
+  highlights.forEach(h => {
+    h.addEventListener('click', () => {
+      const title = h.dataset.title || h.querySelector('strong')?.innerText || 'Product';
+      const desc = h.dataset.desc || h.querySelector('div')?.innerText || '';
+      modalTitle.textContent = title;
+      modalDesc.textContent = desc;
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+    });
+  });
+
+  closeBtn.addEventListener('click', ()=>{ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); });
+  closeGhost.addEventListener('click', ()=>{ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); });
+  modal.addEventListener('click', e=>{ if(e.target === modal) { modal.style.display='none'; modal.setAttribute('aria-hidden','true'); } });
+
+  enquireBtn.addEventListener('click', ()=>{
+    const title = modalTitle.textContent || '';
+    const desc = modalDesc.textContent || '';
+    if(messageField) messageField.value = `Enquiry: ${title} — ${desc}`;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+    document.querySelector('#contact').scrollIntoView({behavior:'smooth'});
+    setTimeout(()=> { if(messageField) messageField.focus(); }, 600);
+  });
+})();
+
+/* ---------- Leads module (localStorage) ---------- */
+const Leads = (function(){
+  const KEY = 'bm_leads_v5';
+  function safeParse(s){ try{return JSON.parse(s);}catch(e){return[];} }
+  function get(){ return safeParse(localStorage.getItem(KEY) || '[]'); }
+  function save(lead){ const arr=get(); arr.unshift(lead); localStorage.setItem(KEY,JSON.stringify(arr)); renderLeadsAdmin(); }
+  function clearAll(){ localStorage.removeItem(KEY); renderLeadsAdmin(); }
+  function exportCSV(filename='leads.csv'){
+    const arr=get();
+    if(!arr.length){ alert('No leads to export.'); return; }
+    const headers = ['time','name','email','phone','company','message'];
+    const rows = [headers.join(',')];
+    arr.forEach(r => {
+      const vals = headers.map(h => {
+        const v = r[h] == null ? '' : String(r[h]).replace(/"/g,'""');
+        return `"${v}"`;
+      });
+      rows.push(vals.join(','));
+    });
+    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
+  return { get, save, clear: clearAll, exportCSV };
+})();
+
+function renderLeadsAdmin(filter=''){
+  const el = document.getElementById('leadListAdmin');
+  if(!el) return;
+  const arr = Leads.get();
+  const f = (filter||'').toLowerCase();
+  const filtered = arr.filter(l => {
+    if(!f) return true;
+    return (l.name + ' ' + l.email + ' ' + l.company + ' ' + l.message).toLowerCase().includes(f);
+  });
+  el.innerHTML = filtered.map(l => {
+    return `<div style="background:#fff;padding:12px;border-radius:8px;margin-bottom:10px;border:1px solid rgba(0,0,0,0.04);box-shadow:0 10px 20px rgba(0,0,0,0.04)">
+      <div style="font-weight:800">${l.name||'—'}</div>
+      <div style="color:var(--muted);font-size:13px">${l.email||''}${l.phone? ' | ' + l.phone: ''}${l.company? ' | ' + l.company: ''}</div>
+      <div style="margin-top:8px">${l.message||''}</div>
+      <div style="margin-top:8px;font-size:12px;color:var(--muted)">${new Date(l.time).toLocaleString()}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ---------- Form handling (submit -> Formspree + save locally + toast) ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // render admin if already logged
+  const token = sessionStorage.getItem('bm_admin_auth');
+  if(token === 'ok') showAdminDashboard();
+
+  // render leads initially
+  renderLeadsAdmin();
+
+  // form submit
+  const form = document.getElementById('leadForm');
+  if(form){
+    form.addEventListener('submit', e=>{
+      // allow default Formspree to proceed, but also save locally and show toast
+      const fd = new FormData(form);
+      const lead = {
+        time: Date.now(),
+        name: fd.get('name') || '',
+        email: fd.get('email') || '',
+        phone: fd.get('phone') || '',
+        company: fd.get('company') || '',
+        message: fd.get('message') || ''
+      };
+      // save locally
+      Leads.save(lead);
+      // show toast
+      showToast('✓ Thank You...Request received — we’ll contact you soon.');
+      // do not prevent default so Formspree still works
+    });
+  }
+
+  // admin form actions (top admin controls)
+  const adminFilterTop = document.getElementById('adminFilterTop');
+  if(adminFilterTop) adminFilterTop.addEventListener('input', e=> renderLeadsAdmin(e.target.value));
+  const exportTop = document.getElementById('exportCSV_top');
+  if(exportTop) exportTop.addEventListener('click', ()=> Leads.exportCSV());
+  const clearTop = document.getElementById('clearLeads_top');
+  if(clearTop) clearTop.addEventListener('click', ()=> { if(confirm('Clear all leads?')) Leads.clear(); });
+
+  // quick menu also saves quick action leads
+  document.querySelectorAll('.quick-menu a').forEach(a=>{
+    a.addEventListener('click', ()=> {
+      Leads.save({ time: Date.now(), name: 'Quick Action', email:'', phone:'', company:'', message: a.textContent || '' });
+    });
+  });
+});
+
+/* ---------- Admin Login / Dashboard in same file ---------- */
+(function(){
+  const adminWrap = document.getElementById('adminLoginWrap');
+  const adminSection = document.getElementById('admin');
+  const adminDashboard = document.getElementById('adminDashboard');
+  const loginBtn = document.getElementById('loginBtn');
+  const cancelLogin = document.getElementById('cancelLogin');
+  const loginError = document.getElementById('loginError');
+  const logoutBtn = document.getElementById('adminLogout');
+  const exportCSV_top = document.getElementById('exportCSV_top');
+  const clearLeads_top = document.getElementById('clearLeads_top');
+
+  function showAdminLogin(){
+    adminSection.style.display = 'block';
+    adminSection.setAttribute('aria-hidden','false');
+    adminWrap.style.display = 'block';
+    adminDashboard.style.display = 'none';
+    document.querySelector('html,body').scrollTop = adminSection.offsetTop;
+  }
+
+  window.showAdminDashboard = function(){
+    adminSection.style.display = 'block';
+    adminSection.setAttribute('aria-hidden','false');
+    adminWrap.style.display = 'none';
+    adminDashboard.style.display = 'block';
+    renderLeadsAdmin();
+    document.querySelector('html,body').scrollTop = adminSection.offsetTop;
+  }
+
+  // if URL has #admin, open login
+  if(location.hash === '#admin') {
+    showAdminLogin();
+  }
+
+  // admin nav click -> open login
+  const adminNav = document.getElementById('adminNav');
+  if(adminNav){
+    adminNav.addEventListener('click', (e)=>{
+      e.preventDefault();
+      history.replaceState(null, '', '#admin');
+      showAdminLogin();
+    });
+  }
+
+  // cancel login -> hide admin section
+  if(cancelLogin){
+    cancelLogin.addEventListener('click', ()=>{
+      adminSection.style.display = 'none';
+      adminSection.setAttribute('aria-hidden','true');
+      history.replaceState(null, '', ' ');
+    });
+  }
+
+  // login logic (username admin / password 123)
+  if(loginBtn){
+    loginBtn.addEventListener('click', ()=>{
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value.trim();
+      loginError.style.display = 'none';
+      if(user === 'admin' && pass === '123'){
+        // success
+        sessionStorage.setItem('bm_admin_auth','ok');
+        showAdminDashboard();
+      } else {
+        loginError.innerText = 'Invalid credentials — please check username and password.';
+        loginError.style.display = 'block';
+      }
+    });
+  }
+
+  // logout
+  if(logoutBtn){
+    logoutBtn.addEventListener('click', ()=>{
+      sessionStorage.removeItem('bm_admin_auth');
+      // hide admin
+      document.getElementById('admin').style.display = 'none';
+      document.getElementById('admin').setAttribute('aria-hidden','true');
+      history.replaceState(null, '', ' ');
+      showToast('Logged out of admin.');
+    });
+  }
+
+  // hook top export/clear also
+  if(exportCSV_top) exportCSV_top.addEventListener('click', ()=> Leads.exportCSV());
+  if(clearLeads_top) clearLeads_top.addEventListener('click', ()=> { if(confirm('Clear all leads?')) Leads.clear(); });
+
+})();
+
+/* ---------- Mega menu & industries dropdown ---------- */
+(function(){
+  const sol = document.querySelector('.solutions-link');
+  const navInner = document.querySelector('.main-nav-inner');
+
+  const mega = document.createElement('div');
+  mega.className = 'mega-menu';
+  mega.style.display = 'none';
+  mega.style.position = 'absolute';
+  mega.style.top = '100%';
+  mega.style.left = '0';
+  mega.style.width = '100%';
+  mega.style.background = '#fff';
+  mega.style.border = '1px solid var(--border)';
+  mega.style.boxShadow = '0 20px 40px rgba(11,31,51,0.08)';
+  mega.style.padding = '18px 24px';
+  mega.innerHTML = `<div style="max-width:var(--container);margin:0 auto"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding:18px 0">
+    <div><div style="font-weight:900;color:var(--accent);margin-bottom:10px">Industrial Equipment</div><div style="color:var(--muted);margin-bottom:6px">Valves & Actuation</div><div style="color:var(--muted);margin-bottom:6px">Crucibles & Melting</div><div style="color:var(--muted)">Foundry Consumables</div></div>
+    <div><div style="font-weight:900;color:var(--accent);margin-bottom:10px">Automation</div><div style="color:var(--muted);margin-bottom:6px">Dosing Pumps</div><div style="color:var(--muted);margin-bottom:6px">Control Systems</div><div style="color:var(--muted)">Process Monitoring</div></div>
+    <div><div style="font-weight:900;color:var(--accent);margin-bottom:10px">Services</div><div style="color:var(--muted);margin-bottom:6px">Consultancy</div><div style="color:var(--muted);margin-bottom:6px">On-Site Support</div><div style="color:var(--muted)">After-Sales</div></div>
+  </div></div>`;
+  navInner.appendChild(mega);
+
+  if(sol){
+    sol.addEventListener('mouseenter', ()=> { mega.style.display='block'; });
+    sol.addEventListener('mouseleave', ()=> { setTimeout(()=>{ if(!mega.matches(':hover')) mega.style.display='none'; }, 120); });
+    mega.addEventListener('mouseleave', ()=> { mega.style.display='none'; });
+    sol.addEventListener('click', e=> { if(window.innerWidth <= 900){ e.preventDefault(); mega.style.display = (mega.style.display==='block') ? 'none' : 'block'; } });
+  }
+
+  // industries dropdown
+  const indLink = document.querySelector('.industries-link');
+  const indDrop = document.createElement('div');
+  indDrop.className = 'dropdown';
+  indDrop.style.display = 'none';
+  indDrop.style.position = 'absolute';
+  indDrop.style.top = '100%';
+  indDrop.style.left = '0';
+  indDrop.style.padding = '10px';
+  indDrop.style.width = '520px';
+  indDrop.style.background = '#fff';
+  indDrop.style.border = '1px solid var(--border)';
+  indDrop.style.boxShadow = '0 20px 40px rgba(11,31,51,0.08)';
+  indDrop.innerHTML = `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px">
+    <div style="padding:10px;border-radius:8px;background:#fafbfc;border:1px solid var(--border)">Foundry & Metal Casting</div>
+    <div style="padding:10px;border-radius:8px;background:#fafbfc;border:1px solid var(--border)">Automotive Components</div>
+    <div style="padding:10px;border-radius:8px;background:#fafbfc;border:1px solid var(--border)">Chemical Processing</div>
+    <div style="padding:10px;border-radius:8px;background:#fafbfc;border:1px solid var(--border)">Manufacturing & Machinery</div>
+    <div style="padding:10px;border-radius:8px;background:#fafbfc;border:1px solid var(--border)">Lubrication Plants</div>
+    <div style="padding:10px;border-radius:8px;background:#fafbfc;border:1px solid var(--border)">Industrial Utilities</div>
+  </div>`;
+  navInner.appendChild(indDrop);
+
+  if(indLink){
+    indLink.addEventListener('mouseenter', ()=> { indDrop.style.display='block'; });
+    indLink.addEventListener('mouseleave', ()=> { setTimeout(()=>{ if(!indDrop.matches(':hover')) indDrop.style.display='none'; }, 120); });
+    indDrop.addEventListener('mouseleave', ()=> { indDrop.style.display='none'; });
+    indLink.addEventListener('click', e=> { if(window.innerWidth <= 900){ e.preventDefault(); indDrop.style.display = (indDrop.style.display==='block') ? 'none' : 'block'; } });
+  }
+})();
+
+/* ---------- Sidebar visibility using IntersectionObserver ---------- */
+(function(){
+  const sidebar = document.getElementById('sidebar');
+  const hero = document.querySelector('.hero');
+  const footer = document.querySelector('footer');
+  if(!sidebar || !hero) return;
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){ sidebar.classList.remove('visible'); sidebar.setAttribute('aria-hidden','true'); }
+      else { sidebar.classList.add('visible'); sidebar.setAttribute('aria-hidden','false'); }
+    });
+  }, { threshold: 0 });
+  obs.observe(hero);
+  if(footer){
+    const obsF = new IntersectionObserver(entries=>{ entries.forEach(en=>{ if(en.isIntersecting){ sidebar.classList.remove('visible'); sidebar.setAttribute('aria-hidden','true'); } }); }, { threshold: 0.1 });
+    obsF.observe(footer);
+  }
+  const backTop = document.getElementById('backTop');
+  if(backTop) backTop.addEventListener('click', e=>{ e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+
+/* ---------- Respect reduced motion ---------- */
+if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  gsap.globalTimeline.timeScale(0.001);
+}
+</script>
+</body>
+</html>
+
+
