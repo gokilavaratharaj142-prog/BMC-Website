@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BEST MARKETING COMPANY — Engineering Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+<!-- GSAP & Lenis -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+
+<style>
+:root{
+  /* COLOR PALETTE: Coffee & Cream (Trendy/Fashionable) */
+  --bg:#F9F5EB; /* Rich Vanilla Cream */
+  --surface:#FFFFFF;
+  --text:#3E2723; /* Dark Espresso */
+  --text-light:#6D4C41; /* Mocha */
+  --accent:#8D6E63; /* Latte/Light Coffee */
+  --accent-dark:#4E342E; /* Dark Roast */
+  --navy:#2C1810; /* Deepest Coffee Brown */
+  --border:rgba(62, 39, 35, 0.08);
+  --radius:8px; /* Slightly softer radius */
+  --container:1400px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Manrope', sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block;object-fit:cover}
+
+/* TYPOGRAPHY - Trendy & Sharp */
+h1,h2,h3,.hero-h,.title{
+  font-family:'Manrope', sans-serif; 
+  font-weight:800; 
+  letter-spacing:-0.03em; 
+  color:var(--text);
+}
+.hero-h {
+  background: linear-gradient(to right, var(--text), var(--text-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.mono{font-family:'Syncopate', sans-serif; text-transform:uppercase; letter-spacing:0.1em; font-weight:700;}
+
+/* CUSTOM CURSOR */
+.cursor-dot{width:8px;height:8px;background:var(--accent-dark);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transition:transform 0.1s; top:0; left:0;}
+.cursor-outline{width:40px;height:40px;border:1px solid var(--accent-dark);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s, background 0.2s; top:0; left:0;}
+
+/* SCROLL PROGRESS */
+#scroll-progress{position:fixed;top:0;left:0;height:4px;width:0;background:var(--accent-dark);z-index:10001;}
+
+/* TOPBAR */
+.topbar{
+  background:var(--navy); color:#F9F5EB; padding:8px 0; font-size:12px; position:relative; z-index:1001;
+}
+.topbar-inner{
+  max-width:var(--container); margin:0 auto; padding:0 40px; display:flex; justify-content:space-between; align-items:center;
+}
+.topbar a{opacity:0.8; transition:opacity 0.2s;}
+.topbar a:hover{opacity:1;}
+
+/* NAV */
+.main-nav{
+  position:fixed;top:34px;left:0;width:100%;z-index:1000;
+  padding:20px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background:transparent;
+}
+.main-nav.scrolled{
+  background:rgba(249, 245, 235, 0.95); /* Rich Vanilla Transparent */
+  backdrop-filter:blur(10px);
+  padding:15px 40px;
+  box-shadow:0 4px 20px rgba(62, 39, 35, 0.05);
+  top:0; /* Hide topbar on scroll */
+}
+.brand{font-weight:900;font-size:24px;letter-spacing:-0.04em; color:var(--text);}
+.brand span{color:var(--accent);}
+.nav-links{display:flex;gap:40px;}
+.nav-links a{
+  font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;position:relative; color:var(--text);
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--accent);transition:width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.nav-links a:hover::after{width:100%;}
+.nav-btn{
+  padding:12px 24px; background:var(--text); color:var(--bg); font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; border-radius:var(--radius); transition:all 0.3s;
+}
+.nav-btn:hover{background:var(--accent); color:white;}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 5vw;
+  position:relative;
+  overflow:hidden;
+  padding-top:100px;
+}
+.hero-bg-text{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:18vw; font-weight:900; color:rgba(0,0,0,0.03);
+  white-space:nowrap; pointer-events:none; font-family:'Syncopate', sans-serif;
+  z-index:0;
+}
+.hero-content{
+  position:relative; z-index:2; max-width:1200px;
+}
+.hero-label{
+  color:var(--accent); font-weight:700; letter-spacing:0.2em; font-size:14px; margin-bottom:20px; text-transform:uppercase; display:inline-block; border-bottom:1px solid var(--accent); padding-bottom:4px;
+}
+.hero-h{
+  font-size:clamp(50px, 8vw, 110px); 
+  line-height:0.95; 
+  color:var(--text);
+  margin-bottom:40px;
+}
+.hero-h span{color:var(--accent); font-style:italic;}
+.hero-sub{
+  max-width:500px; font-size:20px; color:var(--text-light); line-height:1.6; margin-bottom:50px; border-left:2px solid var(--accent); padding-left:20px;
+}
+.hero-btns{display:flex; gap:20px;}
+.btn{
+  padding:18px 36px; border-radius:var(--radius); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; font-size:14px; transition:all 0.3s; cursor:pointer; display:inline-flex; align-items:center; gap:10px;
+}
+.btn-primary{background:var(--accent); color:white; border:1px solid var(--accent);}
+.btn-primary:hover{background:var(--accent-dark); border-color:var(--accent-dark);}
+.btn-outline{background:transparent; color:var(--text); border:1px solid var(--text);}
+.btn-outline:hover{background:var(--text); color:var(--bg);}
+
+/* METRICS STRIP */
+.metrics-strip{
+  padding:80px 5vw; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border);
+}
+.metric{text-align:left;}
+.metric-num{font-size:60px; font-weight:800; color:var(--text); line-height:1; font-family:'Syncopate', sans-serif;}
+.metric-lbl{font-size:14px; color:var(--text-light); text-transform:uppercase; letter-spacing:0.1em; margin-top:10px;}
+
+/* SECTIONS */
+.section{padding:140px 5vw; max-width:var(--container); margin:0 auto; position:relative;}
+.section-header{
+  margin-bottom:80px; display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border); padding-bottom:40px;
+}
+.section-title{font-size:50px; font-weight:800; letter-spacing:-0.02em; line-height:1;}
+.section-desc{max-width:400px; color:var(--text-light); text-align:right; font-size:16px; line-height:1.6;}
+
+/* PODS / FEATURES */
+.pods-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border);}
+.pod{background:var(--bg); padding:50px; transition:background 0.3s;}
+.pod:hover{background:var(--surface);}
+.pod-icon{font-size:30px; color:var(--accent); margin-bottom:20px;}
+.pod h3{font-size:22px; margin-bottom:15px;}
+.pod p{color:var(--text-light); line-height:1.6;}
+
+/* ABOUT GRID */
+.about-grid{display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;}
+.about-img{
+  height:600px; width:100%; object-fit:cover; border-radius:var(--radius); filter:grayscale(100%); transition:filter 0.5s;
+}
+.about-grid:hover .about-img{filter:grayscale(0%);}
+.about-content h3{font-size:32px; margin-bottom:30px; line-height:1.3;}
+.about-content p{color:var(--text-light); font-size:18px; line-height:1.7; margin-bottom:20px;}
+
+/* PRODUCTS / HIGHLIGHTS */
+.products-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:40px;}
+.product-card{
+  background:var(--surface); padding:40px; border-radius:var(--radius); transition:transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+  border:1px solid transparent; position:relative; overflow:hidden;
+}
+.product-card:hover{transform:translateY(-15px); border-color:var(--border); box-shadow:0 30px 60px rgba(0,0,0,0.05);}
+.product-card::before{
+  content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform 0.4s;
+}
+.product-card:hover::before{transform:scaleX(1);}
+.product-card h4{font-size:24px; margin-bottom:10px;}
+.product-card .meta{color:var(--accent); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:20px; display:block;}
+.product-card p{color:var(--text-light); font-size:15px; line-height:1.6; margin-bottom:30px;}
+.link-arrow{font-weight:700; font-size:14px; text-transform:uppercase; letter-spacing:0.05em; display:flex; align-items:center; gap:10px;}
+
+/* SERVICES LIST */
+.service-row{
+  display:grid; grid-template-columns:1fr 3fr 1fr; border-top:1px solid var(--border); padding:50px 0; align-items:center; transition:background 0.3s;
+}
+.service-row:hover{background:var(--surface);}
+.s-num{font-family:'Syncopate', sans-serif; font-size:14px; color:var(--accent); font-weight:700;}
+.s-name{font-size:32px; font-weight:800; color:var(--text);}
+.s-icon{justify-self:end; font-size:24px; opacity:0; transform:translateX(-20px); transition:all 0.3s;}
+.service-row:hover .s-icon{opacity:1; transform:translateX(0);}
+
+/* CASE STUDIES */
+.cases-scroll{display:flex; gap:40px; overflow-x:auto; padding-bottom:40px; scrollbar-width:none;}
+.cases-scroll::-webkit-scrollbar{display:none;}
+.case-card{
+  min-width:400px; background:var(--surface); padding:40px; border-radius:var(--radius);
+}
+.case-card h4{font-size:20px; margin-bottom:15px;}
+.case-card p{color:var(--text-light); line-height:1.6;}
+
+/* MARQUEE */
+.marquee-wrap{background:var(--navy); padding:80px 0; overflow:hidden;}
+.marquee-track{display:flex; gap:100px; animation:scroll 40s linear infinite;}
+.client-logo{font-family:'Syncopate', sans-serif; font-size:30px; font-weight:900; color:rgba(255,255,255,0.2); white-space:nowrap;}
+@keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
+
+/* CONTACT */
+.contact-section{background:var(--surface);}
+.contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:80px;}
+.form-group{margin-bottom:30px;}
+.form-group label{display:block; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px; color:var(--text-light);}
+.form-input{
+  width:100%; padding:20px; background:var(--bg); border:none; border-bottom:2px solid var(--border); font-family:'Manrope', sans-serif; font-size:16px; transition:all 0.3s;
+}
+.form-input:focus{outline:none; border-bottom-color:var(--accent); background:white;}
+
+/* FOOTER */
+footer{background:var(--text); color:var(--bg); padding:100px 5vw 40px;}
+.footer-big{font-family:'Syncopate', sans-serif; font-size:12vw; font-weight:900; line-height:0.8; opacity:0.1; margin-bottom:60px;}
+.footer-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:40px; margin-bottom:80px;}
+.f-col h5{color:var(--accent); margin-bottom:20px; font-size:14px; text-transform:uppercase; letter-spacing:0.1em;}
+.f-col a{display:block; color:rgba(255,255,255,0.6); margin-bottom:12px; transition:color 0.3s;}
+.f-col a:hover{color:white;}
+.footer-btm{border-top:1px solid rgba(255,255,255,0.1); padding-top:40px; display:flex; justify-content:space-between; font-size:14px; opacity:0.4;}
+
+/* TRUSTED GRID - Stunning Update */
+.trusted-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border); /* Creates the grid lines */
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.trust-item {
+  background: var(--bg);
+  height: 200px; /* Taller for more elegance */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syncopate', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text-light);
+  letter-spacing: 0.05em;
+  /* FIX: Avoid 'all' to prevent conflict with GSAP animations */
+  transition: background-color 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+              color 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+              letter-spacing 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+/* Hover Effect: Subtle Scale & Tracking */
+.trust-item:hover {
+  color: var(--navy);
+  background: #fff;
+  letter-spacing: 0.2em;
+}
+/* Hover Effect: Corner Accents */
+.trust-item::before, .trust-item::after {
+  content: '';
+  position: absolute;
+  width: 10px; height: 10px;
+  border: 1px solid transparent;
+  transition: all 0.4s;
+}
+.trust-item::before { top: 15px; left: 15px; border-top-color: transparent; border-left-color: transparent; }
+.trust-item::after { bottom: 15px; right: 15px; border-bottom-color: transparent; border-right-color: transparent; }
+
+.trust-item:hover::before { border-top-color: var(--accent); border-left-color: var(--accent); }
+.trust-item:hover::after { border-bottom-color: var(--accent); border-right-color: var(--accent); }
+
+@media (max-width: 1024px) {
+  .trusted-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .trusted-grid { grid-template-columns: repeat(2, 1fr); }
+  .trust-item { height: 140px; font-size: 14px; }
+}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .hero-h{font-size:60px;}
+  .about-grid, .contact-grid{grid-template-columns:1fr;}
+  .products-grid, .pods-grid{grid-template-columns:1fr;}
+  .service-row{grid-template-columns:1fr; gap:10px;}
+  .s-icon{display:none;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor-dot"></div>
+<div class="cursor-outline"></div>
+
+<!-- Scroll Progress -->
+<div id="scroll-progress"></div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div>BMC Share: ₹281.40 (-0.03)</div>
+    <div style="display:flex; gap:20px;">
+      <a href="#">Careers</a>
+      <a href="#">News</a>
+      <a href="#">Global (EN)</a>
+    </div>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav class="main-nav">
+  <a href="#" class="brand">BMC <span>CORP</span></a>
+  <div class="nav-links">
+    <a href="#who">Who We Are</a>
+    <a href="#services">Services</a>
+    <a href="#products">Products</a>
+    <a href="avcon.html">Avcon</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="#contact" class="nav-btn">Get Quote</a>
+</nav>
+
+<!-- Hero -->
+<header class="hero" id="top">
+  <div class="hero-bg-text">ENGINEERING</div>
+  <div class="hero-content">
+    <div class="hero-label">Since 1990</div>
+    <h1 class="hero-h">Engineering <br><span>Solutions</span> For <br>Modern Industry</h1>
+    <p class="hero-sub">We supply valves, crucibles, dosing systems, and automation for the world's most demanding sectors.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn btn-primary">Explore Products</a>
+      <a href="#services" class="btn btn-outline">Our Services</a>
+    </div>
+  </div>
+</header>
+
+<!-- Metrics -->
+<div class="metrics-strip">
+  <div class="metric">
+    <div class="metric-num">350+</div>
+    <div class="metric-lbl">Active Clients</div>
+  </div>
+  <div class="metric">
+    <div class="metric-num">45</div>
+    <div class="metric-lbl">Years Experience</div>
+  </div>
+  <div class="metric">
+    <div class="metric-num">120</div>
+    <div class="metric-lbl">Projects Done</div>
+  </div>
+</div>
+
+<!-- Pods / Features -->
+<div class="pods-grid">
+  <div class="pod">
+    <div class="pod-icon">◉</div>
+    <h3>Trusted Supply</h3>
+    <p>Quality parts, timely delivery. We ensure your supply chain never breaks.</p>
+  </div>
+  <div class="pod">
+    <div class="pod-icon">◈</div>
+    <h3>Expert Support</h3>
+    <p>Commissioning & field service. Our engineers are with you on-site.</p>
+  </div>
+  <div class="pod">
+    <div class="pod-icon">❖</div>
+    <h3>Sector Expertise</h3>
+    <p>Specialized in Foundry, Metal, and heavy Industrial applications.</p>
+  </div>
+</div>
+
+<!-- About -->
+<section id="who" class="section">
+  <div class="section-header">
+    <h2 class="section-title">Who We Are</h2>
+    <div class="section-desc">Reliable partners in industrial automation and supply since 1990.</div>
+  </div>
+  <div class="about-grid">
+    <img src="about.jpg" alt="About BMC" class="about-img" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800'">
+    <div class="about-content">
+      <h3>We help keep operations reliable — from product selection to on-site commissioning.</h3>
+      <p>BEST MARKETING COMPANY is a trusted distributor of valves, crucibles, dosing systems, lubricants and automation equipment across India.</p>
+      <p>Our technical team supports installation, performance tuning, and after-sales service so you experience minimal downtime.</p>
+      <a href="#contact" class="link-arrow">Read Our Story →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section id="services" class="section">
+  <div class="section-header">
+    <h2 class="section-title">Our Services</h2>
+    <div class="section-desc">End-to-end industrial solutions tailored to your needs.</div>
+  </div>
+  
+  <div class="service-row">
+    <div class="s-num">01</div>
+    <div class="s-name">Industrial Supply</div>
+    <div class="s-icon">→</div>
+  </div>
+  <div class="service-row">
+    <div class="s-num">02</div>
+    <div class="s-name">Automation & Dosing</div>
+    <div class="s-icon">→</div>
+  </div>
+  <div class="service-row">
+    <div class="s-num">03</div>
+    <div class="s-name">Technical Consultancy</div>
+    <div class="s-icon">→</div>
+  </div>
+</section>
+
+<!-- Products -->
+<section id="products" class="section" style="background:var(--surface);">
+  <div class="section-header">
+    <h2 class="section-title">Product Highlights</h2>
+    <div class="section-desc">Top-tier industrial components.</div>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <span class="meta">Valves</span>
+      <h4>Industrial Valve A1</h4>
+      <p>Robust Industrial Ball Valve — engineered for durability in high-pressure environments.</p>
+      <a href="#" class="link-arrow">View Specs →</a>
+    </div>
+    <div class="product-card">
+      <span class="meta">Crucibles</span>
+      <h4>Crucible C-300</h4>
+      <p>High-temp graphite lined crucibles designed for superior thermal conductivity.</p>
+      <a href="#" class="link-arrow">View Specs →</a>
+    </div>
+    <div class="product-card">
+      <span class="meta">Fluids</span>
+      <h4>Coolant LX</h4>
+      <p>Long-life metalworking coolant that extends tool life and improves finish.</p>
+      <a href="#" class="link-arrow">View Specs →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Case Studies -->
+<section class="section">
+  <div class="section-header">
+    <h2 class="section-title">Case Studies</h2>
+    <div class="section-desc">Real results from real projects.</div>
+  </div>
+  <div class="cases-scroll">
+    <div class="case-card">
+      <h4>Foundry Efficiency Upgrade</h4>
+      <p>Reduced downtime by 23% through tuned dosing & control systems.</p>
+    </div>
+    <div class="case-card">
+      <h4>Valve Retrofit Project</h4>
+      <p>Replaced legacy valves to improve safety and reduce leakage across the plant.</p>
+    </div>
+    <div class="case-card">
+      <h4>Lubrication Program</h4>
+      <p>Custom lubrication program extended asset life by 2 years.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THEY TRUSTED US SECTION -->
+<section class="section" style="padding-bottom: 0;">
+  <div class="section-header" style="display:block; text-align:left; border:none; margin-bottom:60px;">
+    <h2 class="section-title mono" style="font-size: clamp(30px, 5vw, 60px); margin-bottom: 10px;">THEY TRUSTED US</h2>
+    <p style="font-size: 24px; color: var(--accent); font-family: 'Manrope', sans-serif; font-style: italic;">and many more</p>
+  </div>
+  
+  <div class="trusted-grid">
+    <div class="trust-item">AVCON</div>
+    <div class="trust-item">MORGAN</div>
+    <div class="trust-item">FOSECO</div>
+    <div class="trust-item">LUBRIK</div>
+    <div class="trust-item">SIEMENS</div>
+    <div class="trust-item">TATA STEEL</div>
+    <div class="trust-item">RELIANCE</div>
+    <div class="trust-item">L&T</div>
+    <div class="trust-item">BHARAT FORGE</div>
+    <div class="trust-item">JINDAL</div>
+    <div class="trust-item">ADANI</div>
+    <div class="trust-item">VEDANTA</div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="section contact-section">
+  <div class="contact-grid">
+    <div>
+      <h2 class="section-title" style="margin-bottom:30px;">Let's Talk Business</h2>
+      <p style="margin-bottom:40px; color:var(--text-light); font-size:18px;">Ready to optimize your industrial operations? Our team is here to help.</p>
+      <div style="margin-bottom:20px;">
+        <strong>Email:</strong><br> sales@bmc-india.com
+      </div>
+      <div>
+        <strong>Phone:</strong><br> +91 987 654 3210
+      </div>
+    </div>
+    <form>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-input" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-input" placeholder="Enter your email">
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <input type="text" class="form-input" placeholder="How can we help?">
+      </div>
+      <button type="button" class="btn btn-primary" style="width:100%; justify-content:center;">Send Message</button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-big">BMC CORP</div>
+  <div class="footer-grid">
+    <div class="f-col">
+      <h5>Navigation</h5>
+      <a href="#who">Who We Are</a>
+      <a href="#services">Services</a>
+      <a href="#products">Products</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="f-col">
+      <h5>Products</h5>
+      <a href="#">Valves</a>
+      <a href="#">Actuators</a>
+      <a href="#">Crucibles</a>
+      <a href="#">Lubricants</a>
+    </div>
+    <div class="f-col">
+      <h5>Legal</h5>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Sitemap</a>
+    </div>
+    <div class="f-col">
+      <h5>Social</h5>
+      <a href="#">LinkedIn</a>
+      <a href="#">Twitter</a>
+      <a href="#">Facebook</a>
+    </div>
+  </div>
+  <div class="footer-btm">
+    <div>&copy; 2024 Best Marketing Company. All rights reserved.</div>
+    <div>Designed for Excellence</div>
+  </div>
+</footer>
+
+<script>
+// LENIS SCROLL
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  smooth: true,
+});
+function raf(time) {
+  lenis.raf(time);
+  ScrollTrigger.update();
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
+
+// SCROLL PROGRESS
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrolled / max) * 100;
+  document.getElementById('scroll-progress').style.width = progress + '%';
+  
+  // Nav background
+  if(scrolled > 50){
+    document.querySelector('.main-nav').classList.add('scrolled');
+  }else{
+    document.querySelector('.main-nav').classList.remove('scrolled');
+  }
+});
+
+// CURSOR
+const cursorDot = document.querySelector('.cursor-dot');
+const outline = document.querySelector('.cursor-outline');
+
+window.addEventListener('mousemove', (e) => {
+  const posX = e.clientX;
+  const posY = e.clientY;
+  
+  cursorDot.style.transform = `translate(${posX}px, ${posY}px)`;
+  
+  outline.animate({
+    left: `${posX}px`,
+    top: `${posY}px`
+  }, { duration: 500, fill: 'forwards' });
+});
+
+// Cursor Hover Effects
+document.querySelectorAll('a, button, .product-card, .pod, .service-row, .case-card, .trust-item').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    outline.style.width = '60px';
+    outline.style.height = '60px';
+    outline.style.background = 'rgba(141, 110, 99, 0.2)'; // Latte tint
+    outline.style.borderColor = 'transparent';
+  });
+  el.addEventListener('mouseleave', () => {
+    outline.style.width = '40px';
+    outline.style.height = '40px';
+    outline.style.background = 'transparent';
+    outline.style.borderColor = 'var(--accent-dark)';
+  });
+});
+
+// GSAP ANIMATIONS
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero Reveal
+const tl = gsap.timeline();
+tl.from(".hero-h", {y: 100, opacity: 0, duration: 1, ease: "power4.out"})
+  .from(".hero-sub", {y: 50, opacity: 0, duration: 1, ease: "power4.out"}, "-=0.5")
+  .from(".hero-btns", {y: 30, opacity: 0, duration: 0.8, ease: "power4.out"}, "-=0.5")
+  .from(".main-nav", {y: -50, opacity: 0, duration: 1, ease: "power2.out"}, "-=1");
+
+// Section Headers
+gsap.utils.toArray('.section-header').forEach(header => {
+  gsap.from(header, {
+    scrollTrigger: {trigger: header, start: "top 85%"},
+    y: 50, opacity: 0, duration: 1, ease: "power3.out"
+  });
+});
+
+// Products Stagger
+gsap.from(".product-card", {
+  scrollTrigger: {trigger: ".products-grid", start: "top 75%"},
+  y: 100, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power3.out"
+});
+
+// Metrics Count Up
+gsap.utils.toArray('.metric-num').forEach(num => {
+  gsap.from(num, {
+    scrollTrigger: {trigger: num, start: "top 85%"},
+    textContent: 0,
+    duration: 2,
+    ease: "power1.out",
+    snap: {textContent: 1},
+    stagger: 1
+  });
+});
+
+// TRUSTED GRID ANIMATION
+gsap.from(".trust-item", {
+  scrollTrigger: {
+    trigger: ".trusted-grid",
+    start: "top 90%",
+    toggleActions: "play none none reverse"
+  },
+  y: 30,
+  opacity: 0,
+  duration: 0.6,
+  stagger: 0.1,
+  ease: "power3.out"
+});
+
+</script>
+</body>
+</html>
