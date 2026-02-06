@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lubricants & Coolants — BMC Foundry Automation</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<style>
+:root{--bg:#F9F5EB;--surface:#FFFFFF;--text:#3E2723;--text-light:#6D4C41;--accent:#8D6E63;--accent-dark:#4E342E;--border:rgba(62,39,35,0.08);--radius:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+a:visited{color:inherit}
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;width:100%;background:#2C1810;color:#F9F5EB;padding:8px 0;font-size:12px;z-index:1001}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:center}
+.topbar a{opacity:.8;transition:opacity .2s}
+.topbar a:hover{opacity:1}
+
+/* HEADER NAV */
+.main-nav{position:fixed;top:40px;left:0;width:100%;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;z-index:1000;transition:all .4s cubic-bezier(0.16,1,0.3,1);background:rgba(249,245,235,.9);backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(62,39,35,.05)}
+.main-nav.scrolled{background:rgba(249,245,235,.95)}
+.brand{font-weight:900;font-size:24px;letter-spacing:-0.04em;color:var(--text)}
+.nav-links{display:flex;gap:40px}
+.nav-links a{font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;position:relative;color:var(--text)}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--accent);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.nav-btn{padding:12px 24px;background:var(--text);color:var(--bg);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;border-radius:8px;transition:all .3s}
+.nav-btn:hover{background:var(--accent);color:#fff}
+.dropdown{position:relative}
+.dropdown > a{display:flex;align-items:center;gap:6px}
+.dropdown-content{position:absolute;top:28px;left:0;min-width:260px;background:rgba(255,255,255,.95);border:1px solid var(--border);border-radius:10px;box-shadow:0 20px 40px rgba(0,0,0,.08);padding:12px;display:none}
+.dropdown-content a{display:block;padding:10px 12px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);border-radius:8px}
+.dropdown-content a:hover{background:var(--bg)}
+.dropdown:hover .dropdown-content{display:block}
+.page-hero{min-height:70vh;padding:160px 5vw 60px;display:flex;flex-direction:column;justify-content:flex-end;border-bottom:1px solid var(--border)}
+.hero-title{font-size:clamp(44px,8vw,96px);margin-bottom:20px;background:linear-gradient(to right,var(--text),var(--text-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-desc{max-width:980px;font-size:18px;color:var(--text-light);line-height:1.8;border-left:2px solid var(--accent);padding-left:24px}
+.grid{max-width:1200px;margin:0 auto;padding:80px 5vw;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.image{height:180px;background:#e0ded5;border-bottom:1px solid var(--border)}
+.image img{width:100%;height:100%;object-fit:contain}
+.inner{padding:18px}
+.inner h3{font-size:18px;margin-bottom:8px}
+.inner p{color:var(--text-light);line-height:1.7;font-size:14px}
+.brands{max-width:1200px;margin:0 auto;padding:40px 5vw;border-top:1px solid var(--border);display:flex;gap:24px;flex-wrap:wrap;align-items:center}
+.brands img{height:42px;object-fit:contain}
+.cta{max-width:1200px;margin:0 auto;padding:60px 5vw;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.box{background:var(--surface);padding:24px;border:1px solid var(--border);border-radius:var(--radius)}
+footer{background:var(--text);color:var(--bg);padding:50px 5vw;text-align:center}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.cta{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div>BMC Share: ₹281.40 (-0.03)</div>
+    <div style="display:flex;gap:20px;">
+      <a href="#">Careers</a>
+      <a href="#">News</a>
+      <a href="#">Global (EN)</a>
+    </div>
+  </div>
+</div>
+<nav class="main-nav">
+  <a href="bmc original maari.html#top" class="brand">Best Marketing Company</a>
+  <div class="nav-links">
+    <a href="bmc original maari.html#top">Home</a>
+    <div class="dropdown">
+      <a href="about.html">About Us ▾</a>
+      <div class="dropdown-content">
+        <a href="company-profile.html">Company Profile</a>
+        <a href="awards.html">Awards & Recognitions</a>
+        <a href="memberships.html">Memberships & Affiliations</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="bmc original maari.html#categories">Our Products ▾</a>
+      <div class="dropdown-content">
+        <a href="valves.html">Valves</a>
+        <a href="crucibles.html">Crucibles</a>
+        <a href="foundry-products.html">Foundry Products</a>
+        <a href="coolants-lubricants.html">Coolants & Lubricants</a>
+        <a href="die-casting.html">Die Casting Machines</a>
+        <a href="foundry-automations.html">BMC Automation & Solutions</a>
+        <a href="vacuum-casting.html">Vacuum Casting Systems</a>
+      </div>
+    </div>
+    <a href="media.html">Media</a>
+    <a href="bmc original maari.html#contact">Contact</a>
+    <a href="feedback.html">Feedback</a>
+    <a href="admin.html">Admin</a>
+  </div>
+  <a href="bmc original maari.html#contact" class="nav-btn">Get Quote</a>
+</nav>
+<header class="page-hero">
+  <h1 class="hero-title">Lubricants & Coolants</h1>
+  <div class="hero-desc">Release agents, coolants and lubricants are essential. For high-temperature and critical machining, speciality lubricants enhance productivity, extend tool/mold life, reduce cycle time and save costs. BMC partners with MORESCO to deliver the right technology with ongoing operator training and process support.</div>
+</header>
+<section class="grid">
+  <div class="card"><div class="image"><img src="images/Coolants & Lubricants/Hot Forging Lubricant.png" alt="Hot Forging Lubricant"></div><div class="inner"><h3>Hot Forging Lubricant</h3><p>For auto engine components and safety parts.</p></div></div>
+  <div class="card"><div class="image"><img src="images/Coolants & Lubricants/Vacuum Pump Oil.png" alt="Vacuum Pump Oil"></div><div class="inner"><h3>Vacuum Pump Oil</h3><p>For small vacuum pumps and food vacuum packing.</p></div></div>
+  <div class="card"><div class="image"><img src="images/Coolants & Lubricants/Hydraulic Fluid.png" alt="Hydraulic Fluid"></div><div class="inner"><h3>Hydraulic Fluid</h3><p>Fire-resistant fluids used in steel industry and fun park rides.</p></div></div>
+  <div class="card"><div class="image"><img src="images/Coolants & Lubricants/High Temperature Greases.png" alt="High Temperature Greases"></div><div class="inner"><h3>High Temperature Greases</h3><p>For automotive engine bearings and oven chains in breadmaking.</p></div></div>
+</section>
+<section class="brands">
+  <img src="images/Coolants & Lubricants/Moresco Corporation - Japan.png" alt="MORESCO Japan">
+  <img src="images/Coolants & Lubricants/Moresco HM & LUB India Pvt. Ltd., - India.png" alt="MORESCO India">
+</section>
+<section class="cta">
+  <div><h2 style="font-size:24px;margin-bottom:10px">Applications & Service</h2><p><strong>Aluminium Foundry:</strong> Water soluble & waterless die lubricants, plunger lubricants.<br><strong>Machining Coolants:</strong> Ferrous & nonferrous, aerospace and speciality grinding/machining.<br><strong>Speciality Lubricants:</strong> Vacuum pump oil, forging, hot melt adhesive, radiation-resistant oils/greases, liquid paraffin.</p></div>
+  <div class="box"><h3 style="margin-bottom:8px">For more details and enquiry</h3><p>mail@bestmarketingco.net<br>valves_automation@bestmarketingco.net<br>+91 9597512444</p></div>
+</section>
+<footer>© 2024 Best Marketing Company — Lubricants & Coolants</footer>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+gsap.from(".hero-title",{y:50,opacity:0,duration:1});
+gsap.from(".hero-desc",{y:20,opacity:0,duration:.8,delay:.2});
+gsap.from(".card",{scrollTrigger:{trigger:".grid",start:"top 80%"},y:40,opacity:0,duration:.6,stagger:.06});
+</script>
+<style>
+.fab-wrap{position:fixed;right:22px;bottom:22px;z-index:10000;display:flex;flex-direction:column;gap:10px}
+.fab{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;border:1px solid var(--accent-dark);box-shadow:0 10px 20px rgba(0,0,0,0.15);cursor:pointer;font-size:20px}
+.fab:hover{background:var(--accent-dark)}
+.chat-window{position:fixed;right:22px;bottom:90px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,0.15);display:none;overflow:hidden}
+.chat-head{padding:10px 12px;background:var(--text);color:var(--bg);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.chat-body{padding:10px;max-height:260px;overflow:auto;font-size:14px;color:var(--text)}
+.chat-msg{margin:6px 0;padding:8px 10px;border-radius:10px;background:#f4efe6}
+.chat-input{display:flex;gap:6px;padding:10px;border-top:1px solid var(--border)}
+.chat-input input{flex:1;padding:10px;border:1px solid var(--border);border-radius:8px}
+.chat-input button{padding:10px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;font-size:12px}
+</style>
+<div class="fab-wrap">
+  <a class="fab" href="https://wa.me/919597512444" target="_blank" aria-label="WhatsApp">🟢</a>
+  <a class="fab" href="tel:+919597512444" aria-label="Call">📞</a>
+  <a class="fab" href="mailto:mail@bestmarketingco.net" aria-label="Email">✉️</a>
+  <button class="fab" id="chatToggle" aria-label="Chatbot">💬</button>
+</div>
+<div class="chat-window" id="chatWin">
+  <div class="chat-head">BMC Chat</div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg">Hi! Ask about lubricants & coolants.</div>
+  </div>
+  <div class="chat-input">
+    <input id="chatText" placeholder="Type a message..." />
+    <button id="chatSend">Send</button>
+  </div>
+</div>
+<script>
+const chatWin = document.getElementById('chatWin');
+document.getElementById('chatToggle').addEventListener('click', ()=>{
+  chatWin.style.display = chatWin.style.display==='none' || chatWin.style.display==='' ? 'block' : 'none';
+});
+function reply(msg){
+  const body = document.getElementById('chatBody');
+  const add = (text)=>{ const d=document.createElement('div'); d.className='chat-msg'; d.textContent=text; body.appendChild(d); body.scrollTop = body.scrollHeight; };
+  add(msg);
+}
+function handle(text){
+  const t = text.toLowerCase();
+  if(t.includes('lubricant')||t.includes('coolant')||t.includes('moresco')) return 'MORESCO speciality lubricants & coolants. Email mail@bestmarketingco.net.';
+  if(t.includes('contact')||t.includes('phone')||t.includes('call')) return 'Call +91 95975 12444.';
+  return 'Our team will respond soon. Please leave your email and query.';
+}
+document.getElementById('chatSend').addEventListener('click', ()=>{
+  const input = document.getElementById('chatText');
+  const text = input.value.trim();
+  if(!text) return;
+  reply('You: ' + text);
+  setTimeout(()=>reply('BMC: ' + handle(text)), 300);
+  input.value='';
+});
+</script>
+</body>
+</html>

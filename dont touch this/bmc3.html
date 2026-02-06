@@ -12,6 +12,7 @@
 
 <style>
 :root{
+  /* COLOR PALETTE: Coffee & Cream (Trendy/Fashionable) */
   --bg:#F9F5EB; /* Rich Vanilla Cream */
   --surface:#FFFFFF;
   --text:#3E2723; /* Dark Espresso */
@@ -22,15 +23,6 @@
   --border:rgba(62, 39, 35, 0.08);
   --radius:8px; /* Slightly softer radius */
   --container:1400px;
-}
-:root[data-theme="dark"]{
-  --bg:#121212;
-  --surface:#1a1a1a;
-  --text:#f5f5f5;
-  --text-light:#c7bdb7;
-  --accent:#b08968;
-  --accent-dark:#7f5539;
-  --border:rgba(255,255,255,0.08);
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -43,7 +35,6 @@ body{
   cursor:none;
 }
 a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
 img{max-width:100%;display:block;object-fit:cover}
 
 /* TYPOGRAPHY - Trendy & Sharp */
@@ -69,8 +60,7 @@ h1,h2,h3,.hero-h,.title{
 
 /* TOPBAR */
 .topbar{
-  position:fixed; top:0; left:0; width:100%;
-  background:var(--navy); color:#F9F5EB; padding:8px 0; font-size:12px; z-index:1001;
+  background:var(--navy); color:#F9F5EB; padding:8px 0; font-size:12px; position:relative; z-index:1001;
 }
 .topbar-inner{
   max-width:var(--container); margin:0 auto; padding:0 40px; display:flex; justify-content:space-between; align-items:center;
@@ -80,22 +70,19 @@ h1,h2,h3,.hero-h,.title{
 
 /* NAV */
 .main-nav{
-  position:fixed;top:40px;left:0;width:100%;z-index:1000;
+  position:fixed;top:34px;left:0;width:100%;z-index:1000;
   padding:20px 40px;
   display:flex;justify-content:space-between;align-items:center;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  background:rgba(249, 245, 235, 0.90);
-  backdrop-filter:blur(10px);
-  box-shadow:0 4px 20px rgba(62, 39, 35, 0.05);
+  background:transparent;
 }
 .main-nav.scrolled{
-  background:rgba(249, 245, 235, 0.95);
+  background:rgba(249, 245, 235, 0.95); /* Rich Vanilla Transparent */
+  backdrop-filter:blur(10px);
   padding:15px 40px;
-  box-shadow:0 6px 24px rgba(62, 39, 35, 0.08);
-  top:40px;
+  box-shadow:0 4px 20px rgba(62, 39, 35, 0.05);
+  top:0; /* Hide topbar on scroll */
 }
-:root[data-theme="dark"] .main-nav{background:rgba(26,26,26,0.90)}
-:root[data-theme="dark"] .main-nav.scrolled{background:rgba(26,26,26,0.95)}
 .brand{font-weight:900;font-size:24px;letter-spacing:-0.04em; color:var(--text);}
 .brand span{color:var(--accent);}
 .nav-links{display:flex;gap:40px;}
@@ -106,22 +93,10 @@ h1,h2,h3,.hero-h,.title{
   content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--accent);transition:width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
 }
 .nav-links a:hover::after{width:100%;}
-.dropdown{position:relative}
-.dropdown > a{display:flex;align-items:center;gap:6px}
-.dropdown-content{
-  position:absolute; top:28px; left:0; min-width:260px;
-  background:rgba(255,255,255,0.95); border:1px solid var(--border); border-radius:10px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.08); padding:12px; display:none; z-index:1001;
-}
-.dropdown-content a{
-  display:block; padding:10px 12px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text); border-radius:8px;
-}
-.dropdown-content a:hover{background:var(--bg)}
-.dropdown:hover .dropdown-content{display:block}
 .nav-btn{
-  padding:12px 24px; background:var(--accent); color:white; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; border-radius:var(--radius); transition:all 0.3s;
+  padding:12px 24px; background:var(--text); color:var(--bg); font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; border-radius:var(--radius); transition:all 0.3s;
 }
-.nav-btn:hover{background:var(--accent-dark); color:white;}
+.nav-btn:hover{background:var(--accent); color:white;}
 
 /* HERO */
 .hero{
@@ -186,14 +161,6 @@ h1,h2,h3,.hero-h,.title{
 .pod-icon{font-size:30px; color:var(--accent); margin-bottom:20px;}
 .pod h3{font-size:22px; margin-bottom:15px;}
 .pod p{color:var(--text-light); line-height:1.6;}
-
-/* SPECIALIZE */
-.specialize-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border);}
-.specialize-card{background:var(--bg); padding:60px; text-align:left; transition:transform 0.4s cubic-bezier(0.2, 1, 0.3, 1), background 0.3s;}
-.specialize-card:hover{transform:translateY(-10px); background:var(--surface);}
-.specialize-card .icon{font-size:40px; color:var(--accent); margin-bottom:20px; font-family:'Syncopate', sans-serif;}
-.specialize-card h3{font-size:26px; margin-bottom:12px;}
-.specialize-card p{color:var(--text-light); font-size:16px; line-height:1.7;}
 
 /* ABOUT GRID */
 .about-grid{display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;}
@@ -354,35 +321,14 @@ footer{background:var(--text); color:var(--bg); padding:100px 5vw 40px;}
 
 <!-- Nav -->
 <nav class="main-nav">
-  <a href="#" class="brand">Best Marketing Company</a>
+  <a href="#" class="brand">BMC <span>CORP</span></a>
   <div class="nav-links">
-    <a href="#top">Home</a>
-    <div class="dropdown">
-      <a href="about.html">About Us ▾</a>
-      <div class="dropdown-content">
-        <a href="company-profile.html">Company Profile</a>
-        <a href="awards.html">Awards & Recognitions</a>
-        <a href="memberships.html">Memberships & Affiliations</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <a href="#categories">Our Products ▾</a>
-      <div class="dropdown-content">
-        <a href="valves.html">Valves</a>
-        <a href="crucibles.html">Crucibles</a>
-        <a href="foundry-products.html">Foundry Products</a>
-        <a href="coolants-lubricants.html">Coolants & Lubricants</a>
-        <a href="die-casting.html">Die Casting Machines</a>
-        <a href="foundry-automations.html">BMC Automation & Solutions</a>
-        <a href="vacuum-casting.html">Vacuum Casting Systems</a>
-      </div>
-    </div>
-    <a href="media.html">Media</a>
+    <a href="#who">Who We Are</a>
+    <a href="#services">Services</a>
+    <a href="#products">Products</a>
+    <a href="avcon.html">Avcon</a>
     <a href="#contact">Contact</a>
-    <a href="feedback.html">Feedback</a>
-    <a href="admin.html">Admin</a>
   </div>
-  <button id="themeToggle" class="nav-btn" style="background:transparent;color:var(--text);border:1px solid var(--text)">Dark Mode</button>
   <a href="#contact" class="nav-btn">Get Quote</a>
 </nav>
 
@@ -442,7 +388,7 @@ footer{background:var(--text); color:var(--bg); padding:100px 5vw 40px;}
     <div class="section-desc">Reliable partners in industrial automation and supply since 1990.</div>
   </div>
   <div class="about-grid">
-    <img src="aboutt.jpg" alt="About BMC" class="about-img" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800'">
+    <img src="about.jpg" alt="About BMC" class="about-img" onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800'">
     <div class="about-content">
       <h3>We help keep operations reliable — from product selection to on-site commissioning.</h3>
       <p>BEST MARKETING COMPANY is a trusted distributor of valves, crucibles, dosing systems, lubricants and automation equipment across India.</p>
@@ -452,17 +398,47 @@ footer{background:var(--text); color:var(--bg); padding:100px 5vw 40px;}
   </div>
 </section>
 
- 
-
- 
-
- 
-
- 
-
- 
-
-<!-- Company Information moved near footer -->
+<!-- Company Information -->
+<section id="company" class="section" style="background:var(--surface);">
+  <div class="section-header">
+    <h2 class="section-title">Best Marketing Company</h2>
+    <div class="section-desc">Industrial marketing company in Coimbatore, operating since 1994.</div>
+  </div>
+  <div class="about-grid">
+    <div>
+      <h3 style="margin-bottom:20px;">Company Information</h3>
+      <p style="margin-bottom:20px;">Address: No: 5, R.K.K Nagar, Neelikonam Palayan Post, Singanallur, Coimbatore - 641 033, Tamil Nadu, India</p>
+      <p style="margin-bottom:20px;">Contact: (+91) 422 2314527 / 4395235</p>
+      <p style="margin-bottom:20px;">Email: mail@bestmarketingco.net</p>
+      <p>Operations across Tamil Nadu, Kerala, and Karnataka</p>
+    </div>
+    <div>
+      <h3 style="margin-bottom:20px;">We Specialize In</h3>
+      <div class="pods-grid" style="grid-template-columns:1fr 1fr; gap:1px;">
+        <div class="pod">
+          <div class="pod-icon">▣</div>
+          <h3>Foundry Consumables</h3>
+          <p>Leading dealers, stockists & distributors of foundry consumables.</p>
+        </div>
+        <div class="pod">
+          <div class="pod-icon">▤</div>
+          <h3>Industrial Products</h3>
+          <p>South India's leading dealers of industrial products.</p>
+        </div>
+        <div class="pod">
+          <div class="pod-icon">▥</div>
+          <h3>Tech & Service</h3>
+          <p>Specializes in bridging technology, service & business.</p>
+        </div>
+        <div class="pod">
+          <div class="pod-icon">▧</div>
+          <h3>Comprehensive Solutions</h3>
+          <p>Complete solutions for foundry and industrial applications.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- Product Categories -->
 <section id="categories" class="section">
@@ -475,49 +451,49 @@ footer{background:var(--text); color:var(--bg); padding:100px 5vw 40px;}
       <span class="meta">Valves</span>
       <h4>Automated Process Valves</h4>
       <p>Industrial automated valves for robust process control and reliability.</p>
-      <a href="valves.html" class="link-arrow">Explore →</a>
+      <a href="#" class="link-arrow">Explore →</a>
     </div>
     <div class="product-card">
       <span class="meta">Crucibles</span>
       <h4>Graphite & Ceramic Crucibles</h4>
       <p>For non-ferrous, ferrous, and precious metals melting applications.</p>
-      <a href="crucibles.html" class="link-arrow">Explore →</a>
+      <a href="#" class="link-arrow">Explore →</a>
     </div>
     <div class="product-card">
       <span class="meta">Foundry Products</span>
       <h4>Metal Transfer Control</h4>
       <p>Solutions to ensure precise metal handling and pouring performance.</p>
-      <a href="foundry-products.html" class="link-arrow">Explore →</a>
+      <a href="#" class="link-arrow">Explore →</a>
     </div>
     <div class="product-card">
       <span class="meta">Mould Release Agents</span>
       <h4>Die Coat & High Temp</h4>
       <p>High temperature coatings improving release and surface finish.</p>
-      <a href="mould-release.html" class="link-arrow">Explore →</a>
+      <a href="#" class="link-arrow">Explore →</a>
     </div>
     <div class="product-card">
       <span class="meta">Die Casting Machines</span>
       <h4>Cold Chamber Systems</h4>
       <p>High pressure systems delivering precision casting performance.</p>
-      <a href="die-casting.html" class="link-arrow">Explore →</a>
+      <a href="#" class="link-arrow">Explore →</a>
     </div>
     <div class="product-card">
       <span class="meta">BMC Automation</span>
       <h4>Foundry Automation</h4>
       <p>Non-ferrous foundry automation for consistent and efficient output.</p>
-      <a href="foundry-automations.html" class="link-arrow">Explore →</a>
+      <a href="#" class="link-arrow">Explore →</a>
     </div>
     <div class="product-card">
       <span class="meta">Vacuum Casting</span>
       <h4>Vacuum Systems</h4>
       <p>Advanced vacuum casting systems for improved material integrity.</p>
-      <a href="vacuum-casting.html" class="link-arrow">Explore →</a>
+      <a href="#" class="link-arrow">Explore →</a>
     </div>
     <div class="product-card">
       <span class="meta">Coolants & Lubricants</span>
       <h4>Industrial Fluids</h4>
       <p>Coolants and lubricants that extend tool life and protect assets.</p>
-      <a href="coolants-lubricants.html" class="link-arrow">Explore →</a>
+      <a href="#" class="link-arrow">Explore →</a>
     </div>
   </div>
 </section>
@@ -587,49 +563,19 @@ footer{background:var(--text); color:var(--bg); padding:100px 5vw 40px;}
       <span class="meta">Valves</span>
       <h4>Industrial Valve A1</h4>
       <p>Robust Industrial Ball Valve — engineered for durability in high-pressure environments.</p>
-      <a href="valves.html" class="link-arrow">View Specs →</a>
+      <a href="#" class="link-arrow">View Specs →</a>
     </div>
     <div class="product-card">
       <span class="meta">Crucibles</span>
       <h4>Crucible C-300</h4>
       <p>High-temp graphite lined crucibles designed for superior thermal conductivity.</p>
-      <a href="crucibles.html" class="link-arrow">View Specs →</a>
+      <a href="#" class="link-arrow">View Specs →</a>
     </div>
     <div class="product-card">
       <span class="meta">Fluids</span>
       <h4>Coolant LX</h4>
       <p>Long-life metalworking coolant that extends tool life and improves finish.</p>
       <a href="#" class="link-arrow">View Specs →</a>
-    </div>
-  </div>
-</section>
-
-<!-- We Specialize In -->
-<section id="specialize" class="section">
-  <div class="section-header">
-    <h2 class="section-title">We Specialize In</h2>
-    <div class="section-desc">Bridging technology, service, and business.</div>
-  </div>
-  <div class="specialize-grid">
-    <div class="specialize-card">
-      <div class="icon">▣</div>
-      <h3>Foundry Consumables</h3>
-      <p>Leading dealers, stockists, and distributors of foundry consumables.</p>
-    </div>
-    <div class="specialize-card">
-      <div class="icon">▤</div>
-      <h3>Industrial Products</h3>
-      <p>South India's leading dealers of industrial products.</p>
-    </div>
-    <div class="specialize-card">
-      <div class="icon">▥</div>
-      <h3>Technology & Service</h3>
-      <p>End-to-end solutions that connect technology with on-site service.</p>
-    </div>
-    <div class="specialize-card">
-      <div class="icon">▧</div>
-      <h3>Comprehensive Solutions</h3>
-      <p>Complete solution provider for foundry and industrial applications.</p>
     </div>
   </div>
 </section>
@@ -656,26 +602,6 @@ footer{background:var(--text); color:var(--bg); padding:100px 5vw 40px;}
   </div>
 </section>
 
-<!-- Company Information (Final Section) -->
-<section id="company" class="section" style="background:var(--surface);">
-  <div class="section-header">
-    <h2 class="section-title">Best Marketing Company</h2>
-    <div class="section-desc">Industrial marketing company in Coimbatore, operating since 1994.</div>
-  </div>
-  <div class="about-grid">
-    <div>
-      <h3 style="margin-bottom:20px;">Company Information</h3>
-      <p style="margin-bottom:20px;">Address: No: 5, R.K.K Nagar, Neelikonam Palayan Post, Singanallur, Coimbatore - 641 033, Tamil Nadu, India</p>
-      <p style="margin-bottom:20px;">Contact: (+91) 422 2314527 / 4395235</p>
-      <p style="margin-bottom:20px;">Email: mail@bestmarketingco.net</p>
-      <p>Operations across Tamil Nadu, Kerala, and Karnataka</p>
-    </div>
-    <div>
-      <h3 style="margin-bottom:20px;">Service Regions</h3>
-      <p>Tamil Nadu, Kerala, Karnataka</p>
-    </div>
-  </div>
-</section>
 <!-- THEY TRUSTED US SECTION -->
 <section class="section" style="padding-bottom: 0;">
   <div class="section-header" style="display:block; text-align:left; border:none; margin-bottom:60px;">
@@ -705,57 +631,30 @@ footer{background:var(--text); color:var(--bg); padding:100px 5vw 40px;}
     <div>
       <h2 class="section-title" style="margin-bottom:30px;">Let's Talk Business</h2>
       <p style="margin-bottom:40px; color:var(--text-light); font-size:18px;">Ready to optimize your industrial operations? Our team is here to help.</p>
-      <div style="margin-bottom:14px;"><strong>Email:</strong><br> mail@bestmarketingco.net<br> benedict@bestmarketingco.net</div>
-      <div style="margin-bottom:14px;"><strong>Phone:</strong><br> (+91) 0422 2314527<br> (+91) 99444 03032</div>
-      <div style="margin-bottom:14px;"><strong>Address:</strong><br> No: 5, R.K.K Nagar, Neelikonam Palayan Post, Singanallur, Coimbatore - 641 033, Tamilnadu, India.</div>
-      <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:10px;">
-        <a href="https://maps.google.com/maps/dir//Best+Marketing+Company+-+Foundry+Automation+No:+5+Post,+R.K.K+Nagar+Neelikonampalayam,+Singanallur,+Tamil+Nadu+641033/@11.0099507,77.038639,16z/data=!4m5!4m4!1m0!1m2!1m1!1s0x3ba85761c12a15d7:0x781b0613d4bebe6e" class="btn btn-outline" target="_blank">Directions</a>
-        <a href="https://search.google.com/local/reviews?placeid=ChIJ1xUqwWFXqDsRbr6-1BMGG3g&q=Best+Marketing+Company&hl=en&gl=IN" class="btn btn-outline" target="_blank">Reviews</a>
-        <a href="https://www.facebook.com/Best-Marketing-Company-294255130691317/" class="btn btn-outline" target="_blank">Facebook</a>
-        <a href="https://www.youtube.com/channel/UCGGy623aw79L4QKf5xsD9mg" class="btn btn-outline" target="_blank">YouTube</a>
-        <a href="https://www.linkedin.com/in/benedict-raj-28900427" class="btn btn-outline" target="_blank">LinkedIn</a>
+      <div style="margin-bottom:20px;">
+        <strong>Email:</strong><br> mail@bestmarketingco.net
+      </div>
+      <div>
+        <strong>Phone:</strong><br> (+91) 422 2314527 / 4395235
+      </div>
+      <div style="margin-top:20px;">
+        <strong>Address:</strong><br> No: 5, R.K.K Nagar, Neelikonam Palayan Post, Singanallur, Coimbatore - 641 033, Tamil Nadu, India
       </div>
     </div>
-    <form id="contactForm">
+    <form>
       <div class="form-group">
         <label>Name</label>
-        <input name="name" type="text" class="form-input" placeholder="Enter your name" required>
+        <input type="text" class="form-input" placeholder="Enter your name">
       </div>
       <div class="form-group">
         <label>Email</label>
-        <input name="email" type="email" class="form-input" placeholder="Enter your email" required>
-      </div>
-      <div class="form-group">
-        <label>Phone</label>
-        <input name="phone" type="tel" class="form-input" placeholder="+91 XXXXX XXXXX">
-      </div>
-      <div class="form-group">
-        <label>Product Interest</label>
-        <select name="interest" class="form-input">
-          <option>Valves</option>
-          <option>Crucibles</option>
-          <option>Foundry Products</option>
-          <option>Coolants & Lubricants</option>
-          <option>Die Casting Machines</option>
-          <option>BMC Automation & Solutions</option>
-          <option>Vacuum Casting Systems</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Preferred Contact</label>
-        <select name="contact_method" class="form-input">
-          <option>Email</option>
-          <option>Phone</option>
-          <option>WhatsApp</option>
-        </select>
+        <input type="email" class="form-input" placeholder="Enter your email">
       </div>
       <div class="form-group">
         <label>Message</label>
-        <textarea name="message" class="form-input" placeholder="How can we help?" rows="3" required></textarea>
+        <input type="text" class="form-input" placeholder="How can we help?">
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send Message</button>
-      <div id="contactSuccess" style="display:none; margin-top:10px; padding:10px; border:1px solid #31a24c66; background:#31a24c12; color:#1b6d2f; border-radius:8px;">Thanks! We received your enquiry.</div>
+      <button type="button" class="btn btn-primary" style="width:100%; justify-content:center;">Send Message</button>
     </form>
   </div>
 </section>
@@ -866,7 +765,7 @@ const tl = gsap.timeline();
 tl.from(".hero-h", {y: 100, opacity: 0, duration: 1, ease: "power4.out"})
   .from(".hero-sub", {y: 50, opacity: 0, duration: 1, ease: "power4.out"}, "-=0.5")
   .from(".hero-btns", {y: 30, opacity: 0, duration: 0.8, ease: "power4.out"}, "-=0.5")
-  ;
+  .from(".main-nav", {y: -50, opacity: 0, duration: 1, ease: "power2.out"}, "-=1");
 
 const phrases = [
   "Engineering Solutions For Modern Industry",
@@ -925,107 +824,6 @@ gsap.from(".trust-item", {
   ease: "power3.out"
 });
 
-// BACKEND ADAPTER
-const Backend = {
-  base: window.FUNCTIONS_BASE_URL || '',
-  enabled(){ return !!this.base },
-  notify(path, payload){
-    if(!this.enabled()) return Promise.resolve({ok:false, skipped:true});
-    return fetch(`${this.base}/${path}`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    }).catch(()=>({ok:false}));
-  }
-};
-// CONTACT FORM STORAGE
-const CONTACT_KEY = 'bmc_contacts';
-const contactForm = document.getElementById('contactForm');
-if(contactForm){
-  contactForm.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const fd = new FormData(contactForm);
-    const entry = {
-      name: fd.get('name')?.trim() || '',
-      email: fd.get('email')?.trim() || '',
-      phone: fd.get('phone')?.trim() || '',
-      interest: fd.get('interest') || '',
-      contact_method: fd.get('contact_method') || '',
-      message: fd.get('message')?.trim() || '',
-      timestamp: Date.now()
-    };
-    if(!entry.name || !entry.email || !entry.message) return;
-    let all = [];
-    try{ all = JSON.parse(localStorage.getItem(CONTACT_KEY)) || []; }catch(e){ all = []; }
-    all.push(entry);
-    localStorage.setItem(CONTACT_KEY, JSON.stringify(all));
-    Backend.notify('sendEnquiry', entry);
-    document.getElementById('contactSuccess').style.display='block';
-    contactForm.reset();
-  });
-}
-
 </script>
-<!-- Floating Actions & Chatbot -->
-<style>
-.fab-wrap{position:fixed;right:22px;bottom:22px;z-index:10000;display:flex;flex-direction:column;gap:10px}
-.fab{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;border:1px solid var(--accent-dark);box-shadow:0 10px 20px rgba(0,0,0,0.15);cursor:pointer;font-size:20px}
-.fab:hover{background:var(--accent-dark)}
-.chat-window{position:fixed;right:22px;bottom:90px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,0.15);display:none;overflow:hidden}
-.chat-head{padding:10px 12px;background:var(--text);color:var(--bg);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
-.chat-body{padding:10px;max-height:260px;overflow:auto;font-size:14px;color:var(--text)}
-.chat-msg{margin:6px 0;padding:8px 10px;border-radius:10px;background:#f4efe6}
-.chat-input{display:flex;gap:6px;padding:10px;border-top:1px solid var(--border)}
-.chat-input input{flex:1;padding:10px;border:1px solid var(--border);border-radius:8px}
-.chat-input button{padding:10px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;font-size:12px}
-</style>
-<div class="fab-wrap">
-  <a class="fab" href="https://wa.me/919597512444" target="_blank" aria-label="WhatsApp">🟢</a>
-  <a class="fab" href="tel:+919597512444" aria-label="Call">📞</a>
-  <a class="fab" href="mailto:mail@bestmarketingco.net" aria-label="Email">✉️</a>
-  <button class="fab" id="chatToggle" aria-label="Chatbot">💬</button>
-</div>
-<div class="chat-window" id="chatWin">
-  <div class="chat-head">BMC Chat</div>
-  <div class="chat-body" id="chatBody">
-    <div class="chat-msg">Hi! Ask about products, support, or contact.</div>
-  </div>
-  <div class="chat-input">
-    <input id="chatText" placeholder="Type a message..." />
-    <button id="chatSend">Send</button>
-  </div>
-</div>
-<script>
-const chatWin = document.getElementById('chatWin');
-document.getElementById('chatToggle').addEventListener('click', ()=>{
-  chatWin.style.display = chatWin.style.display==='none' || chatWin.style.display==='' ? 'block' : 'none';
-});
-function reply(msg){
-  const body = document.getElementById('chatBody');
-  const add = (text)=>{ const d=document.createElement('div'); d.className='chat-msg'; d.textContent=text; body.appendChild(d); body.scrollTop = body.scrollHeight; };
-  add(msg);
-}
-function handle(text){
-  const t = text.toLowerCase();
-  if(t.includes('valve')) return 'Valves: Solenoid, Pneumatic, Control, Actuated. Email valves_automation@bestmarketingco.net.';
-  if(t.includes('crucible')) return 'Crucibles: Excel, Salamander, Syncarb. Email cruciblebmc@bestmarketingco.net.';
-  if(t.includes('contact')||t.includes('phone')||t.includes('call')) return 'Call +91 95975 12444 or +91 99444 03032.';
-  if(t.includes('location')||t.includes('address')) return 'No: 5, RKK Nagar, Singanallur, Coimbatore - 641033.';
-  if(t.includes('lubricant')||t.includes('coolant')) return 'MORESCO speciality lubricants & coolants. Email mail@bestmarketingco.net.';
-  return 'Our team will respond soon. Please leave your email and query.';
-}
-document.getElementById('chatSend').addEventListener('click', ()=>{
-  const input = document.getElementById('chatText');
-  const text = input.value.trim();
-  if(!text) return;
-  reply('You: ' + text);
-  setTimeout(()=>reply('BMC: ' + handle(text)), 300);
-  input.value='';
-});
-(()=>{const k='bmc_theme';const cur=localStorage.getItem(k)||'light';document.documentElement.setAttribute('data-theme',cur);const b=document.getElementById('themeToggle');function txt(){return(localStorage.getItem(k)==='dark')?'Light Mode':'Dark Mode'}if(b){b.textContent=txt();b.addEventListener('click',()=>{const now=(localStorage.getItem(k)==='dark')?'light':'dark';localStorage.setItem(k,now);document.documentElement.setAttribute('data-theme',now);b.textContent=txt();});}})();
-</script>
-<style>
-#about-us,#company-profile,#awards,#memberships,#media{display:none !important}
-</style>
 </body>
 </html>

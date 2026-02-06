@@ -1,0 +1,27 @@
+What’s Done (simple)
+- Same header on all pages
+- Share label and spacing fixed
+- “Get Quote” button readable on hover
+- Feedback form: stars + emojis + live charts
+- Big donut gauge for satisfaction
+- Confetti when feedback is submitted
+- Admin login gate and CSV export
+- Admin charts with monthly counts
+- Floating WhatsApp/Call/Email with tooltips
+- Dark/Light mode toggle on main pages
+- Smooth micro-animations
+
+What’s Next (needs server)
+- Database (MySQL)
+- Secure login (hashed passwords, JWT)
+- OTP login and forgot password
+- Roles (Admin/Staff/Manager)
+- Email notifications (admin + customer)
+- Backups and recovery
+- Full analytics dashboard from server data
+- Multi-admin accounts
+- Better mobile tuning and tests
+- Audit logs of admin actions
+- Smarter AI chatbot
+- RPA automation
+- Cloud hosting
