@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>BEST MARKETING COMPANY — Engineering Solutions</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+<script>window.API_BASE="http://localhost:5000";</script>
 <!-- GSAP & Lenis -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -927,15 +928,12 @@ gsap.from(".trust-item", {
 
 // BACKEND ADAPTER
 const Backend = {
-  base: window.FUNCTIONS_BASE_URL || '',
+  base: (window.API_BASE || window.FUNCTIONS_BASE_URL || ''),
   enabled(){ return !!this.base },
-  notify(path, payload){
+  post(path, payload){
     if(!this.enabled()) return Promise.resolve({ok:false, skipped:true});
-    return fetch(`${this.base}/${path}`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    }).catch(()=>({ok:false}));
+    const url = this.base.endsWith('/') ? `${this.base}${path.replace(/^\//,'')}` : `${this.base}${path}`;
+    return fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)}).catch(()=>({ok:false}));
   }
 };
 // CONTACT FORM STORAGE
@@ -959,7 +957,7 @@ if(contactForm){
     try{ all = JSON.parse(localStorage.getItem(CONTACT_KEY)) || []; }catch(e){ all = []; }
     all.push(entry);
     localStorage.setItem(CONTACT_KEY, JSON.stringify(all));
-    Backend.notify('sendEnquiry', entry);
+    Backend.post('/api/leads', entry);
     document.getElementById('contactSuccess').style.display='block';
     contactForm.reset();
   });
@@ -995,6 +993,16 @@ if(contactForm){
     <button id="chatSend">Send</button>
   </div>
 </div>
+<style>
+.back-top-wrap{position:fixed;bottom:22px;left:22px;z-index:10001;display:flex;gap:10px}
+.back-top-wrap a,.back-top-wrap button{padding:10px 14px;border-radius:999px;border:1px solid var(--accent-dark);background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:8px}
+.back-top{display:none}
+</style>
+<div class="back-top-wrap">
+  <a href="#top">↑ Top</a>
+  <a href="#top">Back to Home</a>
+  <button class="back-top" id="homeTopBtn">↑ Top</button>
+</div>
 <script>
 const chatWin = document.getElementById('chatWin');
 document.getElementById('chatToggle').addEventListener('click', ()=>{
@@ -1023,6 +1031,12 @@ document.getElementById('chatSend').addEventListener('click', ()=>{
   input.value='';
 });
 (()=>{const k='bmc_theme';const cur=localStorage.getItem(k)||'light';document.documentElement.setAttribute('data-theme',cur);const b=document.getElementById('themeToggle');function txt(){return(localStorage.getItem(k)==='dark')?'Light Mode':'Dark Mode'}if(b){b.textContent=txt();b.addEventListener('click',()=>{const now=(localStorage.getItem(k)==='dark')?'light':'dark';localStorage.setItem(k,now);document.documentElement.setAttribute('data-theme',now);b.textContent=txt();});}})();
+window.addEventListener('scroll', ()=>{
+  const b = document.getElementById('homeTopBtn');
+  if(!b) return;
+  b.style.display = window.scrollY > 200 ? 'inline-flex' : 'none';
+});
+document.getElementById('homeTopBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
 </script>
 <style>
 #about-us,#company-profile,#awards,#memberships,#media{display:none !important}

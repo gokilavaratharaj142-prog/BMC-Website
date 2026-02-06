@@ -10,9 +10,10 @@ What’s Done (simple)
 - Floating WhatsApp/Call/Email with tooltips
 - Dark/Light mode toggle on main pages
 - Smooth micro-animations
+- Back to Top button and Back to Home on all pages
 
 What’s Next (needs server)
-- Database (MySQL)
+- Database (MongoDB Atlas) [you already set this up]
 - Secure login (hashed passwords, JWT)
 - OTP login and forgot password
 - Roles (Admin/Staff/Manager)
@@ -25,3 +26,12 @@ What’s Next (needs server)
 - Smarter AI chatbot
 - RPA automation
 - Cloud hosting
+
+Manual Steps (server plan quick guide)
+- Create server: Node.js (Express) project
+- Add MySQL: users, roles, contacts, feedback, audit logs tables
+- Auth: bcrypt for hashing, JWT for sessions, OTP routes
+- Email: Nodemailer or SendGrid for notifications
+- Endpoints: /contacts, /feedback, /auth, /analytics/monthly
+- Deploy: host on cloud (e.g., Render/railway/vercel functions + ClearDB/MySQL)
+- Configure: set frontend base URL (FUNCTIONS_BASE_URL) for notifications

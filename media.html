@@ -109,5 +109,22 @@ a:visited{color:inherit}
     </div>
   </div>
 </section>
+<style>
+.float-btn{position:fixed;bottom:22px;left:22px;z-index:10001;display:flex;gap:10px}
+.float-btn a,.float-btn button{padding:10px 14px;border-radius:999px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:8px}
+.back-top{display:none}
+</style>
+<div class="float-btn">
+  <a href="bmc original maari.html#top">← Home</a>
+  <button class="back-top" id="backTopBtn">↑ Top</button>
+</div>
+<script>
+window.addEventListener('scroll', ()=>{
+  const b = document.getElementById('backTopBtn');
+  if(!b) return;
+  b.style.display = window.scrollY > 200 ? 'inline-flex' : 'none';
+});
+document.getElementById('backTopBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+</script>
 </body>
 </html>

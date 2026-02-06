@@ -1,5 +1,6 @@
-﻿const express = require('express');
-const { query } = require('../db');
+const express = require('express');
+const Lead = require('../models/Lead');
+const User = require('../models/User');
 const { requireAuth, requireRole } = require('../middleware/auth');
 const { getOverview, getLeadsByDay } = require('../services/analytics');
 
@@ -12,28 +13,41 @@ router.get('/overview', requireAuth, requireRole(['admin','manager']), async (re
 
 router.get('/leads', requireAuth, requireRole(['admin','manager','staff']), async (req, res) => {
   const q = String(req.query.q || '').trim();
-  if (q) {
-    const like = `%${q}%`;
-    const rows = await query(
-      'SELECT name, email, phone, company, message, product, created_at FROM leads WHERE name LIKE ? OR email LIKE ? OR phone LIKE ? OR company LIKE ? OR message LIKE ? OR product LIKE ? ORDER BY created_at DESC',
-      [like, like, like, like, like, like]
-    );
-    return res.json(rows || []);
-  }
-  const rows = await query('SELECT name, email, phone, company, message, product, created_at FROM leads ORDER BY created_at DESC');
+  const filter = q ? {
+    $or: [
+      { name: new RegExp(q, 'i') },
+      { email: new RegExp(q, 'i') },
+      { phone: new RegExp(q, 'i') },
+      { company: new RegExp(q, 'i') },
+      { message: new RegExp(q, 'i') },
+      { product: new RegExp(q, 'i') },
+    ]
+  } : {};
+  const rows = await Lead.find(filter).sort({ createdAt: -1 });
   res.json(rows || []);
 });
 
 router.post('/leads/clear', requireAuth, requireRole(['admin']), async (req, res) => {
-  await query('DELETE FROM leads');
+  await Lead.deleteMany({});
   res.json({ ok: true });
 });
 
 router.get('/leads.csv', requireAuth, requireRole(['admin','manager']), async (req, res) => {
-  const rows = await query('SELECT name, email, phone, company, message, product, created_at FROM leads ORDER BY created_at DESC');
+  const rows = await Lead.find().sort({ createdAt: -1 });
   const headers = ['created_at','name','email','phone','company','message','product'];
   const csv = [headers.join(',')]
-    .concat(rows.map(r => headers.map(h => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(',')))
+    .concat(rows.map(r => headers.map(h => {
+      const map = {
+        created_at: r.createdAt,
+        name: r.name,
+        email: r.email,
+        phone: r.phone,
+        company: r.company,
+        message: r.message,
+        product: r.product
+      };
+      return `"${String(map[h] ?? '').replace(/"/g, '""')}"`;
+    }).join(',')))
     .join('\n');
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename="leads.csv"');
@@ -47,7 +61,7 @@ router.get('/analytics/leads', requireAuth, requireRole(['admin','manager']), as
 });
 
 router.get('/users', requireAuth, requireRole(['admin']), async (req, res) => {
-  const rows = await query('SELECT id, name, email, role, status, created_at FROM users ORDER BY created_at DESC');
+  const rows = await User.find().sort({ createdAt: -1 }).select(['name','email','role','status','createdAt']);
   res.json(rows || []);
 });
 

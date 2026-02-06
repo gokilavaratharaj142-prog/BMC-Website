@@ -1,12 +1,16 @@
-﻿const express = require('express');
-const { query } = require('../db');
+const express = require('express');
+const AuditLog = require('../models/AuditLog');
 const { requireAuth, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
 router.get('/', requireAuth, requireRole(['admin','manager']), async (req, res) => {
-  const rows = await query('SELECT user_id, action, detail, ip, created_at FROM audit_logs ORDER BY created_at DESC LIMIT 200');
-  res.json(rows || []);
+  try{
+    const rows = await AuditLog.find().sort({ createdAt: -1 }).limit(200);
+    res.json(rows || []);
+  }catch(err){
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 module.exports = router;
