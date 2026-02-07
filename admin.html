@@ -5,30 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Admin — Best Marketing Company</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <script>window.API_BASE="http://localhost:5000";</script>
 <style>
-:root{--bg:#F9F5EB;--surface:#FFFFFF;--text:#3E2723;--text-light:#6D4C41;--accent:#8D6E63;--accent-dark:#4E342E;--border:rgba(62,39,35,0.08);--radius:8px}
-:root[data-theme="dark"]{--bg:#121212;--surface:#1a1a1a;--text:#f5f5f5;--text-light:#c7bdb7;--accent:#b08968;--accent-dark:#7f5539;--border:rgba(255,255,255,0.08)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 a:visited{color:inherit}
-.topbar{position:fixed;top:0;left:0;width:100%;background:#2C1810;color:#F9F5EB;padding:8px 0;font-size:12px;z-index:1001}
-.topbar-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:center}
-.topbar a{opacity:.8;transition:opacity .2s}
-.topbar a:hover{opacity:1}
-.main-nav{position:fixed;top:40px;left:0;width:100%;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;z-index:1000;background:rgba(249,245,235,.9);backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(62,39,35,.05);transition:all .4s cubic-bezier(0.16,1,0.3,1)}
-.main-nav.scrolled{background:rgba(249,245,235,.95)}
-:root[data-theme="dark"] .main-nav{background:rgba(26,26,26,.90)}
-:root[data-theme="dark"] .main-nav.scrolled{background:rgba(26,26,26,.95)}
-.brand{font-weight:900;font-size:24px;letter-spacing:-0.04em;color:var(--text)}
-.nav-links{display:flex;gap:40px}
-.nav-links a{font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;position:relative;color:var(--text)}
-.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--accent);transition:width .3s cubic-bezier(0.65,0,0.35,1)}
-.nav-links a:hover::after{width:100%}
-.nav-btn{padding:12px 24px;background:var(--text);color:var(--bg);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;border-radius:8px;transition:all .3s}
-.nav-btn{padding:12px 24px;background:var(--accent);color:#fff;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;border-radius:8px;transition:transform .2s, box-shadow .2s;border:1px solid var(--accent-dark)}
-.nav-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(62,39,35,.12)}
 .dropdown{position:relative}
 .dropdown > a{display:flex;align-items:center;gap:6px}
 .dropdown-content{position:absolute;top:28px;left:0;min-width:260px;background:rgba(255,255,255,.95);border:1px solid var(--border);border-radius:10px;box-shadow:0 20px 40px rgba(0,0,0,.08);padding:12px;display:none}
@@ -36,7 +19,7 @@ a:visited{color:inherit}
 .dropdown-content a:hover{background:var(--bg)}
 .dropdown:hover .dropdown-content{display:block}
 .page-hero{min-height:50vh;padding:140px 5vw 40px;display:flex;flex-direction:column;justify-content:flex-end;border-bottom:1px solid var(--border)}
-.hero-title{font-size:clamp(40px,7vw,80px);margin-bottom:10px;background:linear-gradient(to right,var(--text),var(--text-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-title{font-size:clamp(40px,7vw,80px);margin-bottom:10px;background:linear-gradient(to right,var(--text),var(--text-light));background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .hero-desc{max-width:900px;font-size:18px;color:var(--text-light);line-height:1.8;border-left:2px solid var(--accent);padding-left:24px}
 .wrap{max-width:1200px;margin:0 auto;padding:60px 5vw}
 .tabs{display:flex;gap:12px;margin-bottom:20px}
@@ -61,6 +44,10 @@ a:visited{color:inherit}
       <input id="admPass" placeholder="Password" type="password" style="padding:12px;border:1px solid var(--border);border-radius:8px">
       <button id="admLoginBtn" style="padding:12px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em">Login</button>
       <div id="admError" style="display:none;color:#b00020;font-size:13px">Invalid credentials</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-top:6px">
+        <a href="bmc original maari.html#top" style="color:var(--accent);font-weight:700">← Home</a>
+        <button id="admForgot" style="background:transparent;border:none;color:var(--accent);font-weight:700;cursor:pointer">Forgot password?</button>
+      </div>
     </div>
   </div>
 </div>
@@ -101,11 +88,14 @@ a:visited{color:inherit}
     <a href="media.html">Media</a>
     <a href="bmc original maari.html#contact">Contact</a>
     <a href="feedback.html">Feedback</a>
-    <a href="admin.html">Admin</a>
+    <a href="admin.html">Dashboard</a>
   </div>
-  <button id="themeToggle" class="nav-btn" style="background:transparent;color:var(--text);border:1px solid var(--text)">Dark Mode</button>
   <a href="bmc original maari.html#contact" class="nav-btn">Get Quote</a>
+  <button id="themeToggle" class="nav-btn" style="background:transparent;color:var(--text);border:1px solid var(--text)">Dark Mode</button>
 </nav>
+<script>
+(function(){const k='bmc_theme';const cur=localStorage.getItem(k)||'light';document.documentElement.setAttribute('data-theme',cur);const b=document.getElementById('themeToggle');function txt(){return(localStorage.getItem(k)==='dark')?'Light Mode':'Dark Mode'}if(b){b.textContent=txt();b.addEventListener('click',()=>{const now=(localStorage.getItem(k)==='dark')?'light':'dark';localStorage.setItem(k,now);document.documentElement.setAttribute('data-theme',now);b.textContent=txt();});}})();
+</script>
 <div id="adminApp" style="display:none">
 <header class="page-hero">
   <h1 class="hero-title">Admin Dashboard</h1>
@@ -132,16 +122,28 @@ const ADM_KEY = 'bmc_admin_auth';
 const Backend = {
   base: (window.API_BASE || window.FUNCTIONS_BASE_URL || ''),
   enabled(){ return !!this.base },
-  async login(u,p){
-    if(!this.enabled()) return {ok:false};
-    const res = await fetch(`${this.base}/api/admin/login`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username:u, password:p})}).catch(()=>null);
-    if(!res || !res.ok) return {ok:false};
-    localStorage.setItem(ADM_KEY,'yes');
-    return {ok:true};
+  tokenKey: 'bmc_jwt',
+  async authLogin(email,password){
+    const res = await fetch(`${this.base}/api/auth/login`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password})}).catch(()=>null);
+    if(!res) return null;
+    return res.json().catch(()=>null);
+  },
+  async verifyOtp(email, otp){
+    const res = await fetch(`${this.base}/api/auth/verify-otp`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, otp})}).catch(()=>null);
+    if(!res || !res.ok) return null;
+    const data = await res.json().catch(()=>null);
+    if(data && data.token){
+      localStorage.setItem(this.tokenKey, data.token);
+      localStorage.setItem(ADM_KEY,'yes');
+      return true;
+    }
+    return false;
   },
   async get(path){
     if(!this.enabled()) return null;
-    const res = await fetch(`${this.base}${path}`).catch(()=>null);
+    const t = localStorage.getItem(this.tokenKey)||'';
+    const headers = t ? {'Authorization': `Bearer ${t}`} : {};
+    const res = await fetch(`${this.base}${path}`, { headers }).catch(()=>null);
     if(!res || !res.ok) return null;
     return res.json().catch(()=>null);
   }
@@ -161,10 +163,21 @@ function gate(){
     const u = document.getElementById('admUser').value.trim();
     const p = document.getElementById('admPass').value.trim();
     if(Backend.enabled()){
-      const ok = await Backend.login(u,p);
-      if(ok.ok){ gate.style.display='none'; app.style.display='block' }
-      else if(tryLogin(u,p)){ gate.style.display='none'; app.style.display='block' }
-      else { const e=document.getElementById('admError'); e.style.display='block' }
+      const resp = await Backend.authLogin(u,p);
+      if(resp && resp.next==='otp'){
+        const code = window.prompt('Enter the OTP sent to your email');
+        if(code){
+          const ok = await Backend.verifyOtp(u, code.trim());
+          if(ok){ gate.style.display='none'; app.style.display='block' }
+          else { const e=document.getElementById('admError'); e.style.display='block' }
+        }else{
+          const e=document.getElementById('admError'); e.style.display='block'
+        }
+      }else if(tryLogin(u,p)){
+        gate.style.display='none'; app.style.display='block'
+      }else{
+        const e=document.getElementById('admError'); e.style.display='block'
+      }
     }else{
       if(tryLogin(u,p)){ gate.style.display='none'; app.style.display='block' }
       else { const e=document.getElementById('admError'); e.style.display='block' }
@@ -204,9 +217,11 @@ async function drawCharts(){
     return r.startsWith('5') || r.startsWith('4') || s>=4 || d.sentiment==='love' || d.sentiment==='like';
   }).length;
   const sat = Math.round((good/data.length)*100);
-  const bar = (label,val,max)=>`<div style="display:flex;align-items:center;gap:12px;margin:6px 0"><div style="width:180px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)">${label}</div><div style="flex:1;height:10px;background:#f0ede6;border-radius:999px;overflow:hidden"><div style="width:${Math.round((val/max)*100)}%;height:10px;background:var(--accent);transition:width .3s"></div></div><div style="width:40px;text-align:right;color:var(--text-light)">${val}</div></div>`;
-  const cats = Object.entries(catCounts).map(([k,v])=>bar(k,v,maxCat)).join('');
-  const rates = Object.entries(rateCounts).map(([k,v])=>bar(k,v,maxRate)).join('');
+  const palette = ['#5B8DEF','#FF7C6E','#7BD88F','#F4D35E','#C17CEB','#4FD1C5','#ED64A6','#FFB000','#00A6FB'];
+  const ratePalette = ['#2ecc71','#27ae60','#f1c40f','#e67e22','#e74c3c'];
+  const bar = (label,val,max,color)=>`<div style="display:flex;align-items:center;gap:12px;margin:6px 0"><div style="width:180px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:${color}">${label}</div><div style="flex:1;height:12px;background:#f0ede6;border-radius:999px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)"><div style="width:${Math.round((val/max)*100)}%;height:12px;background:${color};background-image:linear-gradient(90deg, ${color}, ${color}80);transition:width .3s"></div></div><div style="width:40px;text-align:right;color:var(--text-light)">${val}</div></div>`;
+  const cats = Object.entries(catCounts).map(([k,v],i)=>bar(k,v,maxCat,palette[i%palette.length])).join('');
+  const rates = Object.entries(rateCounts).map(([k,v],i)=>bar(k,v,maxRate,ratePalette[i%ratePalette.length])).join('');
   let monthBars = '';
   if(Backend.enabled()){
     const stats = await Backend.get('/api/admin/analytics/leads');
@@ -315,6 +330,18 @@ document.getElementById('logoutBtn').addEventListener('click', ()=>{
   gate();
   window.scrollTo({top:0,behavior:'smooth'});
 });
+  document.getElementById('admForgot').addEventListener('click', async ()=>{
+    const email = window.prompt('Enter your admin email');
+    if(!email) return;
+    const res = await fetch(`${Backend.base}/api/auth/forgot`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email})}).catch(()=>null);
+    if(!res) return;
+    const code = window.prompt('Enter the OTP sent to your email');
+    if(!code) return;
+    const np = window.prompt('Enter new password');
+    if(!np) return;
+    const r = await fetch(`${Backend.base}/api/auth/reset`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, otp: code.trim(), newPassword: np})}).catch(()=>null);
+    if(r && r.ok){ alert('Password reset successful. Please login again.') } else { alert('Reset failed. Try again.') }
+  });
 </script>
 <style>
 .fab-wrap{position:fixed;right:22px;bottom:22px;z-index:10000;display:flex;flex-direction:column;gap:10px}
@@ -348,14 +375,15 @@ document.getElementById('logoutBtn').addEventListener('click', ()=>{
 </div>
 <style>
 .float-btn{position:fixed;bottom:22px;display:flex;gap:10px;z-index:10001}
-.float-btn a,.float-btn button{padding:10px 14px;border-radius:999px;border:1px solid var(--accent-dark);background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:8px}
 .float-btn .left{left:22px}
 .float-btn .right{right:22px}
 .back-top{display:none}
+.back-top-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;border:1px solid var(--accent-dark);box-shadow:0 10px 20px rgba(0,0,0,0.15);cursor:pointer;font-size:18px}
+.back-top-icon:hover{transform:translateY(-2px);box-shadow:0 14px 24px rgba(0,0,0,0.18)}
 </style>
 <div class="float-btn left">
-  <a href="bmc original maari.html#top">← Home</a>
-  <button class="back-top" id="backTopBtn">↑ Top</button>
+  <a href="bmc original maari.html#top" style="padding:10px 14px;border-radius:999px;border:1px solid var(--accent-dark);background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:8px">← Home</a>
+  <button class="back-top back-top-icon" id="backTopBtn">↑</button>
 </div>
 <script>
 const chatWin = document.getElementById('chatWin');
