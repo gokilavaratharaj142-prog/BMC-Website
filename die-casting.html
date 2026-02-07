@@ -44,6 +44,11 @@ footer{background:var(--text);color:var(--bg);padding:50px 5vw;text-align:center
 </style>
 </head>
 <body>
+
+<!-- Custom Cursor -->
+<div class="cursor-dot"></div>
+<div class="cursor-outline"></div>
+
 <div class="topbar">
   <div class="topbar-inner">
     <div>BMC Share: ₹281.40 (-0.03)</div>
@@ -165,7 +170,37 @@ document.getElementById('chatSend').addEventListener('click', ()=>{
   setTimeout(()=>reply('BMC: ' + handle(text)), 300);
   input.value='';
 });
-(function(){const k='bmc_theme';const cur=localStorage.getItem(k)||'light';document.documentElement.setAttribute('data-theme',cur);const b=document.getElementById('themeToggle');function txt(){return(localStorage.getItem(k)==='dark')?'Light Mode':'Dark Mode'}if(b){b.textContent=txt();b.addEventListener('click',()=>{const now=(localStorage.getItem(k)==='dark')?'light':'dark';localStorage.setItem(k,now);document.documentElement.setAttribute('data-theme',now);b.textContent=txt();});}})();
+
+// CURSOR
+const cursorDot = document.querySelector('.cursor-dot');
+const outline = document.querySelector('.cursor-outline');
+
+if (cursorDot && outline) {
+  window.addEventListener('mousemove', (e) => {
+    const posX = e.clientX;
+    const posY = e.clientY;
+    cursorDot.style.transform = `translate(${posX}px, ${posY}px)`;
+    outline.animate({
+      left: `${posX}px`,
+      top: `${posY}px`
+    }, { duration: 500, fill: 'forwards' });
+  });
+
+  document.querySelectorAll('a, button, .dropdown, .product-card, .pod, .service-row, .case-card, .trust-item, .nav-btn, input, textarea, .card, .fab').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      outline.style.width = '60px';
+      outline.style.height = '60px';
+      outline.style.background = 'rgba(141, 110, 99, 0.2)';
+      outline.style.borderColor = 'transparent';
+    });
+    el.addEventListener('mouseleave', () => {
+      outline.style.width = '40px';
+      outline.style.height = '40px';
+      outline.style.background = 'transparent';
+      outline.style.borderColor = 'var(--accent-dark)';
+    });
+  });
+}
 </script>
 </body>
 </html>

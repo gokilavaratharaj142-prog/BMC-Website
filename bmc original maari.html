@@ -803,33 +803,32 @@ window.addEventListener('scroll', () => {
 const cursorDot = document.querySelector('.cursor-dot');
 const outline = document.querySelector('.cursor-outline');
 
-window.addEventListener('mousemove', (e) => {
-  const posX = e.clientX;
-  const posY = e.clientY;
-  
-  cursorDot.style.transform = `translate(${posX}px, ${posY}px)`;
-  
-  outline.animate({
-    left: `${posX}px`,
-    top: `${posY}px`
-  }, { duration: 500, fill: 'forwards' });
-});
+if (cursorDot && outline) {
+  window.addEventListener('mousemove', (e) => {
+    const posX = e.clientX;
+    const posY = e.clientY;
+    cursorDot.style.transform = `translate(${posX}px, ${posY}px)`;
+    outline.animate({
+      left: `${posX}px`,
+      top: `${posY}px`
+    }, { duration: 500, fill: 'forwards' });
+  });
 
-// Cursor Hover Effects
-document.querySelectorAll('a, button, .product-card, .pod, .service-row, .case-card, .trust-item').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    outline.style.width = '60px';
-    outline.style.height = '60px';
-    outline.style.background = 'rgba(141, 110, 99, 0.2)'; // Latte tint
-    outline.style.borderColor = 'transparent';
+  document.querySelectorAll('a, button, .dropdown, .product-card, .pod, .service-row, .case-card, .trust-item, .nav-btn, input, textarea, .tab, .btn, .fab, .star, .emoji, .contact-pill, .card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      outline.style.width = '60px';
+      outline.style.height = '60px';
+      outline.style.background = 'rgba(141, 110, 99, 0.2)';
+      outline.style.borderColor = 'transparent';
+    });
+    el.addEventListener('mouseleave', () => {
+      outline.style.width = '40px';
+      outline.style.height = '40px';
+      outline.style.background = 'transparent';
+      outline.style.borderColor = 'var(--accent-dark)';
+    });
   });
-  el.addEventListener('mouseleave', () => {
-    outline.style.width = '40px';
-    outline.style.height = '40px';
-    outline.style.background = 'transparent';
-    outline.style.borderColor = 'var(--accent-dark)';
-  });
-});
+}
 
 // GSAP ANIMATIONS
 gsap.registerPlugin(ScrollTrigger);
