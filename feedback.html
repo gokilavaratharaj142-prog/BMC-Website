@@ -6,6 +6,7 @@
 <title>Feedback — Best Marketing Company</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="common.css">
+<script src="global.js" defer></script>
 <script>window.API_BASE="http://localhost:5000";</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -63,55 +64,15 @@ a:visited{color:inherit}
 </head>
 <body>
 
+<div id="global-header"></div>
+
 <!-- Custom Cursor -->
 <div class="cursor-dot"></div>
 <div class="cursor-outline"></div>
 
-<div class="topbar">
-  <div class="topbar-inner">
-    <div>BMC Share: ₹281.40 (-0.03)</div>
-    <div style="display:flex;gap:20px;">
-      <a href="#">Careers</a>
-      <a href="#">News</a>
-      <a href="#">Global (EN)</a>
-    </div>
-  </div>
-</div>
-<nav class="main-nav">
-  <a class="brand" href="bmc original maari.html#top">Best Marketing Company</a>
-  <div class="nav-links">
-    <a href="bmc original maari.html#top">Home</a>
-    <div class="dropdown">
-      <a href="about.html">About Us ▾</a>
-      <div class="dropdown-content">
-        <a href="company-profile.html">Company Profile</a>
-        <a href="awards.html">Awards & Recognitions</a>
-        <a href="memberships.html">Memberships & Affiliations</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <a href="bmc original maari.html#categories">Our Products ▾</a>
-      <div class="dropdown-content">
-        <a href="valves.html">Valves</a>
-        <a href="crucibles.html">Crucibles</a>
-        <a href="foundry-products.html">Foundry Products</a>
-        <a href="coolants-lubricants.html">Coolants & Lubricants</a>
-        <a href="die-casting.html">Die Casting Machines</a>
-        <a href="foundry-automations.html">BMC Automation & Solutions</a>
-        <a href="vacuum-casting.html">Vacuum Casting Systems</a>
-      </div>
-    </div>
-    <a href="media.html">Media</a>
-    <a href="bmc original maari.html#contact">Contact</a>
-    <a href="feedback.html">Feedback</a>
-    <a href="admin.html">Dashboard</a>
-  </div>
-  <a href="bmc original maari.html#contact" class="nav-btn">Get Quote</a>
-  <button id="themeToggle" class="nav-btn" style="background:transparent;color:var(--text);border:1px solid var(--text)">Dark Mode</button>
-</nav>
-<script>
-(function(){const k='bmc_theme';const cur=localStorage.getItem(k)||'light';document.documentElement.setAttribute('data-theme',cur);const b=document.getElementById('themeToggle');function txt(){return(localStorage.getItem(k)==='dark')?'Light Mode':'Dark Mode'}if(b){b.textContent=txt();b.addEventListener('click',()=>{const now=(localStorage.getItem(k)==='dark')?'light':'dark';localStorage.setItem(k,now);document.documentElement.setAttribute('data-theme',now);b.textContent=txt();});}})();
-</script>
+<!-- Scroll Progress -->
+<div id="scroll-progress"></div>
+
 <header class="page-hero">
   <div class="breadcrumbs">Home / Feedback</div>
   <h1 class="hero-title">Share Your Feedback</h1>
@@ -189,10 +150,8 @@ a:visited{color:inherit}
   </form>
 </section>
 <section class="charts" id="charts"></section>
-<section class="list" id="recentList">
-  <h3>Recent Feedback</h3>
-  <div id="items"></div>
-</section>
+<div id="global-footer"></div>
+
 <script>
 const Backend = {
   base: (window.API_BASE || window.FUNCTIONS_BASE_URL || ''),
@@ -291,17 +250,20 @@ document.getElementById('feedbackForm').addEventListener('submit', (e)=>{
   e.preventDefault();
   const f = e.target;
   const entry = {
-    name: f.name.value.trim(),
-    email: f.email.value.trim(),
-    phone: f.phone.value.trim(),
-    category: f.category.value,
-    message: f.message.value.trim(),
-    rating: f.rating.value,
+    name: sanitize(f.name.value.trim()),
+    email: sanitize(f.email.value.trim()),
+    phone: sanitize(f.phone.value.trim()),
+    category: sanitize(f.category.value),
+    message: sanitize(f.message.value.trim()),
+    rating: sanitize(f.rating.value),
     stars: Number(document.getElementById('starsVal').value||0),
-    sentiment: document.getElementById('emojiVal').value||'',
+    sentiment: sanitize(document.getElementById('emojiVal').value||''),
     timestamp: Date.now()
   };
-  if(!entry.name || !entry.email || !entry.message) return;
+  if(!entry.name || !entry.email || !entry.message || !isValidEmail(entry.email)) {
+    alert('Please fill out all required fields and provide a valid email address.');
+    return;
+  }
   const all = getAll();
   all.push(entry);
   saveAll(all);
@@ -313,6 +275,17 @@ document.getElementById('feedbackForm').addEventListener('submit', (e)=>{
   renderList();
   drawCharts();
 });
+
+function sanitize(str) {
+  const temp = document.createElement('div');
+  temp.textContent = str;
+  return temp.innerHTML;
+}
+
+function isValidEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
 document.getElementById('clearBtn').addEventListener('click', ()=>{
   document.getElementById('feedbackForm').reset();
 });
@@ -330,38 +303,6 @@ window.addEventListener('scroll', ()=>{
   if(window.scrollY>10) n.classList.add('scrolled'); else n.classList.remove('scrolled');
 });
 
-// CURSOR
-const cursorDot = document.querySelector('.cursor-dot');
-const outline = document.querySelector('.cursor-outline');
-
-if (cursorDot && outline) {
-  window.addEventListener('mousemove', (e) => {
-    const posX = e.clientX;
-    const posY = e.clientY;
-    cursorDot.style.transform = `translate(${posX}px, ${posY}px)`;
-    outline.animate({
-      left: `${posX}px`,
-      top: `${posY}px`
-    }, { duration: 500, fill: 'forwards' });
-  });
-
-  document.querySelectorAll('a, button, .dropdown, .product-card, .pod, .service-row, .case-card, .trust-item, .nav-btn, input, textarea, .tab, .btn, .fab, .star, .emoji, .contact-pill, .card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      outline.style.width = '60px';
-      outline.style.height = '60px';
-      outline.style.background = 'rgba(141, 110, 99, 0.2)';
-      outline.style.borderColor = 'transparent';
-    });
-    el.addEventListener('mouseleave', () => {
-      outline.style.width = '40px';
-      outline.style.height = '40px';
-      outline.style.background = 'transparent';
-      outline.style.borderColor = 'var(--accent-dark)';
-    });
-  });
-}
-
-(function(){const k='bmc_theme';const cur=localStorage.getItem(k)||'light';document.documentElement.setAttribute('data-theme',cur);const b=document.getElementById('themeToggle');function txt(){return(localStorage.getItem(k)==='dark')?'Light Mode':'Dark Mode'}if(b){b.textContent=txt();b.addEventListener('click',()=>{const now=(localStorage.getItem(k)==='dark')?'light':'dark';localStorage.setItem(k,now);document.documentElement.setAttribute('data-theme',now);b.textContent=txt();});}})();
 function triggerConfetti(){
   const p = document.createElement('div');
   p.className='party';
@@ -378,79 +319,6 @@ function triggerConfetti(){
   }
   setTimeout(()=>{ document.body.removeChild(p) }, 1500);
 }
-</script>
-<style>
-.fab-wrap{position:fixed;right:22px;bottom:22px;z-index:10000;display:flex;flex-direction:column;gap:10px}
-.fab{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;border:1px solid var(--accent-dark);box-shadow:0 10px 20px rgba(0,0,0,0.15);cursor:pointer;font-size:20px;position:relative}
-.fab:hover{background:var(--accent-dark)}
-.fab::after{content:attr(data-tip);position:absolute;right:58px;top:50%;transform:translateY(-50%);background:#2C1810;color:#F9F5EB;padding:6px 10px;border-radius:8px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s}
-.fab:hover::after{opacity:1}
-.chat-window{position:fixed;right:22px;bottom:90px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,0.15);display:none;overflow:hidden}
-.chat-head{padding:10px 12px;background:var(--text);color:var(--bg);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
-.chat-body{padding:10px;max-height:260px;overflow:auto;font-size:14px;color:var(--text)}
-.chat-msg{margin:6px 0;padding:8px 10px;border-radius:10px;background:#f4efe6}
-.chat-input{display:flex;gap:6px;padding:10px;border-top:1px solid var(--border)}
-.chat-input input{flex:1;padding:10px;border:1px solid var(--border);border-radius:8px}
-.chat-input button{padding:10px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;font-size:12px}
-</style>
-<div class="fab-wrap">
-  <a class="fab" href="https://wa.me/919597512444" target="_blank" aria-label="WhatsApp" data-tip="Chat on WhatsApp">🟢</a>
-  <a class="fab" href="tel:+919597512444" aria-label="Call" data-tip="Call us">📞</a>
-  <a class="fab" href="mailto:mail@bestmarketingco.net" aria-label="Email" data-tip="Send Email">✉️</a>
-  <button class="fab" id="chatToggle" aria-label="Chatbot" data-tip="Chat with BMC">💬</button>
-</div>
-<div class="chat-window" id="chatWin">
-  <div class="chat-head">BMC Chat</div>
-  <div class="chat-body" id="chatBody">
-    <div class="chat-msg">Hi! Ask anything or leave your feedback.</div>
-  </div>
-  <div class="chat-input">
-    <input id="chatText" placeholder="Type a message..." />
-    <button id="chatSend">Send</button>
-  </div>
-</div>
-<style>
-.float-btn{position:fixed;bottom:22px;display:flex;gap:10px;z-index:10001}
-.float-btn a,.float-btn button{padding:10px 14px;border-radius:999px;border:1px solid var(--accent-dark);background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:8px}
-.float-btn .left{left:22px}
-.float-btn .right{right:22px}
-.back-top{display:none}
-</style>
-<div class="float-btn left">
-  <a href="bmc original maari.html#top">← Home</a>
-  <button class="back-top" id="backTopBtn">↑ Top</button>
-</div>
-<script>
-const chatWin = document.getElementById('chatWin');
-document.getElementById('chatToggle').addEventListener('click', ()=>{
-  chatWin.style.display = chatWin.style.display==='none' || chatWin.style.display==='' ? 'block' : 'none';
-});
-function reply(msg){
-  const body = document.getElementById('chatBody');
-  const add = (text)=>{ const d=document.createElement('div'); d.className='chat-msg'; d.textContent=text; body.appendChild(d); body.scrollTop = body.scrollHeight; };
-  add(msg);
-}
-function handle(text){
-  const t = text.toLowerCase();
-  if(t.includes('feedback')) return 'Thanks! Submit via the form; Admin visualizes charts in Admin.';
-  if(t.includes('contact')||t.includes('phone')||t.includes('call')) return 'Call +91 95975 12444 or email mail@bestmarketingco.net.';
-  if(t.includes('products')||t.includes('foundry')||t.includes('det')||t.includes('tbc')||t.includes('moresco')) return 'Products: Morgan crucibles, DET vacuum systems, TBC machines, MORESCO lubricants.';
-  return 'Our team will respond soon. Please leave your email and query.';
-}
-document.getElementById('chatSend').addEventListener('click', ()=>{
-  const input = document.getElementById('chatText');
-  const text = input.value.trim();
-  if(!text) return;
-  reply('You: ' + text);
-  setTimeout(()=>reply('BMC: ' + handle(text)), 300);
-  input.value='';
-});
-window.addEventListener('scroll', ()=>{
-  const b = document.getElementById('backTopBtn');
-  if(!b) return;
-  b.style.display = window.scrollY > 200 ? 'inline-flex' : 'none';
-});
-document.getElementById('backTopBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
 </script>
 </body>
 </html>

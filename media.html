@@ -6,6 +6,7 @@
 <title>Media — Best Marketing Company</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="common.css">
+<script src="global.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{scrollbar-gutter:stable}
@@ -32,86 +33,15 @@ a:visited{color:inherit}
 </head>
 <body>
 
+<div id="global-header"></div>
+
 <!-- Custom Cursor -->
 <div class="cursor-dot"></div>
 <div class="cursor-outline"></div>
-<div class="topbar">
-  <div class="topbar-inner">
-    <div>BMC Share: ₹281.40 (-0.03)</div>
-    <div style="display:flex;gap:20px;">
-      <a href="#">Careers</a>
-      <a href="#">News</a>
-      <a href="#">Global (EN)</a>
-    </div>
-  </div>
-</div>
-<nav class="main-nav">
-  <a class="brand" href="bmc original maari.html#top">Best Marketing Company</a>
-  <div class="nav-links">
-    <a href="bmc original maari.html#top">Home</a>
-    <div class="dropdown">
-      <a href="about.html">About Us ▾</a>
-      <div class="dropdown-content">
-        <a href="company-profile.html">Company Profile</a>
-        <a href="awards.html">Awards & Recognitions</a>
-        <a href="memberships.html">Memberships & Affiliations</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <a href="bmc original maari.html#categories">Our Products ▾</a>
-      <div class="dropdown-content">
-        <a href="valves.html">Valves</a>
-        <a href="crucibles.html">Crucibles</a>
-        <a href="foundry-products.html">Foundry Products</a>
-        <a href="coolants-lubricants.html">Coolants & Lubricants</a>
-        <a href="die-casting.html">Die Casting Machines</a>
-        <a href="foundry-automations.html">BMC Automation & Solutions</a>
-        <a href="vacuum-casting.html">Vacuum Casting Systems</a>
-      </div>
-    </div>
-    <a href="media.html">Media</a>
-    <a href="bmc original maari.html#contact">Contact</a>
-    <a href="feedback.html">Feedback</a>
-    <a href="admin.html">Dashboard</a>
-  </div>
-  <a href="bmc original maari.html#contact" class="nav-btn">Get Quote</a>
-  <button id="themeToggle" class="nav-btn" style="background:transparent;color:var(--text);border:1px solid var(--text)">Dark Mode</button>
-</nav>
 
-<script>
-// CURSOR
-const cursorDot = document.querySelector('.cursor-dot');
-const outline = document.querySelector('.cursor-outline');
+<!-- Scroll Progress -->
+<div id="scroll-progress"></div>
 
-if (cursorDot && outline) {
-  window.addEventListener('mousemove', (e) => {
-    const posX = e.clientX;
-    const posY = e.clientY;
-    cursorDot.style.transform = `translate(${posX}px, ${posY}px)`;
-    outline.animate({
-      left: `${posX}px`,
-      top: `${posY}px`
-    }, { duration: 500, fill: 'forwards' });
-  });
-
-  document.querySelectorAll('a, button, .dropdown, .product-card, .pod, .service-row, .case-card, .trust-item, .card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      outline.style.width = '60px';
-      outline.style.height = '60px';
-      outline.style.background = 'rgba(141, 110, 99, 0.2)';
-      outline.style.borderColor = 'transparent';
-    });
-    el.addEventListener('mouseleave', () => {
-      outline.style.width = '40px';
-      outline.style.height = '40px';
-      outline.style.background = 'transparent';
-      outline.style.borderColor = 'var(--accent-dark)';
-    });
-  });
-}
-
-(function(){const k='bmc_theme';const cur=localStorage.getItem(k)||'light';document.documentElement.setAttribute('data-theme',cur);const b=document.getElementById('themeToggle');function txt(){return(localStorage.getItem(k)==='dark')?'Light Mode':'Dark Mode'}if(b){b.textContent=txt();b.addEventListener('click',()=>{const now=(localStorage.getItem(k)==='dark')?'light':'dark';localStorage.setItem(k,now);document.documentElement.setAttribute('data-theme',now);b.textContent=txt();});}})();
-</script>
 <header class="page-hero">
   <h1 class="hero-title">Media</h1>
 </header>
@@ -137,22 +67,7 @@ if (cursorDot && outline) {
     </div>
   </div>
 </section>
-<style>
-.float-btn{position:fixed;bottom:22px;left:22px;z-index:10001;display:flex;gap:10px}
-.float-btn a,.float-btn button{padding:10px 14px;border-radius:999px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:8px}
-.back-top{display:none}
-</style>
-<div class="float-btn">
-  <a href="bmc original maari.html#top">← Home</a>
-  <button class="back-top" id="backTopBtn">↑ Top</button>
-</div>
-<script>
-window.addEventListener('scroll', ()=>{
-  const b = document.getElementById('backTopBtn');
-  if(!b) return;
-  b.style.display = window.scrollY > 200 ? 'inline-flex' : 'none';
-});
-document.getElementById('backTopBtn')?.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
-</script>
+<div id="global-footer"></div>
+
 </body>
 </html>

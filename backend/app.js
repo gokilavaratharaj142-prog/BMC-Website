@@ -1,8 +1,3 @@
-﻿require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
 const config = require('./config');
 const connectDB = require('./config/db');
 
@@ -16,12 +11,18 @@ const chatbotRoutes = require('./routes/chatbot');
 const rpaRoutes = require('./routes/rpa');
 const backupRoutes = require('./routes/backup');
 
+const { loginLimiter, apiLimiter } = require('./middleware/rateLimiter');
+
 const app = express();
 
+const sanitizer = require('./middleware/sanitizer');
+
 app.use(helmet());
-app.use(cors({ origin: config.appUrl || 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: config.appUrl, credentials: true }));
 app.use(express.json({ limit: '300kb' }));
 app.use(morgan('dev'));
+app.use(sanitizer);
+app.use('/api/', apiLimiter);
 
 app.get('/health', (req, res) => res.json({ ok: true }));
 
@@ -40,10 +41,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Server error' });
 });
 
-const PORT = process.env.PORT || process.env.BACKEND_PORT || 5000;
 (async () => {
   await connectDB();
-  app.listen(PORT, () => {
-    console.log(`Backend running on http://localhost:${PORT}`);
+  app.listen(config.port, () => {
+    console.log(`Backend running on http://localhost:${config.port}`);
   });
 })();

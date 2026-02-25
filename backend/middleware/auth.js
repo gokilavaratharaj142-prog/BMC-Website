@@ -1,25 +1,32 @@
-﻿const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 const config = require('../config');
 
-function requireAuth(req, res, next){
-  const header = req.headers.authorization || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
-  if (!token) return res.status(401).json({ message: 'Unauthorized' });
-  try{
-    const payload = jwt.verify(token, config.jwtSecret);
-    req.user = payload;
-    return next();
-  }catch(err){
-    return res.status(401).json({ message: 'Invalid token' });
+const protect = async (req, res, next) => {
+  let token;
+
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    try {
+      token = req.headers.authorization.split(' ')[1];
+      const decoded = jwt.verify(token, config.jwtSecret);
+      req.user = await User.findById(decoded.id).select('-passwordHash');
+      next();
+    } catch (error) {
+      res.status(401).json({ message: 'Not authorized, token failed' });
+    }
   }
-}
 
-function requireRole(roles = []){
-  return (req, res, next) => {
-    if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
-    if (!roles.includes(req.user.role)) return res.status(403).json({ message: 'Forbidden' });
-    return next();
-  };
-}
+  if (!token) {
+    res.status(401).json({ message: 'Not authorized, no token' });
+  }
+};
 
-module.exports = { requireAuth, requireRole };
+const admin = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    res.status(401).json({ message: 'Not authorized as an admin' });
+  }
+};
+
+module.exports = { protect, admin };

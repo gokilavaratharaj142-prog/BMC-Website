@@ -18,7 +18,9 @@ async function createOtp(userId, purpose){
   return code;
 }
 
-router.post('/login', async (req, res) => {
+const { loginLimiter } = require('../middleware/rateLimiter');
+
+router.post('/login', loginLimiter, async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
   const password = String(req.body.password || '');
   const user = await User.findOne({ email });
@@ -56,42 +58,56 @@ router.post('/verify-otp', async (req, res) => {
   res.json({ token });
 });
 
+const crypto = require('crypto');
+
 router.post('/forgot', async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
   const user = await User.findOne({ email });
   if (!user || user.status !== 'active') return res.status(200).json({ ok: true });
 
-  const code = await createOtp(user.id, 'reset');
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+  user.resetPasswordToken = hashedToken;
+  user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+  await user.save();
+
+  const resetUrl = `${config.appUrl}/reset-password/${resetToken}`;
+
   await sendMail({
     to: user.email,
-    subject: 'BMC password reset OTP',
-    text: `Your OTP is ${code}. It expires in ${config.otpExpiresMinutes} minutes.`
+    subject: 'BMC password reset',
+    text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\nPlease click on the following link, or paste this into your browser to complete the process:\n\n${resetUrl}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.`
   });
 
-  await logAudit({ userId: user._id, action: 'OTP_SENT', detail: 'Reset OTP sent', ip: req.ip });
+  await logAudit({ userId: user._id, action: 'PASSWORD_RESET_REQUEST', detail: 'Password reset token sent', ip: req.ip });
   res.json({ ok: true });
 });
 
-router.post('/reset', async (req, res) => {
-  const email = String(req.body.email || '').trim().toLowerCase();
-  const otp = String(req.body.otp || '').trim();
+router.post('/reset/:token', async (req, res) => {
+  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: 'Password reset token is invalid or has expired' });
+  }
+
   const newPassword = String(req.body.newPassword || '');
-
-  if (newPassword.length < 8) return res.status(400).json({ message: 'Password too short' });
-
-  const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ message: 'Invalid user' });
-
-  const row = await OtpCode.findOne({ userId: user._id, purpose: 'reset' }).sort({ createdAt: -1 });
-  if (!row) return res.status(400).json({ message: 'OTP not found' });
-  if (new Date(row.expiresAt).getTime() < Date.now()) return res.status(400).json({ message: 'OTP expired' });
-
-  const ok = await bcrypt.compare(otp, row.codeHash);
-  if (!ok) return res.status(400).json({ message: 'Invalid OTP' });
+  if (newPassword.length < 8) {
+    return res.status(400).json({ message: 'Password too short' });
+  }
 
   const hash = await bcrypt.hash(newPassword, 10);
-  await User.updateOne({ _id: user._id }, { $set: { passwordHash: hash } });
-  await logAudit({ userId: user._id, action: 'PASSWORD_RESET', detail: 'Password reset via OTP', ip: req.ip });
+  user.passwordHash = hash;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+
+  await logAudit({ userId: user._id, action: 'PASSWORD_RESET', detail: 'Password reset via token', ip: req.ip });
   res.json({ ok: true });
 });
 

@@ -1,17 +1,17 @@
 const express = require('express');
 const Lead = require('../models/Lead');
 const User = require('../models/User');
-const { requireAuth, requireRole } = require('../middleware/auth');
+const { protect, admin } = require('../middleware/auth');
 const { getOverview, getLeadsByDay } = require('../services/analytics');
 
 const router = express.Router();
 
-router.get('/overview', requireAuth, requireRole(['admin','manager']), async (req, res) => {
+router.get('/overview', protect, admin, async (req, res) => {
   const data = await getOverview();
   res.json(data);
 });
 
-router.get('/leads', requireAuth, requireRole(['admin','manager','staff']), async (req, res) => {
+router.get('/leads', protect, admin, async (req, res) => {
   const q = String(req.query.q || '').trim();
   const filter = q ? {
     $or: [
@@ -27,12 +27,12 @@ router.get('/leads', requireAuth, requireRole(['admin','manager','staff']), asyn
   res.json(rows || []);
 });
 
-router.post('/leads/clear', requireAuth, requireRole(['admin']), async (req, res) => {
+router.post('/leads/clear', protect, admin, async (req, res) => {
   await Lead.deleteMany({});
   res.json({ ok: true });
 });
 
-router.get('/leads.csv', requireAuth, requireRole(['admin','manager']), async (req, res) => {
+router.get('/leads.csv', protect, admin, async (req, res) => {
   const rows = await Lead.find().sort({ createdAt: -1 });
   const headers = ['created_at','name','email','phone','company','message','product'];
   const csv = [headers.join(',')]
@@ -54,13 +54,13 @@ router.get('/leads.csv', requireAuth, requireRole(['admin','manager']), async (r
   res.send(csv);
 });
 
-router.get('/analytics/leads', requireAuth, requireRole(['admin','manager']), async (req, res) => {
+router.get('/analytics/leads', protect, admin, async (req, res) => {
   const days = Number(req.query.days || 14);
   const rows = await getLeadsByDay(days);
   res.json(rows || []);
 });
 
-router.get('/users', requireAuth, requireRole(['admin']), async (req, res) => {
+router.get('/users', protect, admin, async (req, res) => {
   const rows = await User.find().sort({ createdAt: -1 }).select(['name','email','role','status','createdAt']);
   res.json(rows || []);
 });
