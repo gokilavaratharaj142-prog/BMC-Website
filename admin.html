@@ -3,353 +3,151 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Admin — Best Marketing Company</title>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="common.css">
-<script src="global.js" defer></script>
+<title>Admin Login - Best Marketing Company</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script>window.API_BASE="http://localhost:5000";</script>
 <style>
+:root{--bg:#f9f5eb;--surface:#fff;--text:#3e2723;--text-light:#6d4c41;--accent:#8d6e63;--accent-dark:#4e342e;--border:rgba(62,39,35,.1)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-a:visited{color:inherit}
-.dropdown{position:relative}
-.dropdown > a{display:flex;align-items:center;gap:6px}
-.dropdown-content{position:absolute;top:28px;left:0;min-width:260px;background:rgba(255,255,255,.95);border:1px solid var(--border);border-radius:10px;box-shadow:0 20px 40px rgba(0,0,0,.08);padding:12px;display:none}
-.dropdown-content a{display:block;padding:10px 12px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);border-radius:8px}
-.dropdown-content a:hover{background:var(--bg)}
-.dropdown:hover .dropdown-content{display:block}
-.page-hero{min-height:50vh;padding:140px 5vw 40px;display:flex;flex-direction:column;justify-content:flex-end;border-bottom:1px solid var(--border)}
-.hero-title{font-size:clamp(40px,7vw,80px);margin-bottom:10px;background:linear-gradient(to right,var(--text),var(--text-light));background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-.hero-desc{max-width:900px;font-size:18px;color:var(--text-light);line-height:1.8;border-left:2px solid var(--accent);padding-left:24px}
-.wrap{max-width:1200px;margin:0 auto;padding:60px 5vw}
-.tabs{display:flex;gap:12px;margin-bottom:20px}
-.tab{padding:10px 16px;border:1px solid var(--border);border-radius:999px;background:var(--surface);cursor:pointer;font-size:12px;text-transform:uppercase;font-weight:700}
-.tab.active{background:var(--accent);color:white;border-color:var(--accent)}
-.tools{display:flex;gap:12px;margin:12px 0 24px}
-.btn{padding:10px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:white;cursor:pointer;font-weight:700;font-size:12px;text-transform:uppercase}
+body{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at top right,rgba(141,110,99,.2),transparent 42%),var(--bg);font-family:'Manrope',sans-serif;color:var(--text)}
+.login-card{width:min(430px,92vw);background:rgba(255,255,255,.72);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.55);border-radius:18px;box-shadow:0 28px 56px rgba(62,39,35,.2);padding:24px}
+.lock{width:58px;height:58px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;font-size:24px}
+.title{text-align:center;font-size:34px;line-height:1.05;font-weight:900}
+.sub{text-align:center;color:var(--text-light);margin:8px 0 16px}
+.row{display:flex;flex-direction:column;gap:10px}
+.field{display:flex;flex-direction:column;gap:6px}
+.label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:700}
+.input{padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--text);font-size:15px;transition:border-color .2s,box-shadow .2s}
+.input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(141,110,99,.2)}
+.pass-wrap{position:relative}
+.eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--text-light);cursor:pointer;font-size:15px}
+.btn{padding:12px;border-radius:10px;border:1px solid var(--accent);background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;font-weight:800;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 12px 22px rgba(62,39,35,.18)}
 .btn.secondary{background:transparent;color:var(--text);border-color:var(--text)}
-.table{width:100%;border-collapse:collapse;border:1px solid var(--border);background:var(--surface)}
-.table th,.table td{border-bottom:1px solid var(--border);padding:10px 12px;font-size:14px;text-align:left}
-.empty{padding:12px 16px;border:1px dashed var(--border);border-radius:8px;color:var(--text-light)}
-@media(max-width:900px){.table{display:block;overflow:auto}}
+#stepOtp{display:none}
+.msg{display:none;font-size:13px;font-weight:700;padding:8px 10px;border-radius:8px}
+.msg.err{color:#b00020;border:1px solid #b0002044;background:#b0002014}
+.msg.ok{color:#1b6d2f;border:1px solid #1b6d2f44;background:#1b6d2f14}
+.sec{margin-top:8px;font-size:12px;color:var(--text-light)}
+.login-error{color:#b3261e;font-size:13px;margin-top:10px;text-align:center;display:none}
 </style>
 </head>
 <body>
+  <main class="login-card">
+    <div class="lock">??</div>
+    <h1 class="title">Admin Login</h1>
+    <p class="sub">JWT + OTP protected admin access.</p>
 
-<!-- Custom Cursor -->
-<div class="cursor-dot"></div>
-<div class="cursor-outline"></div>
+    <section id="stepCred">
+      <form id="adminLoginForm" class="row" novalidate>
+        <div class="field">
+          <label class="label" for="admUser">Username or Email</label>
+          <input id="admUser" class="input" placeholder="Enter username or email" autocomplete="username">
+        </div>
+        <div class="field">
+          <label class="label" for="admPass">Password</label>
+          <div class="pass-wrap">
+            <input id="admPass" class="input" type="password" placeholder="Enter password" autocomplete="current-password" style="padding-right:40px">
+            <button id="togglePass" type="button" class="eye" aria-label="Toggle password">??</button>
+          </div>
+        </div>
+        <button id="loginBtn" type="submit" class="btn">Login</button>
+        <div id="loginError" class="login-error"></div>
+      </form>
+    </section>
 
-<div id="loginGate" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:2000">
-  <div style="width:360px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.08);padding:24px">
-    <div style="font-weight:900;font-size:22px;margin-bottom:6px;color:var(--text)">Admin Login</div>
-    <div style="color:var(--text-light);font-size:14px;margin-bottom:18px">Only authorized personnel may proceed.</div>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <input id="admUser" placeholder="Username" style="padding:12px;border:1px solid var(--border);border-radius:8px">
-      <input id="admPass" placeholder="Password" type="password" style="padding:12px;border:1px solid var(--border);border-radius:8px">
-      <button id="admLoginBtn" style="padding:12px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em">Login</button>
-      <div id="admError" style="display:none;color:#b00020;font-size:13px">Invalid credentials</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-top:6px">
-        <a href="bmc original maari.html#top" style="color:var(--accent);font-weight:700">← Home</a>
-        <button id="admForgot" style="background:transparent;border:none;color:var(--accent);font-weight:700;cursor:pointer">Forgot password?</button>
+    <section id="stepOtp" class="row">
+      <div class="field">
+        <label class="label" for="admOtp">One Time Password</label>
+        <input id="admOtp" class="input" maxlength="6" inputmode="numeric" placeholder="Enter 6-digit OTP">
       </div>
-    </div>
-  </div>
-</div>
-<div id="global-header"></div>
+      <button id="verifyBtn" type="button" class="btn">Verify OTP</button>
+      <button id="backBtn" type="button" class="btn secondary">Back</button>
+    </section>
+
+    <div id="okMsg" class="msg ok"></div>
+    <div id="errMsg" class="msg err"></div>
+    <div class="sec">?? Session secured with expiring JWT token</div>
+  </main>
+
 <script>
-(function(){const k='bmc_theme';const cur=localStorage.getItem(k)||'light';document.documentElement.setAttribute('data-theme',cur);const b=document.getElementById('themeToggle');function txt(){return(localStorage.getItem(k)==='dark')?'Light Mode':'Dark Mode'}if(b){b.textContent=txt();b.addEventListener('click',()=>{const now=(localStorage.getItem(k)==='dark')?'light':'dark';localStorage.setItem(k,now);document.documentElement.setAttribute('data-theme',now);b.textContent=txt();});}})();
-</script>
-<div id="adminApp" style="display:none">
-<header class="page-hero">
-  <h1 class="hero-title">Admin Dashboard</h1>
-  <div class="hero-desc">View and export website submissions. Data is stored in the browser for privacy. Use Export CSV to download records. <span id="backendStatus" style="margin-left:6px;color:var(--accent);font-weight:700"></span></div>
-</header>
-<section class="wrap">
-  <div class="tabs">
-    <button class="tab active" data-tab="contacts">Contacts</button>
-    <button class="tab" data-tab="feedback">Feedback</button>
-  </div>
-  <div class="tools">
-    <button class="btn" id="exportBtn">Export CSV</button>
-    <button class="btn secondary" id="clearBtn">Clear Records</button>
-    <button class="btn secondary" id="logoutBtn">Logout</button>
-  </div>
-  <div id="tableWrap"></div>
-  <div id="charts" style="margin-top:24px"></div>
-</section>
-<script>
-const CONTACT_KEY = 'bmc_contacts';
-const FEEDBACK_KEY = 'bmc_feedback';
-let current = 'contacts';
-const ADM_KEY = 'bmc_admin_auth';
-const Backend = {
-  base: (window.API_BASE || window.FUNCTIONS_BASE_URL || ''),
-  enabled(){ return !!this.base },
-  tokenKey: 'bmc_jwt',
-  async authLogin(email,password){
-    const res = await fetch(`${this.base}/api/auth/login`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password})}).catch(()=>null);
-    if(!res) return null;
-    return res.json().catch(()=>null);
-  },
-  async verifyOtp(email, otp){
-    const res = await fetch(`${this.base}/api/auth/verify-otp`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, otp})}).catch(()=>null);
-    if(!res || !res.ok) return null;
-    const data = await res.json().catch(()=>null);
-    if(data && data.token){
-      localStorage.setItem(this.tokenKey, data.token);
-      localStorage.setItem(ADM_KEY,'yes');
-      return true;
-    }
-    return false;
-  },
-  async get(path){
-    if(!this.enabled()) return null;
-    const t = localStorage.getItem(this.tokenKey)||'';
-    const headers = t ? {'Authorization': `Bearer ${t}`} : {};
-    const res = await fetch(`${this.base}${path}`, { headers }).catch(()=>null);
-    if(!res || !res.ok) return null;
-    return res.json().catch(()=>null);
-  }
+const TOKEN_KEY = 'bmc_jwt';
+const AUTH_KEY = 'bmc_admin_auth';
+let loginIdentity = '';
+
+const q = (id) => document.getElementById(id);
+const err = (m) => { q('okMsg').style.display='none'; q('errMsg').textContent=m; q('errMsg').style.display='block'; };
+const ok = (m) => { q('errMsg').style.display='none'; q('okMsg').textContent=m; q('okMsg').style.display='block'; };
+const clearMsg = () => { q('okMsg').style.display='none'; q('errMsg').style.display='none'; };
+
+async function apiPost(path, body) {
+  const base = window.API_BASE || 'http://localhost:5000';
+  const res = await fetch(`${base}${path}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body||{}) }).catch(()=>null);
+  if(!res) return { ok:false, status:0, data:null };
+  const data = await res.json().catch(()=>null);
+  return { ok: res.ok, status: res.status, data };
+}
+
+function showOtpStep() { q('stepCred').style.display='none'; q('stepOtp').style.display='flex'; }
+function showCredStep() { q('stepCred').style.display='flex'; q('stepOtp').style.display='none'; }
+
+q('togglePass').addEventListener('click', ()=>{
+  q('admPass').type = q('admPass').type === 'password' ? 'text' : 'password';
+});
+
+const loginErrorEl = q('loginError');
+const showLoginError = (m) => {
+  if(!loginErrorEl) return;
+  loginErrorEl.textContent = m || '';
+  loginErrorEl.style.display = m ? 'block' : 'none';
 };
-function isAuthed(){ return localStorage.getItem(ADM_KEY)==='yes' }
-function tryLogin(u,p){
-  const ok = (u==='BMCAdmin') && (p==='BMC@2025');
-  if(ok){ localStorage.setItem(ADM_KEY,'yes'); return true }
-  return false;
-}
-function gate(){
-  const gate = document.getElementById('loginGate');
-  const app = document.getElementById('adminApp');
-  if(isAuthed()){ gate.style.display='none'; app.style.display='block'; return }
-  gate.style.display='flex'; app.style.display='none';
-  document.getElementById('admLoginBtn').addEventListener('click', async ()=>{
-    const u = document.getElementById('admUser').value.trim();
-    const p = document.getElementById('admPass').value.trim();
-    if(Backend.enabled()){
-      const resp = await Backend.authLogin(u,p);
-      if(resp && resp.next==='otp'){
-        const code = window.prompt('Enter the OTP sent to your email');
-        if(code){
-          const ok = await Backend.verifyOtp(u, code.trim());
-          if(ok){ gate.style.display='none'; app.style.display='block' }
-          else { const e=document.getElementById('admError'); e.style.display='block' }
-        }else{
-          const e=document.getElementById('admError'); e.style.display='block'
-        }
-      }else if(tryLogin(u,p)){
-        gate.style.display='none'; app.style.display='block'
-      }else{
-        const e=document.getElementById('admError'); e.style.display='block'
-      }
-    }else{
-      if(tryLogin(u,p)){ gate.style.display='none'; app.style.display='block' }
-      else { const e=document.getElementById('admError'); e.style.display='block' }
-    }
-  });
-}
-function getData(key){ try{ return JSON.parse(localStorage.getItem(key))||[] }catch(e){ return [] } }
-function toCSV(rows){
-  if(!rows.length) return '';
-  const header = Object.keys(rows[0]);
-  const escape = v => `"${String(v).replace(/"/g,'""')}"`;
-  const lines = [header.join(',')].concat(rows.map(r=>header.map(h=>escape(r[h]??'')).join(',')));
-  return lines.join('\r\n');
-}
-async function drawCharts(){
-  const wrap = document.getElementById('charts');
-  if(current!=='feedback'){ wrap.innerHTML=''; return }
-  let data = getData(FEEDBACK_KEY);
-  if(Backend.enabled()){
-    const remote = await Backend.get('/api/feedback');
-    if(Array.isArray(remote) && remote.length) data = remote;
-  }
-  if(!data.length){ wrap.innerHTML=''; return }
-  const catCounts = {};
-  const rateCounts = {'5 - Excellent':0,'4 - Good':0,'3 - Average':0,'2 - Poor':0,'1 - Very Poor':0};
-  data.forEach(d=>{
-    const c = d.category||'Other';
-    catCounts[c] = (catCounts[c]||0)+1;
-    const r = d.rating||'';
-    if(rateCounts[r]!=null) rateCounts[r]++; 
-  });
-  const maxCat = Math.max(...Object.values(catCounts));
-  const maxRate = Math.max(...Object.values(rateCounts));
-  const good = data.filter(d=>{
-    const r = d.rating||'';
-    const s = Number(d.stars||0);
-    return r.startsWith('5') || r.startsWith('4') || s>=4 || d.sentiment==='love' || d.sentiment==='like';
-  }).length;
-  const sat = Math.round((good/data.length)*100);
-  const palette = ['#5B8DEF','#FF7C6E','#7BD88F','#F4D35E','#C17CEB','#4FD1C5','#ED64A6','#FFB000','#00A6FB'];
-  const ratePalette = ['#2ecc71','#27ae60','#f1c40f','#e67e22','#e74c3c'];
-  const bar = (label,val,max,color)=>`<div style="display:flex;align-items:center;gap:12px;margin:6px 0"><div style="width:180px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:${color}">${label}</div><div style="flex:1;height:12px;background:#f0ede6;border-radius:999px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)"><div style="width:${Math.round((val/max)*100)}%;height:12px;background:${color};background-image:linear-gradient(90deg, ${color}, ${color}80);transition:width .3s"></div></div><div style="width:40px;text-align:right;color:var(--text-light)">${val}</div></div>`;
-  const cats = Object.entries(catCounts).map(([k,v],i)=>bar(k,v,maxCat,palette[i%palette.length])).join('');
-  const rates = Object.entries(rateCounts).map(([k,v],i)=>bar(k,v,maxRate,ratePalette[i%ratePalette.length])).join('');
-  let monthBars = '';
-  if(Backend.enabled()){
-    const stats = await Backend.get('/api/admin/analytics/leads');
-    if(Array.isArray(stats) && stats.length){
-      const entries = stats.slice(-6);
-      const maxMonth = Math.max(...entries.map(e=>e.total));
-      monthBars = entries.map(e=>bar(e.day, e.total, Math.max(1,maxMonth))).join('');
-    }else{
-      const months = {};
-      data.forEach(d=>{
-        const dt = new Date(d.timestamp||Date.now());
-        const key = dt.toISOString().slice(0,7);
-        months[key] = (months[key]||0)+1;
-      });
-      const maxMonth = Math.max(...Object.values(months));
-      monthBars = Object.entries(months).slice(-6).map(([k,v])=>bar(k,v,Math.max(1,maxMonth))).join('');
-    }
-  }else{
-    const months = {};
-    data.forEach(d=>{
-      const dt = new Date(d.timestamp||Date.now());
-      const key = dt.toISOString().slice(0,7);
-      months[key] = (months[key]||0)+1;
-    });
-    const maxMonth = Math.max(...Object.values(months));
-    monthBars = Object.entries(months).slice(-6).map(([k,v])=>bar(k,v,Math.max(1,maxMonth))).join('');
-  }
-  wrap.innerHTML = `<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px"><div style="width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--accent) ${sat}%, #f0ede6 0);display:grid;place-items:center;position:relative"><div style="position:absolute;inset:14px;border-radius:50%;background:var(--surface)"></div><div style="position:relative;font-weight:900;color:var(--accent)">${sat}%</div></div><div style="color:var(--text-light)">customers like the product quality</div></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
-    <div style="border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:16px">
-      <div style="font-weight:900;margin-bottom:8px">Feedback by Category</div>${cats}
-    </div>
-    <div style="border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:16px">
-      <div style="font-weight:900;margin-bottom:8px">Ratings Distribution</div>${rates}
-    </div>
-  </div>
-  <div style="margin-top:24px;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:16px">
-    <div style="font-weight:900;margin-bottom:8px">Monthly Feedback (last 6 months)</div>
-    ${monthBars || '<div style="color:var(--text-light)">No monthly data</div>'}
-  </div>`;
-}
-async function render(){
-  const wrap = document.getElementById('tableWrap');
-  let data = current==='contacts'? getData(CONTACT_KEY): getData(FEEDBACK_KEY);
-  if(Backend.enabled()){
-    let remote = null;
-    if(current==='contacts'){
-      remote = await Backend.get('/api/admin/leads');
-      if(!remote) remote = await Backend.get('/api/leads');
-    }else{
-      remote = await Backend.get('/api/feedback');
-    }
-    if(Array.isArray(remote) && remote.length) data = remote;
-  }
-  if(!data.length){
-    wrap.innerHTML = `<div class="empty">No ${current} records found.</div>`;
-    drawCharts();
+
+async function handleLogin(event) {
+  event.preventDefault();
+  clearMsg();
+  showLoginError('');
+
+  const identity = q('admUser').value.trim();
+  const password = q('admPass').value;
+
+  if(!identity || !password) {
+    showLoginError('Please enter username and password.');
     return;
   }
-  const cols = Object.keys(data[0]);
-  const head = cols.map(c=>`<th>${c}</th>`).join('');
-  const rows = data.map(row=>`<tr>${cols.map(c=>`<td>${row[c]}</td>`).join('')}</tr>`).join('');
-  wrap.innerHTML = `<table class="table"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`;
-  drawCharts();
-}
-document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    current = t.dataset.tab;
-    render();
-  });
-});
-document.getElementById('exportBtn').addEventListener('click', ()=>{
-  const data = current==='contacts'? getData(CONTACT_KEY): getData(FEEDBACK_KEY);
-  if(!data.length) return;
-  const csv = toCSV(data);
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
-  a.href = url;
-  a.download = `bmc-${current}-${stamp}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-});
-document.getElementById('clearBtn').addEventListener('click', ()=>{
-  if(current==='contacts') localStorage.removeItem(CONTACT_KEY);
-  else localStorage.removeItem(FEEDBACK_KEY);
-  render();
-});
-gate(); render();
-document.getElementById('backendStatus').textContent = Backend.enabled()? 'Backend: Connected' : 'Backend: Local';
-window.addEventListener('scroll', ()=>{
-  const n = document.querySelector('.main-nav');
-  if(!n) return;
-  if(window.scrollY>10) n.classList.add('scrolled'); else n.classList.remove('scrolled');
-});
-document.getElementById('logoutBtn').addEventListener('click', ()=>{
-  localStorage.removeItem(ADM_KEY);
-  if(Backend.enabled()){
-    fetch(`${Backend.base}/api/admin/logout`, {method:'POST'}).catch(()=>{});
+
+  const r = await apiPost('/api/admin/login', { username: identity, email: identity, password });
+  if(!r.ok || !r.data) {
+    showLoginError('Invalid username or password.');
+    return;
   }
-  gate();
-  window.scrollTo({top:0,behavior:'smooth'});
+
+  loginIdentity = identity;
+  showOtpStep();
+  if(r.data.devOtp) ok(`Dev OTP: ${r.data.devOtp}`);
+  else ok('OTP sent. Enter the 6-digit code.');
+}
+
+document.getElementById('adminLoginForm').addEventListener('submit', handleLogin);
+
+q('verifyBtn').addEventListener('click', async ()=>{
+  clearMsg();
+  const otp = q('admOtp').value.trim();
+  if(!/^\d{6}$/.test(otp)) return err('Enter valid 6-digit OTP.');
+
+  const r = await apiPost('/api/admin/verify-otp', { username: loginIdentity, email: loginIdentity, otp });
+  if(!r.ok || !r.data || !r.data.token) return err((r.data && r.data.message) || 'OTP verification failed.');
+
+  localStorage.setItem(TOKEN_KEY, r.data.token);
+  localStorage.setItem(AUTH_KEY, 'yes');
+  window.location.href = 'admin-dashboard.html';
 });
-  document.getElementById('admForgot').addEventListener('click', async ()=>{
-    const email = window.prompt('Enter your admin email');
-    if(!email) return;
-    const res = await fetch(`${Backend.base}/api/auth/forgot`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email})}).catch(()=>null);
-    if(!res) return;
-    const code = window.prompt('Enter the OTP sent to your email');
-    if(!code) return;
-    const np = window.prompt('Enter new password');
-    if(!np) return;
-    const r = await fetch(`${Backend.base}/api/auth/reset`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, otp: code.trim(), newPassword: np})}).catch(()=>null);
-    if(r && r.ok){ alert('Password reset successful. Please login again.') } else { alert('Reset failed. Try again.') }
-  });
+
+q('backBtn').addEventListener('click', ()=>{ clearMsg(); showCredStep(); showLoginError(''); });
+q('admOtp').addEventListener('keydown', (e)=>{ if(e.key==='Enter') q('verifyBtn').click(); });
+
+if(localStorage.getItem(AUTH_KEY)==='yes' && localStorage.getItem(TOKEN_KEY)) {
+  window.location.href = 'admin-dashboard.html';
+}
 </script>
-<style>
-.fab-wrap{position:fixed;right:22px;bottom:22px;z-index:10000;display:flex;flex-direction:column;gap:10px}
-.fab{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;border:1px solid var(--accent-dark);box-shadow:0 10px 20px rgba(0,0,0,0.15);cursor:pointer;font-size:20px;position:relative}
-.fab:hover{background:var(--accent-dark)}
-.fab::after{content:attr(data-tip);position:absolute;right:58px;top:50%;transform:translateY(-50%);background:#2C1810;color:#F9F5EB;padding:6px 10px;border-radius:8px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s}
-.fab:hover::after{opacity:1}
-.chat-window{position:fixed;right:22px;bottom:90px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,0.15);display:none;overflow:hidden}
-.chat-head{padding:10px 12px;background:var(--text);color:var(--bg);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
-.chat-body{padding:10px;max-height:260px;overflow:auto;font-size:14px;color:var(--text)}
-.chat-msg{margin:6px 0;padding:8px 10px;border-radius:10px;background:#f4efe6}
-.chat-input{display:flex;gap:6px;padding:10px;border-top:1px solid var(--border)}
-.chat-input input{flex:1;padding:10px;border:1px solid var(--border);border-radius:8px}
-.chat-input button{padding:10px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;font-size:12px}
-</style>
-<div class="fab-wrap">
-  <a class="fab" href="https://wa.me/919597512444" target="_blank" aria-label="WhatsApp" data-tip="Chat on WhatsApp">🟢</a>
-  <a class="fab" href="tel:+919597512444" aria-label="Call" data-tip="Call us">📞</a>
-  <a class="fab" href="mailto:mail@bestmarketingco.net" aria-label="Email" data-tip="Send Email">✉️</a>
-  <button class="fab" id="chatToggle" aria-label="Chatbot" data-tip="Chat with BMC">💬</button>
-</div>
-<div class="chat-window" id="chatWin">
-  <div class="chat-head">BMC Chat</div>
-  <div class="chat-body" id="chatBody">
-    <div class="chat-msg">Hi! Admin tips: use export, clear with caution.</div>
-  </div>
-  <div class="chat-input">
-    <input id="chatText" placeholder="Type a message..." />
-    <button id="chatSend">Send</button>
-  </div>
-</div>
-<style>
-.float-btn{position:fixed;bottom:22px;display:flex;gap:10px;z-index:10001}
-.float-btn .left{left:22px}
-.float-btn .right{right:22px}
-.back-top{display:none}
-.back-top-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;border:1px solid var(--accent-dark);box-shadow:0 10px 20px rgba(0,0,0,0.15);cursor:pointer;font-size:18px}
-.back-top-icon:hover{transform:translateY(-2px);box-shadow:0 14px 24px rgba(0,0,0,0.18)}
-</style>
-<div class="float-btn left">
-  <a href="bmc original maari.html#top" style="padding:10px 14px;border-radius:999px;border:1px solid var(--accent-dark);background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:8px">← Home</a>
-  <button class="back-top back-top-icon" id="backTopBtn">↑</button>
-</div>
-<div id="global-footer"></div>
-</div>
 </body>
 </html>
