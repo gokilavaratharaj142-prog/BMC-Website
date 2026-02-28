@@ -33,4 +33,13 @@ const admin = (req, res, next) => {
   }
 };
 
-module.exports = { protect, admin };
+// Aliases for more granular route protection
+const requireAuth = protect;
+const requireRole = (roles = []) => (req, res, next) => {
+  if (req.user && roles.includes(req.user.role)) {
+    return next();
+  }
+  return res.status(403).json({ message: 'Not authorized for this resource' });
+};
+
+module.exports = { protect, admin, requireAuth, requireRole };
