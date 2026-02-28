@@ -59,6 +59,7 @@ a{text-decoration:none;color:inherit}
 .nav-links a:hover::after{width:100%}
 .dropdown{position:relative}
 .dropdown > a{display:flex;align-items:center;gap:6px}
+.dropdown-arrow{font-size:10px;opacity:0.8;display:inline-block}
 .dropdown-content{
   position:absolute;top:28px;left:0;min-width:260px;background:rgba(255,255,255,0.95);
   border:1px solid var(--border);border-radius:10px;box-shadow:0 20px 40px rgba(0,0,0,0.08);padding:12px;display:none;z-index:1001;
