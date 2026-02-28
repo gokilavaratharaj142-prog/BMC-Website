@@ -23,7 +23,7 @@ const app = express();
 const sanitizer = require('./middleware/sanitizer');
 
 app.use(helmet());
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:3000', 'http://127.0.0.1:5000', 'null'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5000', 'http://localhost:5001', 'http://127.0.0.1:3000', 'http://127.0.0.1:5000', 'http://127.0.0.1:5001', 'null'];
 app.use(cors({ origin: (o, cb) => cb(null, !o || allowedOrigins.includes(o)), credentials: true }));
 app.use(express.json({ limit: '300kb' }));
 app.use(morgan('dev'));

@@ -33,9 +33,10 @@ a:visited{color:inherit}
 .stars{display:flex;gap:8px}
 .star{font-size:28px;color:#ddd;cursor:pointer;transition:color .2s ease}
 .star.active,.star:hover{color:#ffb703}
-.emojis{display:flex;gap:10px}
-.emoji{font-size:22px;cursor:pointer;opacity:0.4;transition:opacity .2s ease}
-.emoji.active,.emoji:hover{opacity:1}
+.emojis{display:flex;gap:10px;flex-wrap:wrap}
+.emoji{font-size:32px;cursor:pointer;opacity:0.3;transition:opacity .2s ease, transform .2s ease;padding:8px;border-radius:8px}
+.emoji.active{opacity:1;transform:scale(1.15);background:rgba(141,110,99,.1)}
+.emoji:hover{opacity:0.8;transform:scale(1.1)}
 .field-error{color:#b00020;font-size:12px;margin-top:4px;display:none}
 .actions{display:flex;gap:12px;align-items:center;margin-top:24px}
 .btn{padding:14px 22px;border-radius:var(--radius);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:white;transition:background .2s ease,transform .1s ease}
@@ -127,6 +128,17 @@ a:visited{color:inherit}
           <span class="star" data-val="5">★</span>
         </div>
         <div class="field-error" id="starsError">Please select a rating</div>
+      </div>
+      <div class="field full">
+        <label class="label">How do you feel?</label>
+        <div class="emojis" id="emojis">
+          <span class="emoji" data-val="love" title="Love it">😍</span>
+          <span class="emoji" data-val="happy" title="Happy">😊</span>
+          <span class="emoji" data-val="like" title="Like it">👍</span>
+          <span class="emoji" data-val="neutral" title="Neutral">😐</span>
+          <span class="emoji" data-val="sad" title="Sad">😕</span>
+          <span class="emoji" data-val="angry" title="Angry">😠</span>
+        </div>
       </div>
       <div class="field full">
         <label class="label" for="consent">
@@ -239,6 +251,16 @@ function initStars(){
     stars.forEach(x=>x.classList.toggle('active', Number(x.dataset.val)<=currentVal));
   });
 }
+function initEmojis(){
+  const emojis = document.querySelectorAll('#emojis .emoji');
+  emojis.forEach(e=>{
+    e.addEventListener('click', ()=>{
+      emojis.forEach(x=>x.classList.remove('active'));
+      e.classList.add('active');
+      document.getElementById('emojiVal').value = e.dataset.val;
+    });
+  });
+}
 function showError(id){
   const el = document.getElementById(id);
   if(el) el.style.display='block';
@@ -284,7 +306,7 @@ document.getElementById('feedbackForm').addEventListener('submit', (e)=>{
     message: sanitize(message),
     rating: `${stars} - ${['','Very Poor','Poor','Average','Good','Excellent'][stars]}`,
     stars: stars,
-    sentiment: stars>=4?'love':stars===3?'neutral':'sad',
+    sentiment: document.getElementById('emojiVal').value || (stars>=4?'love':stars===3?'neutral':'sad'),
     timestamp: Date.now()
   };
   
@@ -300,7 +322,9 @@ document.getElementById('feedbackForm').addEventListener('submit', (e)=>{
     setTimeout(()=>{ document.getElementById('successMsg').style.display='none'; }, 5000);
     f.reset();
     document.getElementById('starsVal').value = '';
+    document.getElementById('emojiVal').value = '';
     document.querySelectorAll('.star').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.emoji').forEach(e=>e.classList.remove('active'));
     renderList();
     drawCharts();
   });
@@ -319,11 +343,14 @@ function isValidEmail(email) {
 document.getElementById('clearBtn').addEventListener('click', ()=>{
   document.getElementById('feedbackForm').reset();
 });
-// hidden input to store stars
+// hidden inputs to store stars and emojis
 const hiddenStars = document.createElement('input'); hiddenStars.type='hidden'; hiddenStars.id='starsVal';
+const hiddenEmoji = document.createElement('input'); hiddenEmoji.type='hidden'; hiddenEmoji.id='emojiVal';
 document.getElementById('feedbackForm').appendChild(hiddenStars);
+document.getElementById('feedbackForm').appendChild(hiddenEmoji);
 seedIfEmpty();
 initStars();
+initEmojis();
 renderList(); drawCharts();
 window.addEventListener('scroll', ()=>{
   const n = document.querySelector('.main-nav');

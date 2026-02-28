@@ -192,22 +192,22 @@ function handle(text) {
     return 'We offer Valves, Crucibles, Foundry Products, Coolants & Lubricants, Die Casting Machines, and Automation Solutions. Visit our Products page for details.';
   }
   if (t.includes('valve')) {
-    return 'Our valve range includes Solenoid, Pneumatic, Control, and Actuated valves. Contact valves_automation@bestmarketingco.net for specifications.';
+    return 'Our valve range includes Solenoid, Pneumatic, Control, and Actuated valves. Contact gokilavaratharaj142@gmail.com for specifications.';
   }
   if (t.includes('crucible')) {
-    return 'We supply Excel, Salamander, and Syncarb crucibles for various melting applications. Email cruciblebmc@bestmarketingco.net for more information.';
+    return 'We supply Excel, Salamander, and Syncarb crucibles for various melting applications. Email gokilavaratharaj142@gmail.com for more information.';
   }
   if (t.includes('automation') || t.includes('die casting')) {
     return 'BMC Automation & Solutions provides non-ferrous foundry automation and cold chamber die casting machines. Contact us for custom solutions.';
   }
   if (t.includes('price') || t.includes('cost') || t.includes('quote')) {
-    return 'For pricing and quotations, please contact our sales team at mail@bestmarketingco.net or call +91 422 2314527.';
+    return 'For pricing and quotations, please contact our sales team at gokilavaratharaj142@gmail.com or call +91 9095195647.';
   }
   if (t.includes('contact') || t.includes('sales')) {
-    return 'Reach us at: Phone: +91 422 2314527 / 4395235, Email: mail@bestmarketingco.net, Address: No. 5, R.K.K Nagar, Singanallur, Coimbatore - 641033.';
+    return 'Reach us at: Phone: +91 9095195647, Email: gokilavaratharaj142@gmail.com, Address: No. 5, R.K.K Nagar, Singanallur, Coimbatore - 641033.';
   }
   if (t.includes('support') || t.includes('technical')) {
-    return 'Our technical support team is ready to assist you. Email mail@bestmarketingco.net or call +91 422 2314527 for immediate support.';
+    return 'Our technical support team is ready to assist you. Email gokilavaratharaj142@gmail.com or call +91 9095195647 for immediate support.';
   }
   if (t.includes('company') || t.includes('about') || t.includes('info')) {
     return 'Best Marketing Company, established in 1994, is a leading marketing company based in Coimbatore with operations across Tamil Nadu, Kerala, and Karnataka.';
@@ -216,10 +216,10 @@ function handle(text) {
     return 'We are located at No. 5, R.K.K Nagar, Neelikonam Palayan Post, Singanallur, Coimbatore - 641033, Tamil Nadu, India.';
   }
   if (t.includes('lubricant') || t.includes('coolant')) {
-    return 'We supply MORESCO specialty lubricants and coolants for industrial applications. Contact mail@bestmarketingco.net for product details.';
+    return 'We supply MORESCO specialty lubricants and coolants for industrial applications. Contact gokilavaratharaj142@gmail.com for product details.';
   }
   
-  return 'Thank you for your message. Our team will respond shortly. For immediate assistance, please call +91 422 2314527 or email mail@bestmarketingco.net.';
+  return 'Thank you for your message. Our team will respond shortly. For immediate assistance, please call +91 9095195647 or email gokilavaratharaj142@gmail.com.';
 }
 
 function initFloatingActions() {
@@ -233,12 +233,12 @@ function initFloatingActions() {
   const mail = items[2];
 
   if (wa) {
-    wa.setAttribute('href', 'https://wa.me/919944403032');
+    wa.setAttribute('href', 'https://wa.me/919095195647');
     wa.setAttribute('target', '_blank');
     wa.setAttribute('rel', 'noopener');
   }
-  if (call) call.setAttribute('href', 'tel:+914222314527');
-  if (mail) mail.setAttribute('href', 'mailto:mail@bestmarketingco.net');
+  if (call) call.setAttribute('href', 'tel:+919095195647');
+  if (mail) mail.setAttribute('href', 'mailto:gokilavaratharaj142@gmail.com');
 }
 
 function initBackToTop() {
