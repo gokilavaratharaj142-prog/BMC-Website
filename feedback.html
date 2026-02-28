@@ -31,16 +31,22 @@ a:visited{color:inherit}
 .input,.textarea,.select{padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);font-size:16px;color:var(--text)}
 .textarea{min-height:140px;resize:vertical}
 .stars{display:flex;gap:8px}
-.star{font-size:22px;color:#c9b4a7;cursor:pointer;transition:transform .1s}
-.star.active{color:#ffb703}
+.star{font-size:28px;color:#ddd;cursor:pointer;transition:color .2s ease}
+.star.active,.star:hover{color:#ffb703}
 .emojis{display:flex;gap:10px}
-.emoji{font-size:22px;cursor:pointer;filter:grayscale(50%);transition:transform .1s, filter .2s}
-.emoji.active{filter:none;transform:scale(1.1)}
+.emoji{font-size:22px;cursor:pointer;opacity:0.4;transition:opacity .2s ease}
+.emoji.active,.emoji:hover{opacity:1}
+.field-error{color:#b00020;font-size:12px;margin-top:4px;display:none}
 .actions{display:flex;gap:12px;align-items:center;margin-top:24px}
-.btn{padding:14px 22px;border-radius:var(--radius);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:white}
+.btn{padding:14px 22px;border-radius:var(--radius);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:white;transition:background .2s ease,transform .1s ease}
+.btn:hover{background:var(--accent-dark)}
+.btn:active{transform:scale(0.98)}
+.btn:disabled{opacity:0.6;cursor:not-allowed}
 .btn.secondary{background:transparent;color:var(--text);border-color:var(--text)}
+.btn.secondary:hover{background:var(--bg)}
 .note{margin-top:14px;color:var(--text-light);font-size:14px}
-.success{margin-top:16px;padding:12px 16px;border:1px solid #31a24c66;background:#31a24c12;color:#1b6d2f;border-radius:8px;display:none}
+.success{margin-top:16px;padding:12px 16px;border:1px solid #31a24c66;background:#31a24c12;color:#1b6d2f;border-radius:8px;display:none;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 .list{max-width:900px;margin:0 auto 60px;padding:0 5vw}
 .list h3{font-size:20px;margin-bottom:8px}
 .item{padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);margin-bottom:8px;display:grid;grid-template-columns:2fr 1fr 1fr}
@@ -84,10 +90,12 @@ a:visited{color:inherit}
       <div class="field">
         <label class="label" for="name">Name</label>
         <input class="input" id="name" name="name" required />
+        <div class="field-error" id="nameError">Name is required</div>
       </div>
       <div class="field">
         <label class="label" for="email">Email</label>
         <input class="input" id="email" name="email" type="email" required />
+        <div class="field-error" id="emailError">Valid email is required</div>
       </div>
       <div class="field">
         <label class="label" for="phone">Phone</label>
@@ -95,29 +103,22 @@ a:visited{color:inherit}
       </div>
       <div class="field">
         <label class="label" for="category">Category</label>
-        <select class="select" id="category" name="category">
-          <option value="Website">Website</option>
-          <option value="Products">Products</option>
-          <option value="Support">Support</option>
+        <select class="select" id="category" name="category" required>
+          <option value="">Select Category</option>
+          <option value="Sales">Sales Inquiry</option>
+          <option value="Support">Technical Support</option>
+          <option value="Product">Product Feedback</option>
           <option value="Other">Other</option>
         </select>
+        <div class="field-error" id="categoryError">Please select a category</div>
       </div>
       <div class="field full">
         <label class="label" for="message">Feedback</label>
-        <textarea class="textarea" id="message" name="message" required></textarea>
+        <textarea class="textarea" id="message" name="message" required minlength="10"></textarea>
+        <div class="field-error" id="messageError">Feedback must be at least 10 characters</div>
       </div>
-      <div class="field">
-        <label class="label" for="rating">Rating</label>
-        <select class="select" id="rating" name="rating">
-          <option>5 - Excellent</option>
-          <option>4 - Good</option>
-          <option>3 - Average</option>
-          <option>2 - Poor</option>
-          <option>1 - Very Poor</option>
-        </select>
-      </div>
-      <div class="field">
-        <label class="label">Stars</label>
+      <div class="field full">
+        <label class="label">Rate Your Experience</label>
         <div class="stars" id="stars">
           <span class="star" data-val="1">★</span>
           <span class="star" data-val="2">★</span>
@@ -125,20 +126,13 @@ a:visited{color:inherit}
           <span class="star" data-val="4">★</span>
           <span class="star" data-val="5">★</span>
         </div>
+        <div class="field-error" id="starsError">Please select a rating</div>
       </div>
-      <div class="field">
-        <label class="label">Emoji Reaction</label>
-        <div class="emojis" id="emojis">
-          <span class="emoji" data-val="love">😍</span>
-          <span class="emoji" data-val="like">👍</span>
-          <span class="emoji" data-val="neutral">😐</span>
-          <span class="emoji" data-val="sad">😕</span>
-        </div>
-      </div>
-      <div class="field">
+      <div class="field full">
         <label class="label" for="consent">
           <input type="checkbox" id="consent" required /> I agree to processing my feedback
         </label>
+        <div class="field-error" id="consentError">You must agree to continue</div>
       </div>
     </div>
     <div class="actions">
@@ -167,10 +161,10 @@ function seedIfEmpty(){
   const cur = getAll();
   if(cur.length) return;
   const samples = [
-    {name:'Anita',email:'anita@example.com',phone:'',category:'Products',message:'Great crucibles',rating:'5 - Excellent',stars:5,sentiment:'love',timestamp:Date.now()-86400000*3},
-    {name:'Vijay',email:'vijay@example.com',phone:'',category:'Support',message:'Helpful staff',rating:'4 - Good',stars:4,sentiment:'like',timestamp:Date.now()-86400000*2},
-    {name:'Sara',email:'sara@example.com',phone:'',category:'Website',message:'Nice design',rating:'4 - Good',stars:4,sentiment:'like',timestamp:Date.now()-86400000},
-    {name:'Kumar',email:'kumar@example.com',phone:'',category:'Products',message:'Die lube improved cycle',rating:'5 - Excellent',stars:5,sentiment:'love',timestamp:Date.now()-3600000},
+    {name:'Anita Kumar',email:'anita@example.com',phone:'',category:'Product',message:'Excellent quality crucibles. Very satisfied with the performance.',rating:'5 - Excellent',stars:5,sentiment:'love',timestamp:Date.now()-86400000*3},
+    {name:'Vijay Raj',email:'vijay@example.com',phone:'',category:'Support',message:'Technical support team was very helpful and responsive.',rating:'4 - Good',stars:4,sentiment:'love',timestamp:Date.now()-86400000*2},
+    {name:'Sara Menon',email:'sara@example.com',phone:'',category:'Sales',message:'Sales team provided detailed product information.',rating:'4 - Good',stars:4,sentiment:'love',timestamp:Date.now()-86400000},
+    {name:'Kumar Patel',email:'kumar@example.com',phone:'',category:'Product',message:'Die casting lubricants improved our production cycle significantly.',rating:'5 - Excellent',stars:5,sentiment:'love',timestamp:Date.now()-3600000},
   ];
   saveAll(samples);
 }
@@ -233,47 +227,83 @@ function initStars(){
       const val = Number(s.dataset.val);
       stars.forEach(x=>x.classList.toggle('active', Number(x.dataset.val)<=val));
       document.getElementById('starsVal').value = val;
+      hideError('starsError');
     });
+    s.addEventListener('mouseenter', ()=>{
+      const val = Number(s.dataset.val);
+      stars.forEach(x=>x.classList.toggle('active', Number(x.dataset.val)<=val));
+    });
+  });
+  document.getElementById('stars').addEventListener('mouseleave', ()=>{
+    const currentVal = Number(document.getElementById('starsVal').value || 0);
+    stars.forEach(x=>x.classList.toggle('active', Number(x.dataset.val)<=currentVal));
   });
 }
-function initEmojis(){
-  const es = document.querySelectorAll('#emojis .emoji');
-  es.forEach(e=>{
-    e.addEventListener('click', ()=>{
-      es.forEach(x=>x.classList.remove('active'));
-      e.classList.add('active');
-      document.getElementById('emojiVal').value = e.dataset.val;
-    });
-  });
+function showError(id){
+  const el = document.getElementById(id);
+  if(el) el.style.display='block';
+}
+function hideError(id){
+  const el = document.getElementById(id);
+  if(el) el.style.display='none';
 }
 document.getElementById('feedbackForm').addEventListener('submit', (e)=>{
   e.preventDefault();
+  
+  // Hide all errors
+  ['nameError','emailError','categoryError','messageError','starsError','consentError'].forEach(hideError);
+  
   const f = e.target;
+  const name = f.name.value.trim();
+  const email = f.email.value.trim();
+  const category = f.category.value;
+  const message = f.message.value.trim();
+  const stars = Number(document.getElementById('starsVal').value||0);
+  const consent = f.consent.checked;
+  
+  let hasError = false;
+  
+  if(!name){ showError('nameError'); hasError=true; }
+  if(!email || !isValidEmail(email)){ showError('emailError'); hasError=true; }
+  if(!category){ showError('categoryError'); hasError=true; }
+  if(!message || message.length<10){ showError('messageError'); hasError=true; }
+  if(stars===0){ showError('starsError'); hasError=true; }
+  if(!consent){ showError('consentError'); hasError=true; }
+  
+  if(hasError) return;
+  
+  const btn = f.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  
   const entry = {
-    name: sanitize(f.name.value.trim()),
-    email: sanitize(f.email.value.trim()),
+    name: sanitize(name),
+    email: sanitize(email),
     phone: sanitize(f.phone.value.trim()),
-    category: sanitize(f.category.value),
-    message: sanitize(f.message.value.trim()),
-    rating: sanitize(f.rating.value),
-    stars: Number(document.getElementById('starsVal').value||0),
-    sentiment: sanitize(document.getElementById('emojiVal').value||''),
+    category: sanitize(category),
+    message: sanitize(message),
+    rating: `${stars} - ${['','Very Poor','Poor','Average','Good','Excellent'][stars]}`,
+    stars: stars,
+    sentiment: stars>=4?'love':stars===3?'neutral':'sad',
     timestamp: Date.now()
   };
-  if(!entry.name || !entry.email || !entry.message || !isValidEmail(entry.email)) {
-    alert('Please fill out all required fields and provide a valid email address.');
-    return;
-  }
+  
   const all = getAll();
   all.push(entry);
   saveAll(all);
-  document.getElementById('successMsg').textContent = 'Thanks! You made our day 🎉 Your feedback is in.';
-  document.getElementById('successMsg').style.display='block';
-  Backend.post('/api/feedback', entry);
-  triggerConfetti();
-  f.reset();
-  renderList();
-  drawCharts();
+  
+  Backend.post('/api/feedback', entry).finally(()=>{
+    btn.disabled = false;
+    btn.textContent = 'Submit Feedback';
+    document.getElementById('successMsg').textContent = 'Thank you! Your feedback has been submitted successfully.';
+    document.getElementById('successMsg').style.display='block';
+    setTimeout(()=>{ document.getElementById('successMsg').style.display='none'; }, 5000);
+    f.reset();
+    document.getElementById('starsVal').value = '';
+    document.querySelectorAll('.star').forEach(s=>s.classList.remove('active'));
+    renderList();
+    drawCharts();
+  });
 });
 
 function sanitize(str) {
@@ -289,13 +319,11 @@ function isValidEmail(email) {
 document.getElementById('clearBtn').addEventListener('click', ()=>{
   document.getElementById('feedbackForm').reset();
 });
-// hidden inputs to store stars/emojis
+// hidden input to store stars
 const hiddenStars = document.createElement('input'); hiddenStars.type='hidden'; hiddenStars.id='starsVal';
-const hiddenEmoji = document.createElement('input'); hiddenEmoji.type='hidden'; hiddenEmoji.id='emojiVal';
 document.getElementById('feedbackForm').appendChild(hiddenStars);
-document.getElementById('feedbackForm').appendChild(hiddenEmoji);
 seedIfEmpty();
-initStars(); initEmojis();
+initStars();
 renderList(); drawCharts();
 window.addEventListener('scroll', ()=>{
   const n = document.querySelector('.main-nav');
@@ -303,22 +331,12 @@ window.addEventListener('scroll', ()=>{
   if(window.scrollY>10) n.classList.add('scrolled'); else n.classList.remove('scrolled');
 });
 
-function triggerConfetti(){
-  const p = document.createElement('div');
-  p.className='party';
-  document.body.appendChild(p);
-  const colors = ['#8D6E63','#4E342E','#F9F5EB','#3E2723','#31a24c'];
-  for(let i=0;i<80;i++){
-    const c = document.createElement('div');
-    c.className='confetti';
-    c.style.left = Math.random()*100 + 'vw';
-    c.style.background = colors[Math.floor(Math.random()*colors.length)];
-    c.style.animationDelay = (Math.random()*0.6)+'s';
-    c.style.transform = `translateY(-20px) rotate(${Math.random()*180}deg)`;
-    p.appendChild(c);
-  }
-  setTimeout(()=>{ document.body.removeChild(p) }, 1500);
-}
+// Input validation listeners
+['name','email','category','message'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', ()=>hideError(id+'Error'));
+});
+document.getElementById('consent').addEventListener('change', ()=>hideError('consentError'));
 </script>
 </body>
 </html>

@@ -111,10 +111,18 @@ function initCursor() {
 function initChatbot() {
   const chatWin = document.getElementById('chatWin');
   const chatToggle = document.getElementById('chatToggle');
-  if (chatToggle && chatWin) {
+  const chatClose = document.getElementById('chatClose');
+  
+  if (chatToggle && chatWin && !chatToggle.dataset.chatBound) {
     chatToggle.dataset.chatBound = '1';
     chatToggle.addEventListener('click', () => {
-      chatWin.style.display = chatWin.style.display === 'block' ? 'none' : 'block';
+      chatWin.classList.toggle('is-open');
+    });
+  }
+  
+  if (chatClose && chatWin) {
+    chatClose.addEventListener('click', () => {
+      chatWin.classList.remove('is-open');
     });
   }
 
@@ -124,8 +132,8 @@ function initChatbot() {
     const send = () => {
       const text = chatInput.value.trim();
       if (!text) return;
-      reply(`You: ${text}`);
-      setTimeout(() => reply(`BMC: ${handle(text)}`), 250);
+      addMessage('user', text);
+      setTimeout(() => addMessage('bot', handle(text)), 400);
       chatInput.value = '';
     };
     chatSend.addEventListener('click', send);
@@ -137,33 +145,81 @@ function initChatbot() {
     });
   }
 
+  // Quick reply buttons
+  const quickBtns = document.querySelectorAll('.quick-btn');
+  quickBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const msg = btn.dataset.msg;
+      addMessage('user', msg);
+      setTimeout(() => addMessage('bot', handle(msg)), 400);
+    });
+  });
+
   document.addEventListener('click', (e) => {
-    if (!chatWin || chatWin.style.display !== 'block') return;
+    if (!chatWin || !chatWin.classList.contains('is-open')) return;
     if (e.target.closest('#chatWin') || e.target.closest('#chatToggle')) return;
-    chatWin.style.display = 'none';
+    chatWin.classList.remove('is-open');
   });
 }
 
-function reply(msg) {
+function addMessage(sender, text) {
   const body = document.getElementById('chatBody');
   if (!body) return;
+  
+  // Remove quick replies after first message
+  const quickReplies = document.getElementById('quickReplies');
+  if (quickReplies && sender === 'user') {
+    quickReplies.style.display = 'none';
+  }
+  
   const bubble = document.createElement('div');
-  bubble.className = 'chat-msg';
-  bubble.textContent = msg;
+  bubble.className = sender === 'user' ? 'chat-msg user-msg' : 'chat-msg bot-msg';
+  
+  const msgText = document.createElement('div');
+  msgText.className = 'msg-text';
+  msgText.textContent = text;
+  bubble.appendChild(msgText);
+  
   body.appendChild(bubble);
   body.scrollTop = body.scrollHeight;
 }
 
 function handle(text) {
   const t = text.toLowerCase();
-  if (t.includes('valve')) return 'Valves: Solenoid, Pneumatic, Control, Actuated. Email valves_automation@bestmarketingco.net.';
-  if (t.includes('crucible')) return 'Crucibles: Excel, Salamander, Syncarb. Email cruciblebmc@bestmarketingco.net.';
-  if (t.includes('contact') || t.includes('phone') || t.includes('call')) return 'Call +91 9095195647 or +91 7373449324.';
-  if (t.includes('location') || t.includes('address')) return 'No: 5, RKK Nagar, Singanallur, Coimbatore - 641033.';
-  if (t.includes('lubricant') || t.includes('coolant')) return 'MORESCO speciality lubricants and coolants. Email mail@bestmarketingco.net.';
-  if (t.includes('quote') || t.includes('request a quote')) return 'Please use Contact -> Get Quote or email mail@bestmarketingco.net.';
-  if (t.includes('recommend') || t.includes('suggest') || t.includes('which')) return 'Tell me the application. For flow control: Valves; melting: Crucibles; dosing: Automation; vacuum integrity: Vacuum Casting.';
-  return 'Our team will respond soon. Please leave your email and query.';
+  
+  // Keyword detection with professional responses
+  if (t.includes('product') || t.includes('view products')) {
+    return 'We offer Valves, Crucibles, Foundry Products, Coolants & Lubricants, Die Casting Machines, and Automation Solutions. Visit our Products page for details.';
+  }
+  if (t.includes('valve')) {
+    return 'Our valve range includes Solenoid, Pneumatic, Control, and Actuated valves. Contact valves_automation@bestmarketingco.net for specifications.';
+  }
+  if (t.includes('crucible')) {
+    return 'We supply Excel, Salamander, and Syncarb crucibles for various melting applications. Email cruciblebmc@bestmarketingco.net for more information.';
+  }
+  if (t.includes('automation') || t.includes('die casting')) {
+    return 'BMC Automation & Solutions provides non-ferrous foundry automation and cold chamber die casting machines. Contact us for custom solutions.';
+  }
+  if (t.includes('price') || t.includes('cost') || t.includes('quote')) {
+    return 'For pricing and quotations, please contact our sales team at mail@bestmarketingco.net or call +91 422 2314527.';
+  }
+  if (t.includes('contact') || t.includes('sales')) {
+    return 'Reach us at: Phone: +91 422 2314527 / 4395235, Email: mail@bestmarketingco.net, Address: No. 5, R.K.K Nagar, Singanallur, Coimbatore - 641033.';
+  }
+  if (t.includes('support') || t.includes('technical')) {
+    return 'Our technical support team is ready to assist you. Email mail@bestmarketingco.net or call +91 422 2314527 for immediate support.';
+  }
+  if (t.includes('company') || t.includes('about') || t.includes('info')) {
+    return 'Best Marketing Company, established in 1994, is a leading marketing company based in Coimbatore with operations across Tamil Nadu, Kerala, and Karnataka.';
+  }
+  if (t.includes('location') || t.includes('address') || t.includes('where')) {
+    return 'We are located at No. 5, R.K.K Nagar, Neelikonam Palayan Post, Singanallur, Coimbatore - 641033, Tamil Nadu, India.';
+  }
+  if (t.includes('lubricant') || t.includes('coolant')) {
+    return 'We supply MORESCO specialty lubricants and coolants for industrial applications. Contact mail@bestmarketingco.net for product details.';
+  }
+  
+  return 'Thank you for your message. Our team will respond shortly. For immediate assistance, please call +91 422 2314527 or email mail@bestmarketingco.net.';
 }
 
 function initFloatingActions() {
