@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Admin Dashboard - Best Marketing Company</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>window.API_BASE='http://localhost:5000';</script>
+<style>
+:root{--bg:#f9f5eb;--surface:#fff;--text:#3e2723;--text-light:#6d4c41;--accent:#8d6e63;--accent-dark:#4e342e;--border:rgba(62,39,35,.1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(180deg,#f9f5eb 0%,#f4eee4 45%,#efe7dc 100%);font-family:'Manrope',sans-serif;color:var(--text)}
+.page{max-width:1200px;margin:0 auto;padding:34px 5vw 54px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:20px}
+.h1{font-size:44px;line-height:1.05;font-weight:900}
+.status{font-size:13px;font-weight:700;padding:8px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface)}
+.status.ok{color:#1b6d2f;border-color:#1b6d2f44;background:#1b6d2f14}
+.status.bad{color:#b00020;border-color:#b0002044;background:#b0002014}
+
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.stat{background:rgba(255,255,255,.9);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:0 12px 28px rgba(62,39,35,.08)}
+.k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:700}
+.v{font-size:28px;font-weight:900;color:var(--accent-dark);line-height:1.1;margin-top:6px}
+
+.tabs{display:flex;gap:10px;margin-bottom:16px}
+.tab{padding:10px 16px;border:1px solid var(--border);border-radius:999px;background:var(--surface);cursor:pointer;font-size:12px;text-transform:uppercase;font-weight:800;letter-spacing:.04em}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 20px}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid var(--accent);background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;cursor:pointer;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.btn.secondary{background:transparent;color:var(--text);border-color:var(--text)}
+
+.panel{background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 10px 26px rgba(62,39,35,.08)}
+.table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.table th,.table td{border-bottom:1px solid var(--border);padding:10px 12px;font-size:14px;text-align:left}
+.empty{padding:12px 16px;border:1px dashed var(--border);border-radius:10px;color:var(--text-light);background:var(--surface)}
+
+@media(max-width:980px){.stats{grid-template-columns:1fr 1fr}.h1{font-size:36px}}
+@media(max-width:680px){.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <div>
+      <h1 class="h1">Admin Dashboard</h1>
+      <div style="color:var(--text-light);margin-top:6px">Secure management console</div>
+    </div>
+    <div id="backendStatus" class="status">Checking backend...</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">Total Contacts</div><div class="v" id="stContacts">0</div></div>
+    <div class="stat"><div class="k">Total Feedback</div><div class="v" id="stFeedback">0</div></div>
+    <div class="stat"><div class="k">Monthly Growth %</div><div class="v" id="stGrowth">0%</div></div>
+    <div class="stat"><div class="k">Satisfaction %</div><div class="v" id="stSat">0%</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="contacts" type="button">Contacts</button>
+    <button class="tab" data-tab="feedback" type="button">Feedback</button>
+  </div>
+
+  <div class="tools">
+    <button class="btn" id="exportCsv" type="button">Export CSV</button>
+    <button class="btn" id="exportXlsx" type="button">Export Excel</button>
+    <button class="btn" id="exportPdf" type="button">Export PDF</button>
+    <button class="btn secondary" id="clearRecords" type="button">Clear Records</button>
+    <button class="btn secondary" id="logoutBtn" type="button">Logout</button>
+  </div>
+
+  <div class="panel">
+    <div id="tableWrap"></div>
+    <div id="charts" style="margin-top:20px"></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = window.API_BASE || 'http://localhost:5000';
+const TOKEN_KEY = 'bmc_jwt';
+const AUTH_KEY = 'bmc_admin_auth';
+const CONTACT_KEY = 'bmc_contacts';
+const FEEDBACK_KEY = 'bmc_feedback';
+
+let current = 'contacts';
+let rowsContacts = [];
+let rowsFeedback = [];
+
+const q = (id) => document.getElementById(id);
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function logoutLocal() {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(AUTH_KEY);
+  window.location.href = 'admin.html';
+}
+
+function authHeaders() {
+  const token = localStorage.getItem(TOKEN_KEY) || '';
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+async function apiGet(path) {
+  const res = await fetch(`${API_BASE}${path}`, { headers: authHeaders() }).catch(()=>null);
+  if(!res) return { ok:false, status:0, data:null };
+  const data = await res.json().catch(()=>null);
+  return { ok: res.ok, status: res.status, data };
+}
+
+async function apiPost(path, body) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', ...authHeaders() },
+    body: JSON.stringify(body || {})
+  }).catch(()=>null);
+  if(!res) return { ok:false, status:0, data:null };
+  const data = await res.json().catch(()=>null);
+  return { ok: res.ok, status: res.status, data };
+}
+
+function toCSV(rows) {
+  if(!rows.length) return '';
+  const cols = Object.keys(rows[0]);
+  const e = (v) => `"${String(v ?? '').replace(/"/g,'""')}"`;
+  return [cols.join(',')].concat(rows.map(r => cols.map(c => e(r[c])).join(','))).join('\r\n');
+}
+
+function dateOf(row) { return new Date(row.createdAt || row.timestamp || Date.now()); }
+function monthKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+
+async function loadData() {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const authed = localStorage.getItem(AUTH_KEY) === 'yes';
+  if(!token || !authed) return logoutLocal();
+
+  const statusEl = q('backendStatus');
+  const overview = await apiGet('/api/admin/overview');
+  if(!overview.ok) {
+    statusEl.textContent = 'Backend disconnected';
+    statusEl.className = 'status bad';
+    if(overview.status === 401 || overview.status === 403) return logoutLocal();
+  } else {
+    statusEl.textContent = 'Backend connected';
+    statusEl.className = 'status ok';
+  }
+
+  const leads = await apiGet('/api/admin/leads');
+  const feedback = await apiGet('/api/feedback');
+
+  if(leads.ok && Array.isArray(leads.data)) rowsContacts = leads.data;
+  else rowsContacts = JSON.parse(localStorage.getItem(CONTACT_KEY) || '[]');
+
+  if(feedback.ok && Array.isArray(feedback.data)) rowsFeedback = feedback.data;
+  else rowsFeedback = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || '[]');
+
+  renderStats();
+  renderTable();
+  renderCharts();
+}
+
+function renderStats() {
+  q('stContacts').textContent = rowsContacts.length;
+  q('stFeedback').textContent = rowsFeedback.length;
+
+  const now = new Date();
+  const curr = monthKey(now);
+  const prev = monthKey(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+  const currCount = rowsContacts.filter(r => monthKey(dateOf(r)) === curr).length + rowsFeedback.filter(r => monthKey(dateOf(r)) === curr).length;
+  const prevCount = rowsContacts.filter(r => monthKey(dateOf(r)) === prev).length + rowsFeedback.filter(r => monthKey(dateOf(r)) === prev).length;
+  const growth = prevCount ? Math.round(((currCount - prevCount) / prevCount) * 100) : (currCount ? 100 : 0);
+  q('stGrowth').textContent = `${growth}%`;
+
+  const good = rowsFeedback.filter(r => {
+    const rating = String(r.rating || '');
+    const stars = Number(r.stars || 0);
+    return rating.startsWith('5') || rating.startsWith('4') || stars >= 4 || ['love','like','happy'].includes(String(r.sentiment || '').toLowerCase());
+  }).length;
+  q('stSat').textContent = `${rowsFeedback.length ? Math.round((good / rowsFeedback.length) * 100) : 0}%`;
+}
+
+function currentRows() { return current === 'contacts' ? rowsContacts : rowsFeedback; }
+
+function renderTable() {
+  const rows = currentRows();
+  if(!rows.length) {
+    q('tableWrap').innerHTML = `<div class="empty">No ${esc(current)} records found.</div>`;
+    return;
+  }
+  const cols = Object.keys(rows[0]);
+  q('tableWrap').innerHTML = `<table class="table"><thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${cols.map(c => `<td>${esc(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+
+function renderCharts() {
+  if(current !== 'feedback' || !rowsFeedback.length) {
+    q('charts').innerHTML = '';
+    return;
+  }
+  const bucket = {'5 - Excellent':0,'4 - Good':0,'3 - Average':0,'2 - Poor':0,'1 - Very Poor':0};
+  rowsFeedback.forEach(r => { const k = String(r.rating || ''); if(bucket[k] != null) bucket[k] += 1; });
+  const max = Math.max(1, ...Object.values(bucket));
+  const bar = (k,v) => `<div style="display:flex;align-items:center;gap:12px;margin:8px 0"><div style="width:170px;font-size:12px;font-weight:700;text-transform:uppercase">${esc(k)}</div><div style="flex:1;height:10px;background:#efe8dd;border-radius:999px;overflow:hidden"><div style="height:10px;width:${Math.round((v/max)*100)}%;background:var(--accent)"></div></div><div style="width:30px;text-align:right;color:var(--text-light)">${v}</div></div>`;
+  q('charts').innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px"><div style="font-weight:900;margin-bottom:8px">Ratings Distribution</div>${Object.entries(bucket).map(([k,v])=>bar(k,v)).join('')}</div>`;
+}
+
+function exportCsv() {
+  const rows = currentRows();
+  if(!rows.length) return;
+  const blob = new Blob([toCSV(rows)], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `bmc-${current}-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function exportXlsx() {
+  const rows = currentRows();
+  if(!rows.length) return;
+  const blob = new Blob([toCSV(rows)], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `bmc-${current}-${new Date().toISOString().slice(0,10)}.xlsx`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function exportPdf() {
+  const rows = currentRows();
+  if(!rows.length) return;
+  const w = window.open('', '_blank');
+  if(!w) return;
+  w.document.write(`<html><head><title>BMC ${esc(current)}</title></head><body><h2>BMC ${esc(current)}</h2><pre>${esc(JSON.stringify(rows,null,2))}</pre></body></html>`);
+  w.document.close();
+  w.focus();
+  w.print();
+}
+
+async function clearRecords() {
+  if(current === 'contacts') {
+    const cleared = await apiPost('/api/admin/leads/clear', {});
+    if(!cleared.ok && (cleared.status === 401 || cleared.status === 403)) return logoutLocal();
+    localStorage.removeItem(CONTACT_KEY);
+  } else {
+    localStorage.removeItem(FEEDBACK_KEY);
+  }
+  await loadData();
+}
+
+async function logout() {
+  await apiPost('/api/auth/logout', {});
+  logoutLocal();
+}
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    current = t.dataset.tab;
+    renderTable();
+    renderCharts();
+  });
+});
+
+q('exportCsv').addEventListener('click', exportCsv);
+q('exportXlsx').addEventListener('click', exportXlsx);
+q('exportPdf').addEventListener('click', exportPdf);
+q('clearRecords').addEventListener('click', clearRecords);
+q('logoutBtn').addEventListener('click', logout);
+
+loadData();
+</script>
+</body>
+</html>

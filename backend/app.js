@@ -1,3 +1,8 @@
+const express = require('express');
+const helmet = require('helmet');
+const cors = require('cors');
+const morgan = require('morgan');
+
 const config = require('./config');
 const connectDB = require('./config/db');
 
@@ -18,7 +23,7 @@ const app = express();
 const sanitizer = require('./middleware/sanitizer');
 
 app.use(helmet());
-app.use(cors({ origin: config.appUrl, credentials: true }));
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json({ limit: '300kb' }));
 app.use(morgan('dev'));
 app.use(sanitizer);

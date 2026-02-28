@@ -4,8 +4,8 @@ const config = {
   port: process.env.BACKEND_PORT || 5000,
   appUrl: process.env.APP_URL || 'http://localhost:3000',
   jwtSecret: process.env.JWT_SECRET || 'replace-me',
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '8h',
-  otpExpiresMinutes: Number(process.env.OTP_EXPIRES_MIN || 10),
+  jwtExpiresIn: '1h',
+  otpExpiresMinutes: Number(process.env.OTP_EXPIRES_MIN || 5),
   // mysql config removed (MongoDB-only)
   smtp: {
     host: process.env.SMTP_HOST || '',

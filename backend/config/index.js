@@ -1,12 +1,13 @@
-require('dotenv').config({ path: '../../.env' });
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '..', '..', '.env') });
 
 module.exports = {
   port: process.env.BACKEND_PORT || 5000,
-  mongoURI: process.env.MONGO_URI,
-  jwtSecret: process.env.JWT_SECRET,
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN,
-  appUrl: process.env.APP_URL,
-  otpExpiresMinutes: process.env.OTP_EXPIRES_MINUTES,
+  mongoURI: process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/bmc_secure',
+  jwtSecret: process.env.JWT_SECRET || 'replace-me',
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1h',
+  appUrl: process.env.APP_URL || 'http://localhost:3000',
+  otpExpiresMinutes: Number(process.env.OTP_EXPIRES_MINUTES || process.env.OTP_EXPIRES_MIN || 5),
   mail: {
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,

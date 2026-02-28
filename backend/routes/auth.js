@@ -21,29 +21,41 @@ async function createOtp(userId, purpose){
 const { loginLimiter } = require('../middleware/rateLimiter');
 
 router.post('/login', loginLimiter, async (req, res) => {
-  const email = String(req.body.email || '').trim().toLowerCase();
-  const password = String(req.body.password || '');
-  const user = await User.findOne({ email });
-  if (!user || user.status !== 'active') return res.status(401).json({ message: 'Invalid credentials' });
+  try {
+    const identity = String(req.body.username || req.body.email || '').trim();
+    const password = String(req.body.password || '');
+    const user = identity.includes('@')
+      ? await User.findOne({ email: identity.toLowerCase() })
+      : await User.findOne({ name: new RegExp(`^${identity.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') });
+    if (!user || user.status !== 'active') return res.status(401).json({ message: 'Invalid credentials' });
 
-  const ok = await bcrypt.compare(password, user.passwordHash);
-  if (!ok) return res.status(401).json({ message: 'Invalid credentials' });
+    const ok = await bcrypt.compare(password, user.passwordHash);
+    if (!ok) return res.status(401).json({ message: 'Invalid credentials' });
 
-  const code = await createOtp(user.id, 'login');
-  await sendMail({
-    to: user.email,
-    subject: 'Your BMC login OTP',
-    text: `Your OTP is ${code}. It expires in ${config.otpExpiresMinutes} minutes.`
-  });
+    const code = await createOtp(user.id, 'login');
+    const mailResult = await sendMail({
+      to: user.email,
+      subject: 'Your BMC login OTP',
+      text: `Your OTP is ${code}. It expires in ${config.otpExpiresMinutes} minutes.`
+    });
 
-  await logAudit({ userId: user._id, action: 'OTP_SENT', detail: 'Login OTP sent', ip: req.ip });
-  res.json({ ok: true, next: 'otp' });
+    await logAudit({ userId: user._id, action: 'OTP_SENT', detail: 'Login OTP sent', ip: req.ip });
+    const payload = { ok: true, next: 'otp' };
+    if (process.env.NODE_ENV !== 'production' && mailResult && mailResult.skipped) {
+      payload.devOtp = code;
+    }
+    return res.json(payload);
+  } catch (_err) {
+    return res.status(500).json({ message: 'Server error' });
+  }
 });
 
 router.post('/verify-otp', async (req, res) => {
-  const email = String(req.body.email || '').trim().toLowerCase();
+  const identity = String(req.body.username || req.body.email || '').trim();
   const otp = String(req.body.otp || '').trim();
-  const user = await User.findOne({ email });
+  const user = identity.includes('@')
+    ? await User.findOne({ email: identity.toLowerCase() })
+    : await User.findOne({ name: new RegExp(`^${identity.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') });
   if (!user || user.status !== 'active') return res.status(401).json({ message: 'Invalid user' });
 
   const row = await OtpCode.findOne({ userId: user._id, purpose: 'login' }).sort({ createdAt: -1 });
@@ -53,9 +65,13 @@ router.post('/verify-otp', async (req, res) => {
   const ok = await bcrypt.compare(otp, row.codeHash);
   if (!ok) return res.status(400).json({ message: 'Invalid OTP' });
 
-  const token = jwt.sign({ id: user._id, role: user.role }, config.jwtSecret, { expiresIn: config.jwtExpiresIn });
+  const token = jwt.sign({ id: user._id, role: user.role }, config.jwtSecret, { expiresIn: '1h' });
   await logAudit({ userId: user._id, action: 'LOGIN', detail: 'OTP verified', ip: req.ip });
   res.json({ token });
+});
+
+router.post('/logout', async (_req, res) => {
+  res.json({ ok: true });
 });
 
 const crypto = require('crypto');
