@@ -42,7 +42,7 @@ async function seedAdmin() {
 
     if (existing) {
       existing.passwordHash = passwordHash;
-      existing.role = 'admin';
+      existing.role = 'super_admin';
       existing.status = 'active';
       await existing.save();
       console.log('Updated existing admin user:', username);
@@ -51,7 +51,7 @@ async function seedAdmin() {
         name: username,
         email,
         passwordHash,
-        role: 'admin',
+        role: 'super_admin',
         status: 'active',
       });
       console.log('Created admin user:', username);

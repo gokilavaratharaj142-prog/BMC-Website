@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Admin Dashboard - Best Marketing Company</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>window.API_BASE="http://localhost:5000";</script>
 <style>
 :root{--bg:#f9f5eb;--surface:#fff;--text:#3e2723;--text-light:#6d4c41;--accent:#8d6e63;--accent-dark:#4e342e;--border:rgba(62,39,35,.1)}
@@ -34,11 +35,61 @@ body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);min
 .page-desc{font-size:14px;color:var(--text-light);margin-bottom:24px}
 
 /* Cards */
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(62,39,35,.04);transition:box-shadow .2s}
-.card:hover{box-shadow:0 4px 12px rgba(62,39,35,.08)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(62,39,35,.04);transition:all .3s ease;position:relative;overflow:hidden}
+.card:hover{box-shadow:0 6px 16px rgba(62,39,35,.12);transform:translateY(-4px)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-accent,var(--accent))}
+.card.blue{--card-accent:#3b82f6}
+.card.purple{--card-accent:#8b5cf6}
+.card.gold{--card-accent:#f59e0b}
+.card.green{--card-accent:#10b981}
 .card-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:600;margin-bottom:6px}
-.card-value{font-size:28px;font-weight:800;color:var(--accent-dark);line-height:1.1}
+.card-value{font-size:32px;font-weight:800;color:var(--accent-dark);line-height:1.1;font-variant-numeric:tabular-nums}
+.card-trend{font-size:12px;color:var(--text-light);margin-top:8px}
+.trend-up{color:#10b981}
+.trend-down{color:#ef4444}
+
+/* Charts */
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(62,39,35,.04)}
+.chart-title{font-size:14px;font-weight:700;margin-bottom:16px;color:var(--text)}
+
+/* Activity */
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:8px;transition:background .2s;position:relative}
+.activity-item:hover{background:rgba(141,110,99,.08)}
+.activity-item.new-glow{animation:newGlow 3s ease-out forwards}
+@keyframes newGlow{0%{background:rgba(59,130,246,.15);box-shadow:0 0 12px rgba(59,130,246,.3)}100%{background:var(--bg);box-shadow:none}}
+.activity-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.activity-icon.contact{background:#dbeafe;color:#3b82f6}
+.activity-icon.feedback{background:#ede9fe;color:#8b5cf6}
+.activity-icon.product{background:#dcfce7;color:#10b981}
+.activity-content{flex:1;min-width:0}
+.activity-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.activity-meta{font-size:11px;color:var(--text-light);margin-bottom:6px}
+.activity-actions{display:flex;gap:6px;margin-top:6px}
+.btn-email{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .2s;box-shadow:0 2px 4px rgba(59,130,246,.2)}
+.btn-email:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(59,130,246,.3)}
+.enquiry-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-left:6px}
+.enquiry-badge.product{background:#dcfce7;color:#166534}
+.enquiry-badge.general{background:#e0e7ff;color:#3730a3}
+
+/* Loading Skeleton */
+.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-card{height:100px;border-radius:10px}
+.skeleton-chart{height:300px;border-radius:10px}
+
+/* Engagement Mini Cards */
+.engagement-mini{background:var(--bg);border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px;transition:all .2s}
+.engagement-mini:hover{background:rgba(141,110,99,.08);transform:translateX(4px)}
+.engagement-mini-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.engagement-mini-icon.whatsapp{background:#dcfce7;color:#16a34a}
+.engagement-mini-icon.call{background:#dbeafe;color:#3b82f6}
+.engagement-mini-icon.email{background:#fef3c7;color:#d97706}
+.engagement-mini-icon.chat{background:#ede9fe;color:#8b5cf6}
+.engagement-mini-content{flex:1}
+.engagement-mini-label{font-size:11px;color:var(--text-light);margin-bottom:2px}
+.engagement-mini-value{font-size:18px;font-weight:700;color:var(--accent-dark)}
 
 /* Tabs & Tools */
 .tabs{display:flex;gap:8px;margin-bottom:16px}
@@ -84,7 +135,24 @@ body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);min
 .pagination .page-info{font-size:13px;color:var(--text-light);margin-left:8px}
 
 @media(max-width:1024px){.cards{grid-template-columns:1fr 1fr}.charts-row{grid-template-columns:1fr}}
-@media(max-width:768px){.sidebar{width:100%;border-right:none;border-bottom:1px solid var(--border)}.dash-wrap{flex-direction:column}.cards{grid-template-columns:1fr}.tools{flex-direction:column;align-items:stretch}}
+@media(max-width:768px){.sidebar{width:100%;border-right:none;border-bottom:1px solid var(--border)}.dash-wrap{flex-direction:column}.cards{grid-template-columns:1fr}.tools{flex-direction:column;align-items:stretch}.charts-row{grid-template-columns:1fr}}
+
+/* Dark Mode */
+body.dark-mode{--bg:#1a1a1a;--surface:#2d2d2d;--text:#e5e5e5;--text-light:#a3a3a3;--accent:#a78bfa;--accent-dark:#c4b5fd;--border:rgba(255,255,255,.1)}
+body.dark-mode .card::before{opacity:0.8}
+body.dark-mode .activity-icon.contact{background:#1e3a8a;color:#93c5fd}
+body.dark-mode .activity-icon.feedback{background:#4c1d95;color:#c4b5fd}
+body.dark-mode .activity-icon.product{background:#14532d;color:#86efac}
+body.dark-mode .engagement-mini-icon.whatsapp{background:#14532d;color:#86efac}
+body.dark-mode .engagement-mini-icon.call{background:#1e3a8a;color:#93c5fd}
+body.dark-mode .engagement-mini-icon.email{background:#78350f;color:#fcd34d}
+body.dark-mode .engagement-mini-icon.chat{background:#4c1d95;color:#c4b5fd}
+body.dark-mode .skeleton{background:linear-gradient(90deg,#2d2d2d 25%,#3d3d3d 50%,#2d2d2d 75%)}
+
+/* Button Ripple Effect */
+.btn,.modal-btn,.tab{position:relative;overflow:hidden}
+.btn::after,.modal-btn::after,.tab::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,0.5);transform:translate(-50%,-50%);transition:width .4s,height .4s}
+.btn:active::after,.modal-btn:active::after,.tab:active::after{width:200px;height:200px}
 </style>
 </head>
 <body>
@@ -97,8 +165,14 @@ body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);min
   </aside>
   <main class="main">
     <header class="topbar">
-      <div class="topbar-left"><span id="adminName">Admin</span></div>
+      <div class="topbar-left">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-size:16px;font-weight:600;color:var(--text)">Welcome back, <span id="adminName">Admin</span></div>
+          <div style="font-size:11px;color:var(--text-light)">Last login: <span id="lastLogin">Loading...</span> • Active sessions: <span id="activeSessions">0</span></div>
+        </div>
+      </div>
       <div class="topbar-right">
+        <button type="button" class="btn-out" id="darkModeToggle" title="Toggle Dark Mode" style="padding:8px 10px">🌙</button>
         <span class="status-text"><span id="statusDot" class="status-dot"></span><span id="backendStatus">Checking...</span></span>
         <button type="button" class="btn-out" id="logoutBtn">Logout</button>
       </div>
@@ -108,10 +182,60 @@ body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);min
       <p class="page-desc" id="pageDesc">Overview of contacts and feedback</p>
 
       <div class="cards">
-        <div class="card"><div class="card-label">Total Contacts</div><div class="card-value" id="stContacts">0</div></div>
-        <div class="card"><div class="card-label">Total Feedback</div><div class="card-value" id="stFeedback">0</div></div>
-        <div class="card"><div class="card-label">Monthly Growth %</div><div class="card-value" id="stGrowth">0%</div></div>
-        <div class="card"><div class="card-label">Satisfaction %</div><div class="card-value" id="stSat">0%</div></div>
+        <div class="card blue">
+          <div class="card-label">Total Contacts</div>
+          <div class="card-value" id="stContacts" data-target="0">0</div>
+          <div class="card-trend" id="contactTrend"></div>
+        </div>
+        <div class="card purple">
+          <div class="card-label">Total Feedback</div>
+          <div class="card-value" id="stFeedback" data-target="0">0</div>
+          <div class="card-trend" id="feedbackTrend"></div>
+        </div>
+        <div class="card gold">
+          <div class="card-label">Average Rating</div>
+          <div class="card-value" id="stAvgRating" data-target="0">0.0</div>
+          <div class="card-trend">⭐ Out of 5.0</div>
+        </div>
+        <div class="card green">
+          <div class="card-label">New Enquiries Today</div>
+          <div class="card-value" id="stNewToday" data-target="0">0</div>
+          <div class="card-trend" id="newTodayTrend"></div>
+        </div>
+        <div class="card" style="--card-accent:#ef4444">
+          <div class="card-label">Pending Responses</div>
+          <div class="card-value" id="stPending" data-target="0">0</div>
+          <div class="card-trend">Needs attention</div>
+        </div>
+        <div class="card" style="--card-accent:#06b6d4">
+          <div class="card-label">Product Enquiries</div>
+          <div class="card-value" id="stProductEnq" data-target="0">0</div>
+          <div class="card-trend" id="productEnqTrend"></div>
+        </div>
+      </div>
+
+      <!-- Analytics Charts -->
+      <div class="charts-row" style="display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px">
+        <div class="chart-card">
+          <h3 class="chart-title">Feedback Trend</h3>
+          <canvas id="feedbackChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3 class="chart-title">Rating Distribution</h3>
+          <canvas id="ratingChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Recent Activity & Engagement -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px">
+        <div class="activity-panel" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px">
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">Recent Activity</h3>
+          <div id="recentActivity" style="display:grid;gap:12px"></div>
+        </div>
+        <div class="engagement-panel" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px">
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">Engagement Tracking</h3>
+          <div id="engagementStats" style="display:grid;gap:10px"></div>
+        </div>
       </div>
 
       <div class="tabs">
@@ -130,11 +254,6 @@ body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);min
       <div class="panel">
         <div class="table-wrap" id="tableWrap"></div>
         <div class="pagination" id="pagination"></div>
-      </div>
-
-      <div class="charts-row" id="chartsRow">
-        <div class="chart-card"><div class="chart-title">Contacts per Month</div><div class="bar-chart" id="barChart"></div></div>
-        <div class="chart-card"><div class="chart-title">Growth Trend</div><div id="lineChart"></div></div>
       </div>
     </div>
   </main>
@@ -216,6 +335,9 @@ async function loadData() {
   const authed = localStorage.getItem(AUTH_KEY) === 'yes';
   if(!token || !authed || isTokenExpired()) return logoutLocal();
 
+  // Show loading skeleton
+  showLoadingSkeleton();
+
   const statusEl = q('backendStatus');
   const dotEl = q('statusDot');
   const overview = await apiGet('/api/admin/overview');
@@ -226,10 +348,28 @@ async function loadData() {
   } else {
     statusEl.textContent = 'Online';
     dotEl.className = 'status-dot ok';
+    
+    // Update admin info
+    if(overview.data && overview.data.user) {
+      const user = overview.data.user;
+      q('adminName').textContent = user.role === 'super_admin' ? 'Super Admin' : user.username || 'Admin';
+      
+      // Last login
+      if(user.lastActive) {
+        const lastLogin = new Date(user.lastActive);
+        q('lastLogin').textContent = formatTimeAgo(lastLogin);
+      }
+      
+      // Active sessions
+      if(overview.data.activeSessions !== undefined) {
+        q('activeSessions').textContent = overview.data.activeSessions;
+      }
+    }
   }
 
   const leads = await apiGet('/api/admin/leads');
   const feedback = await apiGet('/api/feedback');
+  const engagement = await apiGet('/api/engagement/stats');
 
   rowsContacts = (leads.ok && Array.isArray(leads.data)) ? leads.data : [];
   rowsFeedback = (feedback.ok && Array.isArray(feedback.data)) ? feedback.data : [];
@@ -238,6 +378,19 @@ async function loadData() {
   renderStats();
   renderTable();
   renderCharts();
+  renderEngagementStats(engagement.ok ? engagement.data : null);
+  
+  hideLoadingSkeleton();
+}
+
+function showLoadingSkeleton() {
+  const cards = document.querySelector('.cards');
+  if(cards) cards.style.opacity = '0.5';
+}
+
+function hideLoadingSkeleton() {
+  const cards = document.querySelector('.cards');
+  if(cards) cards.style.opacity = '1';
 }
 
 function applyFilter() {
@@ -247,8 +400,9 @@ function applyFilter() {
 }
 
 function renderStats() {
-  q('stContacts').textContent = rowsContacts.length;
-  q('stFeedback').textContent = rowsFeedback.length;
+  // Count-up animation
+  animateValue('stContacts', 0, rowsContacts.length, 1000);
+  animateValue('stFeedback', 0, rowsFeedback.length, 1000);
 
   const now = new Date();
   const curr = monthKey(now);
@@ -256,14 +410,221 @@ function renderStats() {
   const currCount = rowsContacts.filter(r => monthKey(dateOf(r)) === curr).length + rowsFeedback.filter(r => monthKey(dateOf(r)) === curr).length;
   const prevCount = rowsContacts.filter(r => monthKey(dateOf(r)) === prev).length + rowsFeedback.filter(r => monthKey(dateOf(r)) === prev).length;
   const growth = prevCount ? Math.round(((currCount - prevCount) / prevCount) * 100) : (currCount ? 100 : 0);
-  q('stGrowth').textContent = `${growth}%`;
+
+  // New enquiries today
+  const today = new Date().toDateString();
+  const newToday = rowsContacts.filter(r => new Date(r.createdAt).toDateString() === today).length;
+  animateValue('stNewToday', 0, newToday, 1000);
+  
+  // Pending responses (status = 'new')
+  const pending = rowsContacts.filter(r => r.status === 'new').length;
+  animateValue('stPending', 0, pending, 1000);
+  
+  // Product enquiries
+  const productEnq = rowsContacts.filter(r => r.enquiryType === 'Product Enquiry').length;
+  animateValue('stProductEnq', 0, productEnq, 1000);
+  
+  const productPercent = rowsContacts.length ? Math.round((productEnq / rowsContacts.length) * 100) : 0;
+  const productTrend = document.getElementById('productEnqTrend');
+  if(productTrend) {
+    productTrend.textContent = `${productPercent}% of total`;
+  }
+
+  // Average rating
+  const totalStars = rowsFeedback.reduce((sum, r) => sum + (Number(r.stars) || 0), 0);
+  const avgRating = rowsFeedback.length ? (totalStars / rowsFeedback.length).toFixed(1) : 0;
+  animateValue('stAvgRating', 0, parseFloat(avgRating), 1000, '', true);
 
   const good = rowsFeedback.filter(r => {
     const rating = String(r.rating || '');
     const stars = Number(r.stars || r.rating || 0);
     return rating.startsWith('5') || rating.startsWith('4') || stars >= 4 || ['love','like','happy'].includes(String(r.sentiment || '').toLowerCase());
   }).length;
-  q('stSat').textContent = `${rowsFeedback.length ? Math.round((good / rowsFeedback.length) * 100) : 0}%`;
+  
+  renderRecentActivity();
+  renderAnalyticsCharts();
+}
+
+function animateValue(id, start, end, duration, suffix = '', isDecimal = false) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  
+  const range = end - start;
+  const increment = range / (duration / 16);
+  let current = start;
+  
+  const timer = setInterval(() => {
+    current += increment;
+    if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+      current = end;
+      clearInterval(timer);
+    }
+    el.textContent = (isDecimal ? current.toFixed(1) : Math.round(current)) + suffix;
+  }, 16);
+}
+
+function renderRecentActivity() {
+  const container = document.getElementById('recentActivity');
+  if (!container) return;
+  
+  const allItems = [
+    ...rowsContacts.map(r => ({ ...r, type: 'contact' })),
+    ...rowsFeedback.map(r => ({ ...r, type: 'feedback' }))
+  ].sort((a, b) => dateOf(b) - dateOf(a)).slice(0, 5);
+  
+  const today = new Date().toDateString();
+  
+  container.innerHTML = allItems.map(item => {
+    const isContact = item.type === 'contact';
+    const isNew = new Date(item.createdAt || item.timestamp).toDateString() === today;
+    
+    if(isContact) {
+      const isProduct = item.enquiryType === 'Product Enquiry';
+      const icon = isProduct ? '🛍️' : '📧';
+      const iconClass = isProduct ? 'product' : 'contact';
+      const title = isProduct ? 'New Product Enquiry Received' : 'New General Enquiry Received';
+      const subtitle = isProduct ? 'Customer is requesting product information' : 'Customer sent a message';
+      const time = formatTimeAgo(dateOf(item));
+      const badge = `<span class="enquiry-badge ${isProduct ? 'product' : 'general'}">${item.enquiryType}</span>`;
+      
+      // Email template
+      const emailSubject = encodeURIComponent(`Re: Your enquiry at Best Marketing Company`);
+      const emailBody = encodeURIComponent(`Dear ${item.name},\n\nThank you for contacting Best Marketing Company.\n\nWe have received your ${item.enquiryType.toLowerCase()} and our team will respond to you shortly.\n\nYour enquiry:\n${item.message}\n\nBest regards,\nBest Marketing Company\nPhone: +91 9095195647\nEmail: gokilavaratharaj142@gmail.com`);
+      const mailtoLink = `mailto:${item.email}?subject=${emailSubject}&body=${emailBody}`;
+      
+      return `<div class="activity-item ${isNew ? 'new-glow' : ''}">
+        <div class="activity-icon ${iconClass}">${icon}</div>
+        <div class="activity-content">
+          <div class="activity-title">${title}${badge}</div>
+          <div class="activity-meta">${item.name} • ${item.company || 'No company'} • ${time}</div>
+          <div class="activity-actions">
+            <a href="${mailtoLink}" class="btn-email">✉️ Open Email</a>
+          </div>
+        </div>
+      </div>`;
+    } else {
+      const icon = '⭐';
+      const title = `${item.stars}-star feedback from ${item.name}`;
+      const time = formatTimeAgo(dateOf(item));
+      
+      return `<div class="activity-item ${isNew ? 'new-glow' : ''}">
+        <div class="activity-icon feedback">${icon}</div>
+        <div class="activity-content">
+          <div class="activity-title">${title}</div>
+          <div class="activity-meta">${time}</div>
+        </div>
+      </div>`;
+    }
+  }).join('');
+}
+
+function renderEngagementStats(data) {
+  const container = document.getElementById('engagementStats');
+  if(!container) return;
+  
+  if(!data) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-light);font-size:12px;padding:20px">No engagement data</div>';
+    return;
+  }
+  
+  const stats = [
+    { icon: '💬', label: 'WhatsApp', value: data.whatsapp || 0, class: 'whatsapp' },
+    { icon: '📞', label: 'Calls', value: data.call || 0, class: 'call' },
+    { icon: '✉️', label: 'Emails', value: data.email || 0, class: 'email' },
+    { icon: '💬', label: 'Chat', value: data.chat || 0, class: 'chat' }
+  ];
+  
+  container.innerHTML = stats.map(s => `
+    <div class="engagement-mini">
+      <div class="engagement-mini-icon ${s.class}">${s.icon}</div>
+      <div class="engagement-mini-content">
+        <div class="engagement-mini-label">${s.label}</div>
+        <div class="engagement-mini-value">${s.value}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function formatTimeAgo(date) {
+  const seconds = Math.floor((new Date() - date) / 1000);
+  if (seconds < 60) return 'Just now';
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+  return `${Math.floor(seconds / 86400)}d ago`;
+}
+
+let feedbackChartInstance = null;
+let ratingChartInstance = null;
+
+function renderAnalyticsCharts() {
+  // Feedback trend chart
+  const monthlyData = {};
+  [...rowsContacts, ...rowsFeedback].forEach(r => {
+    const key = monthKey(dateOf(r));
+    monthlyData[key] = (monthlyData[key] || 0) + 1;
+  });
+  
+  const months = Object.keys(monthlyData).sort().slice(-6);
+  const counts = months.map(m => monthlyData[m] || 0);
+  
+  const feedbackCtx = document.getElementById('feedbackChart');
+  if (feedbackCtx) {
+    if (feedbackChartInstance) feedbackChartInstance.destroy();
+    feedbackChartInstance = new Chart(feedbackCtx, {
+      type: 'line',
+      data: {
+        labels: months.map(m => {
+          const [y, mo] = m.split('-');
+          return new Date(y, mo - 1).toLocaleDateString('en', { month: 'short', year: '2-digit' });
+        }),
+        datasets: [{
+          label: 'Total Activity',
+          data: counts,
+          borderColor: '#8D6E63',
+          backgroundColor: 'rgba(141, 110, 99, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    });
+  }
+  
+  // Rating distribution
+  const ratingDist = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  rowsFeedback.forEach(r => {
+    const stars = Number(r.stars) || 0;
+    if (stars >= 1 && stars <= 5) ratingDist[stars]++;
+  });
+  
+  const ratingCtx = document.getElementById('ratingChart');
+  if (ratingCtx) {
+    if (ratingChartInstance) ratingChartInstance.destroy();
+    ratingChartInstance = new Chart(ratingCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
+        datasets: [{
+          data: [ratingDist[5], ratingDist[4], ratingDist[3], ratingDist[2], ratingDist[1]],
+          backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#6b7280']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } }
+        }
+      }
+    });
+  }
 }
 
 function currentRows() { return current === 'contacts' ? filteredContacts : filteredFeedback; }
@@ -294,32 +655,7 @@ function renderTable() {
   });
 }
 
-function renderCharts() {
-  const byMonth = {};
-  [...rowsContacts, ...rowsFeedback].forEach(r => {
-    const k = monthKey(dateOf(r));
-    byMonth[k] = (byMonth[k] || 0) + 1;
-  });
-  const sortedMonths = Object.keys(byMonth).sort();
-  const maxBar = Math.max(1, ...Object.values(byMonth));
 
-  q('barChart').innerHTML = sortedMonths.slice(-6).map(m => {
-    const v = byMonth[m] || 0;
-    const pct = Math.round((v / maxBar) * 100);
-    return `<div class="bar-row"><span class="bar-label">${esc(m)}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><span class="bar-val">${v}</span></div>`;
-  }).join('') || '<div class="empty">No data</div>';
-
-  const trendData = sortedMonths.slice(-7).map(m => byMonth[m] || 0);
-  const maxLine = Math.max(1, ...trendData);
-  const w = 300; const h = 100;
-  let path = '';
-  trendData.forEach((v, i) => {
-    const x = (i / (trendData.length - 1 || 1)) * (w - 20) + 10;
-    const y = h - 20 - (v / maxLine) * (h - 40);
-    path += (i === 0 ? 'M' : 'L') + x + ',' + y;
-  });
-  q('lineChart').innerHTML = trendData.length ? `<svg class="line-chart-svg" viewBox="0 0 ${w} ${h}"><path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` : '<div class="empty">No data</div>';
-}
 
 function exportCsv() {
   const rows = currentRows();
@@ -398,6 +734,20 @@ q('exportXlsx').addEventListener('click', exportXlsx);
 q('exportPdf').addEventListener('click', exportPdf);
 q('clearRecords').addEventListener('click', clearRecords);
 q('logoutBtn').addEventListener('click', logout);
+
+// Dark mode toggle
+const darkModeBtn = q('darkModeToggle');
+const isDarkMode = localStorage.getItem('bmc_dark_mode') === 'true';
+if(isDarkMode) {
+  document.body.classList.add('dark-mode');
+  darkModeBtn.textContent = '☀️';
+}
+darkModeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('bmc_dark_mode', isDark);
+  darkModeBtn.textContent = isDark ? '☀️' : '🌙';
+});
 
 loadData();
 </script>

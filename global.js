@@ -117,6 +117,9 @@ function initChatbot() {
     chatToggle.dataset.chatBound = '1';
     chatToggle.addEventListener('click', () => {
       chatWin.classList.toggle('is-open');
+      if (chatWin.classList.contains('is-open')) {
+        trackEngagement('chat');
+      }
     });
   }
   
@@ -236,9 +239,28 @@ function initFloatingActions() {
     wa.setAttribute('href', 'https://wa.me/919095195647');
     wa.setAttribute('target', '_blank');
     wa.setAttribute('rel', 'noopener');
+    wa.addEventListener('click', () => trackEngagement('whatsapp'));
   }
-  if (call) call.setAttribute('href', 'tel:+919095195647');
-  if (mail) mail.setAttribute('href', 'mailto:gokilavaratharaj142@gmail.com');
+  if (call) {
+    call.setAttribute('href', 'tel:+919095195647');
+    call.addEventListener('click', () => trackEngagement('call'));
+  }
+  if (mail) {
+    mail.setAttribute('href', 'mailto:gokilavaratharaj142@gmail.com');
+    mail.addEventListener('click', () => trackEngagement('email'));
+  }
+}
+
+function trackEngagement(type) {
+  const API_BASE = window.API_BASE || 'http://localhost:5000';
+  fetch(`${API_BASE}/api/engagement/track`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type,
+      page: window.location.pathname
+    })
+  }).catch(err => console.log('Tracking error:', err));
 }
 
 function initBackToTop() {

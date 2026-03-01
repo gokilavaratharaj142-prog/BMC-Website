@@ -7,6 +7,8 @@ const LeadSchema = new mongoose.Schema({
   company: { type: String, trim: true },
   message: { type: String, trim: true },
   product: { type: String, trim: true },
+  enquiryType: { type: String, enum: ['Product Enquiry', 'General Enquiry'], default: 'General Enquiry' },
+  status: { type: String, enum: ['new', 'contacted', 'closed'], default: 'new' },
   createdAt: { type: Date, default: Date.now }
 });
 

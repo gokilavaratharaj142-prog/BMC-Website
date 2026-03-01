@@ -15,6 +15,7 @@ const auditRoutes = require('./routes/audit');
 const chatbotRoutes = require('./routes/chatbot');
 const rpaRoutes = require('./routes/rpa');
 const backupRoutes = require('./routes/backup');
+const engagementRoutes = require('./routes/engagement');
 
 const { loginLimiter, apiLimiter } = require('./middleware/rateLimiter');
 
@@ -41,6 +42,7 @@ app.use('/api/audit', auditRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/rpa', rpaRoutes);
 app.use('/api/backup', backupRoutes);
+app.use('/api/engagement', engagementRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

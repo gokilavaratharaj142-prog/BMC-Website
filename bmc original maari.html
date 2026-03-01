@@ -303,6 +303,31 @@ h1,h2,h3,.hero-h,.title{
   .s-icon{display:none;}
   .footer-grid{grid-template-columns:1fr 1fr;}
 }
+
+/* Premium Contact Modal */
+.premium-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);z-index:9999;display:none;align-items:center;justify-content:center;animation:fadeIn .3s ease}
+.premium-modal-overlay.show{display:flex}
+.premium-modal-content{background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-radius:20px;padding:48px 40px;max-width:480px;width:90%;box-shadow:0 24px 48px rgba(0,0,0,0.2);animation:modalSlideUp .4s cubic-bezier(0.16,1,0.3,1);text-align:center;border:1px solid rgba(255,255,255,0.3)}
+.premium-modal-icon{width:80px;height:80px;margin:0 auto 24px;position:relative}
+.checkmark{width:80px;height:80px}
+.checkmark-circle{stroke:#10b981;stroke-width:2;stroke-dasharray:166;stroke-dashoffset:166;animation:stroke .6s cubic-bezier(0.65,0,0.45,1) forwards}
+.checkmark-check{stroke:#10b981;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:48;stroke-dashoffset:48;animation:stroke .3s cubic-bezier(0.65,0,0.45,1) .6s forwards}
+.premium-modal-title{font-size:28px;font-weight:800;color:var(--text);margin-bottom:12px;letter-spacing:-0.02em}
+.premium-modal-message{font-size:16px;color:var(--text-light);margin-bottom:32px;line-height:1.6}
+.premium-progress-bar{height:4px;background:rgba(141,110,99,0.2);border-radius:2px;margin-bottom:32px;overflow:hidden}
+.premium-progress-fill{height:100%;background:linear-gradient(90deg,#8D6E63,#4E342E);width:0;animation:progressFill 4s linear forwards}
+.premium-modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.premium-btn{padding:14px 24px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s ease;border:none;display:flex;align-items:center;gap:8px;position:relative;overflow:hidden}
+.premium-btn::before{content:'';position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,0.3) 0%,transparent 70%);opacity:0;transition:opacity .3s}
+.premium-btn:hover::before{opacity:1}
+.premium-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,0.15)}
+.premium-btn:active{transform:translateY(0)}
+.premium-btn-primary{background:linear-gradient(135deg,#8D6E63,#4E342E);color:#fff;box-shadow:0 4px 12px rgba(141,110,99,0.3)}
+.premium-btn-secondary{background:rgba(255,255,255,0.8);color:var(--text);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes modalSlideUp{from{opacity:0;transform:translateY(30px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes stroke{to{stroke-dashoffset:0}}
+@keyframes progressFill{to{width:100%}}
 </style>
 </head>
 <body>
@@ -692,6 +717,33 @@ h1,h2,h3,.hero-h,.title{
 
 <div id="global-footer"></div>
 
+<!-- Contact Success Modal -->
+<div class="premium-modal-overlay" id="contactModal">
+  <div class="premium-modal-content">
+    <div class="premium-modal-icon">
+      <svg class="checkmark" viewBox="0 0 52 52">
+        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+    <h2 class="premium-modal-title">Message Successfully Sent</h2>
+    <p class="premium-modal-message">Our team has received your enquiry.<br>We will respond shortly.</p>
+    <div class="premium-progress-bar">
+      <div class="premium-progress-fill"></div>
+    </div>
+    <div class="premium-modal-actions">
+      <button class="premium-btn premium-btn-primary" onclick="window.location.href='bmc original maari.html'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Back to Home
+      </button>
+      <button class="premium-btn premium-btn-secondary" onclick="closeContactModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        Send Another Message
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
 // GSAP ANIMATIONS
 gsap.registerPlugin(ScrollTrigger);
@@ -795,9 +847,27 @@ if(contactForm){
     all.push(entry);
     localStorage.setItem(CONTACT_KEY, JSON.stringify(all));
     Backend.post('/api/leads', entry);
-    document.getElementById('contactSuccess').style.display='block';
+    
+    // Show premium modal
+    showContactModal();
     contactForm.reset();
   });
+}
+
+function showContactModal() {
+  const modal = document.getElementById('contactModal');
+  if (!modal) return;
+  modal.classList.add('show');
+  
+  // Auto close after 4 seconds (progress bar duration)
+  setTimeout(() => {
+    closeContactModal();
+  }, 4000);
+}
+
+function closeContactModal() {
+  const modal = document.getElementById('contactModal');
+  if (modal) modal.classList.remove('show');
 }
 
 function sanitize(str) {

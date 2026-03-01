@@ -48,6 +48,26 @@ a:visited{color:inherit}
 .note{margin-top:14px;color:var(--text-light);font-size:14px}
 .success{margin-top:16px;padding:12px 16px;border:1px solid #31a24c66;background:#31a24c12;color:#1b6d2f;border-radius:8px;display:none;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);z-index:9999;display:none;align-items:center;justify-content:center;animation:fadeInOverlay .3s ease}
+.modal-overlay.show{display:flex}
+.modal-content{background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-radius:20px;padding:48px 40px;max-width:500px;width:90%;box-shadow:0 24px 48px rgba(0,0,0,0.2);animation:slideUp .4s cubic-bezier(0.16,1,0.3,1);position:relative;text-align:center;border:1px solid rgba(255,255,255,0.3)}
+.modal-content::before{content:'';position:absolute;inset:0;border-radius:20px;padding:2px;background:linear-gradient(135deg,rgba(141,110,99,0.3),rgba(78,52,46,0.3));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.modal-icon{font-size:72px;margin-bottom:20px;animation:bounceIn .6s cubic-bezier(0.68,-0.55,0.265,1.55);filter:drop-shadow(0 4px 12px rgba(255,183,3,0.3))}
+.modal-title{font-size:28px;font-weight:800;color:var(--text);margin-bottom:12px;letter-spacing:-0.02em}
+.modal-message{font-size:16px;color:var(--text-light);margin-bottom:28px;line-height:1.6}
+.modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.modal-btn{padding:14px 24px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s ease;border:none;position:relative;overflow:hidden}
+.modal-btn::before{content:'';position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,0.3) 0%,transparent 70%);opacity:0;transition:opacity .3s}
+.modal-btn:hover::before{opacity:1}
+.modal-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,0.15)}
+.modal-btn:active{transform:translateY(0)}
+.modal-btn-primary{background:linear-gradient(135deg,#8D6E63,#4E342E);color:#fff;box-shadow:0 4px 12px rgba(141,110,99,0.3)}
+.modal-btn-secondary{background:rgba(255,255,255,0.8);color:var(--text);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.confetti-particle{position:absolute;width:8px;height:8px;border-radius:50%;pointer-events:none}
+@keyframes fadeInOverlay{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes confettiFall{to{transform:translateY(100vh) rotate(360deg);opacity:0}}
 .list{max-width:900px;margin:0 auto 60px;padding:0 5vw}
 .list h3{font-size:20px;margin-bottom:8px}
 .item{padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);margin-bottom:8px;display:grid;grid-template-columns:2fr 1fr 1fr}
@@ -156,6 +176,20 @@ a:visited{color:inherit}
   </form>
 </section>
 <section class="charts" id="charts"></section>
+
+<!-- Success Modal -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-content">
+    <div class="modal-icon" id="modalIcon">🎉</div>
+    <h2 class="modal-title" id="modalTitle">Thank You!</h2>
+    <p class="modal-message" id="modalMessage">Your feedback has been submitted successfully.</p>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="window.location.href='bmc original maari.html'">Back to Home</button>
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Submit Another</button>
+    </div>
+  </div>
+</div>
+
 <div id="global-footer"></div>
 
 <script>
@@ -317,9 +351,10 @@ document.getElementById('feedbackForm').addEventListener('submit', (e)=>{
   Backend.post('/api/feedback', entry).finally(()=>{
     btn.disabled = false;
     btn.textContent = 'Submit Feedback';
-    document.getElementById('successMsg').textContent = 'Thank you! Your feedback has been submitted successfully.';
-    document.getElementById('successMsg').style.display='block';
-    setTimeout(()=>{ document.getElementById('successMsg').style.display='none'; }, 5000);
+    
+    // Show success modal with dynamic message
+    showSuccessModal(stars);
+    
     f.reset();
     document.getElementById('starsVal').value = '';
     document.getElementById('emojiVal').value = '';
@@ -329,6 +364,62 @@ document.getElementById('feedbackForm').addEventListener('submit', (e)=>{
     drawCharts();
   });
 });
+
+function showSuccessModal(stars) {
+  const modal = document.getElementById('successModal');
+  const icon = document.getElementById('modalIcon');
+  const title = document.getElementById('modalTitle');
+  const message = document.getElementById('modalMessage');
+  
+  // Dynamic content based on rating - Professional tone
+  const content = {
+    5: { icon: '⭐', title: "We're thrilled you loved it!", message: 'Your 5-star feedback means the world to us. Thank you for your support!' },
+    4: { icon: '😊', title: 'Thank you!', message: "We're glad you had a great experience. Your feedback helps us improve!" },
+    3: { icon: '👍', title: 'Thanks for your feedback!', message: "We appreciate your input and we'll keep working to improve your experience." },
+    2: { icon: '🤝', title: 'We appreciate your honesty', message: "Your feedback is valuable. We'll work on addressing your concerns." },
+    1: { icon: '🙏', title: 'Thank you for your feedback', message: "We take this seriously and will work to improve. Thank you for helping us get better." }
+  };
+  
+  const data = content[stars] || content[3];
+  icon.textContent = data.icon;
+  title.textContent = data.title;
+  message.textContent = data.message;
+  
+  modal.classList.add('show');
+  
+  // Subtle confetti for 4-5 stars only
+  if (stars >= 4) {
+    createConfetti();
+  }
+  
+  // Auto close after 5 seconds
+  setTimeout(() => {
+    closeModal();
+  }, 5000);
+}
+
+function closeModal() {
+  const modal = document.getElementById('successModal');
+  modal.classList.remove('show');
+}
+
+function createConfetti() {
+  const modal = document.querySelector('.modal-content');
+  const colors = ['#8D6E63', '#4E342E', '#31a24c', '#ffb703', '#F9F5EB'];
+  
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'confetti-particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = '-10px';
+    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.animationDelay = Math.random() * 0.3 + 's';
+    particle.style.animation = 'confettiFall 2s ease-out forwards';
+    modal.appendChild(particle);
+    
+    setTimeout(() => particle.remove(), 2000);
+  }
+}
 
 function sanitize(str) {
   const temp = document.createElement('div');

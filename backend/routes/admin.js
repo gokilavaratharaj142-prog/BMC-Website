@@ -7,7 +7,7 @@ const { getOverview, getLeadsByDay } = require('../services/analytics');
 const router = express.Router();
 
 router.get('/overview', protect, admin, async (req, res) => {
-  const data = await getOverview();
+  const data = await getOverview(req.user?._id);
   res.json(data);
 });
 

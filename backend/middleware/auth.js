@@ -26,10 +26,18 @@ const protect = async (req, res, next) => {
 };
 
 const admin = (req, res, next) => {
-  if (req.user && req.user.role === 'admin') {
+  if (req.user && (req.user.role === 'super_admin' || req.user.role === 'manager')) {
     next();
   } else {
     res.status(401).json({ message: 'Not authorized as an admin' });
+  }
+};
+
+const superAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'super_admin') {
+    next();
+  } else {
+    res.status(403).json({ message: 'Super admin access required' });
   }
 };
 
@@ -42,4 +50,4 @@ const requireRole = (roles = []) => (req, res, next) => {
   return res.status(403).json({ message: 'Not authorized for this resource' });
 };
 
-module.exports = { protect, admin, requireAuth, requireRole };
+module.exports = { protect, admin, superAdmin, requireAuth, requireRole };

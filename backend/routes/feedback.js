@@ -1,6 +1,6 @@
 const express = require("express");
 const Feedback = require("../models/Feedback");
-const { sendMail } = require("../services/mailer");
+const { sendFeedbackNotification } = require("../services/mailer");
 const { logAudit } = require("../services/audit");
 
 const router = express.Router();
@@ -17,26 +17,27 @@ router.post("/", async (req, res) => {
       stars: Number(req.body.stars || req.body.rating || 0),
       sentiment: String(req.body.sentiment || '').trim(),
       message: String(req.body.message || '').trim(),
+      timestamp: Date.now()
     };
     const feedback = await Feedback.create(payload);
     console.log('[FEEDBACK]', { name: feedback.name, email: feedback.email, rating: feedback.rating, category: feedback.category });
-    try{
-      if (feedback.email) {
-        await sendMail({
-          to: feedback.email,
-          subject: 'Thanks for your feedback',
-          text: `Hello ${feedback.name || ''}, thanks for sharing your feedback on "${feedback.category}". We appreciate it!`
-        });
-      }
-      await sendMail({
-        to: process.env.ADMIN_EMAIL || 'admin@bmc.local',
-        subject: 'New feedback received',
-        text: `Feedback: ${feedback.name} <${feedback.email}> | ${feedback.company}\nCategory: ${feedback.category}\nRating: ${feedback.rating}\nMessage: ${feedback.message}`
+    
+    // Send email notification
+    try {
+      await sendFeedbackNotification(feedback);
+      await logAudit({ 
+        userId: null, 
+        userName: feedback.name,
+        action: 'FEEDBACK_SUBMITTED', 
+        resource: 'feedback',
+        resourceId: feedback._id.toString(),
+        details: `${feedback.stars}-star feedback from ${feedback.name}`, 
+        ip: req.ip 
       });
-      await logAudit({ userId: null, action: 'FEEDBACK_CREATED', detail: `${feedback.email || feedback.name}`, ip: '' });
-    }catch(e){
+    } catch(e) {
       console.log('[MAIL/AUDIT]', 'skipped or failed', e.message);
     }
+    
     res.json({ success: true, feedback });
   } catch (err) {
     res.status(500).json({ error: err.message });
